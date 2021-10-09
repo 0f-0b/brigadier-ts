@@ -80,7 +80,7 @@ export class StringReader implements ImmutableStringReader {
 
   readInt(): number {
     const start = this.#cursor;
-    while (this.canRead() && StringReader.isAllowedNumber(this.peek())) {
+    while (StringReader.isAllowedNumber(this.peek())) {
       this.skip();
     }
     const number = this.#string.substring(start, this.#cursor);
@@ -101,7 +101,7 @@ export class StringReader implements ImmutableStringReader {
 
   readFloat(): number {
     const start = this.#cursor;
-    while (this.canRead() && StringReader.isAllowedNumber(this.peek())) {
+    while (StringReader.isAllowedNumber(this.peek())) {
       this.skip();
     }
     const number = this.#string.substring(start, this.#cursor);
@@ -124,9 +124,7 @@ export class StringReader implements ImmutableStringReader {
 
   readUnquotedString(): string {
     const start = this.#cursor;
-    while (
-      this.canRead() && StringReader.isAllowedInUnquotedString(this.peek())
-    ) {
+    while (StringReader.isAllowedInUnquotedString(this.peek())) {
       this.skip();
     }
     return this.#string.substring(start, this.#cursor);
@@ -207,7 +205,7 @@ export class StringReader implements ImmutableStringReader {
   }
 
   expect(c: string): void {
-    if (this.canRead() && this.peek() === c) {
+    if (this.peek() === c) {
       this.skip();
       return;
     }
