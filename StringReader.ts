@@ -1,15 +1,11 @@
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import type { ImmutableStringReader } from "./ImmutableStringReader.ts";
 
-const allowedNumber = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "-"]);
-const quotedStringStart = new Set(["\"", "'"]);
-const allowedInUnquotedString = new Set([
-  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "_", "-", ".", "+",
-  "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
-  "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
-  "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
-]);
+const allowedNumber = new Set("0123456789.-");
+const quotedStringStart = new Set("\"'");
+const allowedInUnquotedString = new Set(
+  "0123456789_-.+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+);
 
 export class StringReader implements ImmutableStringReader {
   readonly #string: string;
@@ -78,35 +74,46 @@ export class StringReader implements ImmutableStringReader {
   }
 
   skipWhitespace(): void {
-    this.#cursor = this.getTotalLength() - this.getRemaining().trimStart().length;
+    this.#cursor = this.getTotalLength() -
+      this.getRemaining().trimStart().length;
   }
 
   readInt(): number {
     const start = this.#cursor;
-    while (this.canRead() && StringReader.isAllowedNumber(this.peek()))
+    while (this.canRead() && StringReader.isAllowedNumber(this.peek())) {
       this.skip();
+    }
     const number = this.#string.substring(start, this.#cursor);
-    if (number.length === 0)
-      throw CommandSyntaxError.builtInErrors.readerExpectedInt.createWithContext(this);
+    if (number.length === 0) {
+      throw CommandSyntaxError.builtInErrors.readerExpectedInt
+        .createWithContext(this);
+    }
     const result = Number(number);
     if (!Number.isInteger(result)) {
       this.#cursor = start;
-      throw CommandSyntaxError.builtInErrors.readerInvalidInt.createWithContext(this, number);
+      throw CommandSyntaxError.builtInErrors.readerInvalidInt.createWithContext(
+        this,
+        number,
+      );
     }
     return result;
   }
 
   readFloat(): number {
     const start = this.#cursor;
-    while (this.canRead() && StringReader.isAllowedNumber(this.peek()))
+    while (this.canRead() && StringReader.isAllowedNumber(this.peek())) {
       this.skip();
+    }
     const number = this.#string.substring(start, this.#cursor);
-    if (number.length === 0)
-      throw CommandSyntaxError.builtInErrors.readerExpectedFloat.createWithContext(this);
+    if (number.length === 0) {
+      throw CommandSyntaxError.builtInErrors.readerExpectedFloat
+        .createWithContext(this);
+    }
     const result = Number(number);
     if (Number.isNaN(result)) {
       this.#cursor = start;
-      throw CommandSyntaxError.builtInErrors.readerInvalidFloat.createWithContext(this, number);
+      throw CommandSyntaxError.builtInErrors.readerInvalidFloat
+        .createWithContext(this, number);
     }
     return result;
   }
@@ -117,51 +124,62 @@ export class StringReader implements ImmutableStringReader {
 
   readUnquotedString(): string {
     const start = this.#cursor;
-    while (this.canRead() && StringReader.isAllowedInUnquotedString(this.peek()))
+    while (
+      this.canRead() && StringReader.isAllowedInUnquotedString(this.peek())
+    ) {
       this.skip();
+    }
     return this.#string.substring(start, this.#cursor);
   }
 
   readQuotedString(): string {
-    if (!this.canRead())
+    if (!this.canRead()) {
       return "";
+    }
     const next = this.peek();
-    if (!StringReader.isQuotedStringStart(next))
-      throw CommandSyntaxError.builtInErrors.readerExpectedStartOfQuote.createWithContext(this);
+    if (!StringReader.isQuotedStringStart(next)) {
+      throw CommandSyntaxError.builtInErrors.readerExpectedStartOfQuote
+        .createWithContext(this);
+    }
     this.skip();
     return this.readStringUntil(next);
   }
 
   readStringUntil(terminator: string): string {
-    const result: string[] = [];
+    let result = "";
     let escaped = false;
     while (this.canRead()) {
       const c = this.read();
       if (escaped) {
         if (c === terminator || c === "\\") {
-          result.push(c);
+          result += c;
           escaped = false;
         } else {
           this.#cursor--;
-          throw CommandSyntaxError.builtInErrors.readerInvalidEscape.createWithContext(this, c);
+          throw CommandSyntaxError.builtInErrors.readerInvalidEscape
+            .createWithContext(this, c);
         }
-      } else switch (c) {
-        case "\\":
-          escaped = true;
-          break;
-        case terminator:
-          return result.join("");
-        default:
-          result.push(c);
-          break;
+      } else {
+        switch (c) {
+          case "\\":
+            escaped = true;
+            break;
+          case terminator:
+            return result;
+          default:
+            result += c;
+            break;
+        }
       }
     }
-    throw CommandSyntaxError.builtInErrors.readerExpectedEndOfQuote.createWithContext(this);
+    throw CommandSyntaxError.builtInErrors.readerExpectedEndOfQuote
+      .createWithContext(this);
   }
 
   readString(): string {
-    if (!this.canRead())
+    if (!this.canRead()) {
       return "";
+    }
     const next = this.peek();
     if (StringReader.isQuotedStringStart(next)) {
       this.skip();
@@ -175,14 +193,16 @@ export class StringReader implements ImmutableStringReader {
     const value = this.readString();
     switch (value) {
       case "":
-        throw CommandSyntaxError.builtInErrors.readerExpectedBool.createWithContext(this);
+        throw CommandSyntaxError.builtInErrors.readerExpectedBool
+          .createWithContext(this);
       case "true":
         return true;
       case "false":
         return false;
       default:
         this.#cursor = start;
-        throw CommandSyntaxError.builtInErrors.readerInvalidBool.createWithContext(this, value);
+        throw CommandSyntaxError.builtInErrors.readerInvalidBool
+          .createWithContext(this, value);
     }
   }
 
@@ -191,6 +211,7 @@ export class StringReader implements ImmutableStringReader {
       this.skip();
       return;
     }
-    throw CommandSyntaxError.builtInErrors.readerExpectedSymbol.createWithContext(this, c);
+    throw CommandSyntaxError.builtInErrors.readerExpectedSymbol
+      .createWithContext(this, c);
   }
 }

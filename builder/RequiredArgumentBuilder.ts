@@ -14,19 +14,34 @@ export class RequiredArgumentBuilder<S, T> extends ArgumentBuilder<S> {
     this.#type = type;
   }
 
-  suggests(provider: SuggestionProvider<S> | undefined): RequiredArgumentBuilder<S, T> {
+  suggests(
+    provider: SuggestionProvider<S> | undefined,
+  ): RequiredArgumentBuilder<S, T> {
     this.#suggestionsProvider = provider;
     return this;
   }
 
   override build(): ArgumentCommandNode<S, T> {
-    const result = new ArgumentCommandNode(this.#name, this.#type, this.getCommand(), this.getRequirement(), this.getRedirect(), this.getRedirectModifier(), this.isFork(), this.#suggestionsProvider);
-    for (const argument of this.getArguments())
+    const result = new ArgumentCommandNode(
+      this.#name,
+      this.#type,
+      this.getCommand(),
+      this.getRequirement(),
+      this.getRedirect(),
+      this.getRedirectModifier(),
+      this.isFork(),
+      this.#suggestionsProvider,
+    );
+    for (const argument of this.getArguments()) {
       result.addChild(argument);
+    }
     return result;
   }
 }
 
-export function argument<S, T>(name: string, type: ArgumentType<T>): RequiredArgumentBuilder<S, T> {
+export function argument<S, T>(
+  name: string,
+  type: ArgumentType<T>,
+): RequiredArgumentBuilder<S, T> {
   return new RequiredArgumentBuilder(name, type);
 }

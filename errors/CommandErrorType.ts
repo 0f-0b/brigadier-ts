@@ -13,7 +13,15 @@ export class CommandErrorType<Args extends unknown[]> {
     return new CommandSyntaxError(this, this.#func(...args));
   }
 
-  createWithContext(reader: ImmutableStringReader, ...args: Args): CommandSyntaxError {
-    return new CommandSyntaxError(this, this.#func(...args), reader.getString(), reader.getCursor());
+  createWithContext(
+    reader: ImmutableStringReader,
+    ...args: Args
+  ): CommandSyntaxError {
+    return new CommandSyntaxError(
+      this,
+      this.#func(...args),
+      reader.getString(),
+      reader.getCursor(),
+    );
   }
 }

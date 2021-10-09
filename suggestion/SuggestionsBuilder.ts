@@ -28,9 +28,16 @@ export class SuggestionsBuilder {
   }
 
   suggest(text: string, tooltip?: Message): SuggestionsBuilder {
-    if (text === this.remaining)
+    if (text === this.remaining) {
       return this;
-    this.#result.push(new Suggestion(StringRange.between(this.start, this.input.length), text, tooltip));
+    }
+    this.#result.push(
+      new Suggestion(
+        StringRange.between(this.start, this.input.length),
+        text,
+        tooltip,
+      ),
+    );
     return this;
   }
 

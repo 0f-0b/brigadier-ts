@@ -17,7 +17,18 @@ export class CommandContext<S> {
   readonly #modifier?: RedirectModifier<S>;
   readonly #forks: boolean;
 
-  constructor(source: S, input: string, parsedArguments: Map<string, ParsedArgument<unknown>>, command: Command<S> | undefined, rootNode: CommandNode<S>, nodes: readonly ParsedCommandNode<S>[], range: StringRange, child: CommandContext<S> | undefined, modifier: RedirectModifier<S> | undefined, forks: boolean) {
+  constructor(
+    source: S,
+    input: string,
+    parsedArguments: Map<string, ParsedArgument<unknown>>,
+    command: Command<S> | undefined,
+    rootNode: CommandNode<S>,
+    nodes: readonly ParsedCommandNode<S>[],
+    range: StringRange,
+    child: CommandContext<S> | undefined,
+    modifier: RedirectModifier<S> | undefined,
+    forks: boolean,
+  ) {
     this.#source = source;
     this.#input = input;
     this.#arguments = parsedArguments;
@@ -31,9 +42,21 @@ export class CommandContext<S> {
   }
 
   copyFor(source: S): CommandContext<S> {
-    if (this.#source === source)
+    if (this.#source === source) {
       return this;
-    return new CommandContext<S>(source, this.#input, this.#arguments, this.#command, this.#rootNode, this.#nodes, this.#range, this.#child, this.#modifier, this.#forks);
+    }
+    return new CommandContext<S>(
+      source,
+      this.#input,
+      this.#arguments,
+      this.#command,
+      this.#rootNode,
+      this.#nodes,
+      this.#range,
+      this.#child,
+      this.#modifier,
+      this.#forks,
+    );
   }
 
   getChild(): CommandContext<S> | undefined {
@@ -44,8 +67,9 @@ export class CommandContext<S> {
     // deno-lint-ignore no-this-alias
     let result: CommandContext<S> = this;
     let child: CommandContext<S> | undefined;
-    while ((child = result.getChild()))
+    while ((child = result.getChild())) {
       result = child;
+    }
     return result;
   }
 
@@ -59,8 +83,9 @@ export class CommandContext<S> {
 
   getArgument<T>(name: string): T {
     const argument = this.#arguments.get(name);
-    if (!argument)
+    if (!argument) {
       throw new TypeError(`No such argument '${name}' exists on this command`);
+    }
     return argument.result as T;
   }
 

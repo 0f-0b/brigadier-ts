@@ -10,9 +10,17 @@ export class LiteralArgumentBuilder<S> extends ArgumentBuilder<S> {
   }
 
   build(): LiteralCommandNode<S> {
-    const result = new LiteralCommandNode<S>(this.literal, this.getCommand(), this.getRequirement(), this.getRedirect(), this.getRedirectModifier(), this.isFork());
-    for (const argument of this.getArguments())
+    const result = new LiteralCommandNode<S>(
+      this.literal,
+      this.getCommand(),
+      this.getRequirement(),
+      this.getRedirect(),
+      this.getRedirectModifier(),
+      this.isFork(),
+    );
+    for (const argument of this.getArguments()) {
       result.addChild(argument);
+    }
     return result;
   }
 }

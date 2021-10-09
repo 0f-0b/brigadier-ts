@@ -36,9 +36,9 @@ export class StringArgumentType extends ArgumentType<string> {
       case "single_word":
         return ["word", "words_with_underscores"];
       case "quotable_phrase":
-        return ["\"quoted phrase\"", "word", "\"\""];
+        return ['"quoted phrase"', "word", '""'];
       case "greedy_phrase":
-        return ["word", "words with spaces", "\"and symbols\""];
+        return ["word", "words with spaces", '"and symbols"'];
       default:
         never(this.type);
     }

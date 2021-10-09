@@ -22,8 +22,9 @@ export class StringRange {
   }
 
   get(str: string | ImmutableStringReader): string {
-    if (typeof str !== "string")
+    if (typeof str !== "string") {
       str = str.getString();
+    }
     return str.substring(this.start, this.end);
   }
 

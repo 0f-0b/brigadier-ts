@@ -19,16 +19,22 @@ import type { SuggestionsBuilder } from "./suggestion/SuggestionsBuilder.ts";
 import { Suggestions } from "./suggestion/Suggestions.ts";
 
 export abstract class CommandNode<S> {
-  readonly children: Map<string, CommandNode<S>> = new Map;
-  readonly literals: Map<string, LiteralCommandNode<S>> = new Map;
-  readonly arguments: Map<string, ArgumentCommandNode<S, unknown>> = new Map;
+  readonly children: Map<string, CommandNode<S>> = new Map();
+  readonly literals: Map<string, LiteralCommandNode<S>> = new Map();
+  readonly arguments: Map<string, ArgumentCommandNode<S, unknown>> = new Map();
   readonly #requirement: Predicate<S>;
   readonly #redirect?: CommandNode<S>;
   readonly #modifier?: RedirectModifier<S>;
   readonly #forks: boolean;
   command?: Command<S>;
 
-  constructor(command: Command<S> | undefined, requirement: Predicate<S>, redirect: CommandNode<S> | undefined, modifier: RedirectModifier<S> | undefined, forks: boolean) {
+  constructor(
+    command: Command<S> | undefined,
+    requirement: Predicate<S>,
+    redirect: CommandNode<S> | undefined,
+    modifier: RedirectModifier<S> | undefined,
+    forks: boolean,
+  ) {
     this.command = command;
     this.#requirement = requirement;
     this.#redirect = redirect;
@@ -61,20 +67,26 @@ export abstract class CommandNode<S> {
   }
 
   addChild(node: CommandNode<S>): void {
-    if (node instanceof RootCommandNode)
-      throw new TypeError("Cannot add a RootCommandNode as a child to any other CommandNode");
+    if (node instanceof RootCommandNode) {
+      throw new TypeError(
+        "Cannot add a RootCommandNode as a child to any other CommandNode",
+      );
+    }
     const child = this.children.get(node.getName());
     if (child) {
-      if (node.getCommand())
+      if (node.getCommand()) {
         child.command = node.getCommand();
-      for (const grandchild of node.getChildren())
+      }
+      for (const grandchild of node.getChildren()) {
         child.addChild(grandchild);
+      }
     } else {
       this.children.set(node.getName(), node);
-      if (node instanceof LiteralCommandNode)
+      if (node instanceof LiteralCommandNode) {
         this.literals.set(node.getName(), node);
-      else if (node instanceof ArgumentCommandNode)
+      } else if (node instanceof ArgumentCommandNode) {
         this.arguments.set(node.getName(), node);
+      }
     }
   }
 
@@ -82,14 +94,17 @@ export abstract class CommandNode<S> {
     let matches = new Set<string>();
     for (const child of this.children.values()) {
       for (const sibling of this.children.values()) {
-        if (child === sibling)
+        if (child === sibling) {
           continue;
-        for (const input of child.getExamples())
-          if (sibling.isValidInput(input))
+        }
+        for (const input of child.getExamples()) {
+          if (sibling.isValidInput(input)) {
             matches.add(input);
+          }
+        }
         if (matches.size) {
           consumer(this, child, sibling, matches);
-          matches = new Set;
+          matches = new Set();
         }
       }
       child.findAmbiguities(consumer);
@@ -108,7 +123,10 @@ export abstract class CommandNode<S> {
 
   abstract parse(reader: StringReader, context: CommandContextBuilder<S>): void;
 
-  abstract listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): Promise<Suggestions>;
+  abstract listSuggestions(
+    context: CommandContext<S>,
+    builder: SuggestionsBuilder,
+  ): Promise<Suggestions>;
 
   abstract createBuilder(): ArgumentBuilder<S>;
 
@@ -117,13 +135,15 @@ export abstract class CommandNode<S> {
   getRelevantNodes(input: StringReader): Iterable<CommandNode<S>> {
     if (this.literals.size > 0) {
       const cursor = input.getCursor();
-      while (input.canRead() && input.peek() != " ")
+      while (input.canRead() && input.peek() != " ") {
         input.skip();
+      }
       const text = input.getString().substring(cursor, input.getCursor());
       input.setCursor(cursor);
       const literal = this.literals.get(text);
-      if (literal)
+      if (literal) {
         return [literal];
+      }
     }
     return this.arguments.values();
   }
@@ -137,7 +157,7 @@ export abstract class CommandNode<S> {
 
 export class RootCommandNode<S> extends CommandNode<S> {
   constructor() {
-    super(undefined, () => true, undefined, s => [s.getSource()], false);
+    super(undefined, () => true, undefined, (s) => [s.getSource()], false);
   }
 
   override getName(): string {
@@ -148,7 +168,7 @@ export class RootCommandNode<S> extends CommandNode<S> {
     return "";
   }
 
-  override parse(): void { }
+  override parse(): void {}
 
   override listSuggestions(): Promise<Suggestions> {
     return Suggestions.empty();
@@ -175,7 +195,14 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
   readonly #literal: string;
   readonly #literalLowerCase: string;
 
-  constructor(literal: string, command: Command<S> | undefined, requirement: Predicate<S>, redirect: CommandNode<S> | undefined, modifier: RedirectModifier<S> | undefined, forks: boolean) {
+  constructor(
+    literal: string,
+    command: Command<S> | undefined,
+    requirement: Predicate<S>,
+    redirect: CommandNode<S> | undefined,
+    modifier: RedirectModifier<S> | undefined,
+    forks: boolean,
+  ) {
     super(command, requirement, redirect, modifier, forks);
     this.#literal = literal;
     this.#literalLowerCase = literal.toLowerCase();
@@ -189,11 +216,18 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     return this.#literal;
   }
 
-  override parse(reader: StringReader, contextBuilder: CommandContextBuilder<S>): void {
+  override parse(
+    reader: StringReader,
+    contextBuilder: CommandContextBuilder<S>,
+  ): void {
     const start = reader.getCursor();
     const end = this.#parse(reader);
-    if (end === undefined)
-      throw CommandSyntaxError.builtInErrors.literalIncorrect.createWithContext(reader, this.#literal);
+    if (end === undefined) {
+      throw CommandSyntaxError.builtInErrors.literalIncorrect.createWithContext(
+        reader,
+        this.#literal,
+      );
+    }
     contextBuilder.withNode(this, StringRange.between(start, end));
   }
 
@@ -204,17 +238,22 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
       const end = start + length;
       if (reader.getString().substring(start, end) === this.#literal) {
         reader.setCursor(end);
-        if (!reader.canRead() || reader.peek() === " ")
+        if (!reader.canRead() || reader.peek() === " ") {
           return end;
+        }
         reader.setCursor(start);
       }
     }
     return undefined;
   }
 
-  override listSuggestions(_context: CommandContext<S>, builder: SuggestionsBuilder): Promise<Suggestions> {
-    if (this.#literalLowerCase.startsWith(builder.remainingLowerCase))
+  override listSuggestions(
+    _context: CommandContext<S>,
+    builder: SuggestionsBuilder,
+  ): Promise<Suggestions> {
+    if (this.#literalLowerCase.startsWith(builder.remainingLowerCase)) {
       return builder.suggest(this.#literal).buildPromise();
+    }
     return Suggestions.empty();
   }
 
@@ -229,10 +268,15 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
   override createBuilder(): LiteralArgumentBuilder<S> {
     const builder = literal<S>(this.#literal);
     builder.requires(this.getRequirement());
-    builder.forward(this.getRedirect(), this.getRedirectModifier(), this.isFork());
+    builder.forward(
+      this.getRedirect(),
+      this.getRedirectModifier(),
+      this.isFork(),
+    );
     const command = this.getCommand();
-    if (command)
+    if (command) {
       builder.executes(command);
+    }
     return builder;
   }
 
@@ -250,7 +294,16 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
   readonly #type: ArgumentType<T>;
   readonly #customSuggestions?: SuggestionProvider<S>;
 
-  constructor(name: string, type: ArgumentType<T>, command: Command<S> | undefined, requirement: Predicate<S>, redirect: CommandNode<S> | undefined, modifier: RedirectModifier<S> | undefined, forks: boolean, customSuggestions: SuggestionProvider<S> | undefined) {
+  constructor(
+    name: string,
+    type: ArgumentType<T>,
+    command: Command<S> | undefined,
+    requirement: Predicate<S>,
+    redirect: CommandNode<S> | undefined,
+    modifier: RedirectModifier<S> | undefined,
+    forks: boolean,
+    customSuggestions: SuggestionProvider<S> | undefined,
+  ) {
     super(command, requirement, redirect, modifier, forks);
     this.#name = name;
     this.#type = type;
@@ -269,7 +322,10 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     return `<${this.#name}>`;
   }
 
-  override parse(reader: StringReader, contextBuilder: CommandContextBuilder<S>): void {
+  override parse(
+    reader: StringReader,
+    contextBuilder: CommandContextBuilder<S>,
+  ): void {
     const start = reader.getCursor();
     const result = this.#type.parse(reader);
     const parsed = new ParsedArgument<T>(start, reader.getCursor(), result);
@@ -277,18 +333,27 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     contextBuilder.withNode(this, parsed.range);
   }
 
-  override listSuggestions(context: CommandContext<S>, builder: SuggestionsBuilder): Promise<Suggestions> {
-    return this.#customSuggestions?.(context, builder) ?? this.#type.listSuggestions(context, builder);
+  override listSuggestions(
+    context: CommandContext<S>,
+    builder: SuggestionsBuilder,
+  ): Promise<Suggestions> {
+    return this.#customSuggestions?.(context, builder) ??
+      this.#type.listSuggestions(context, builder);
   }
 
   override createBuilder(): RequiredArgumentBuilder<S, T> {
     const builder = argument<S, T>(this.#name, this.#type);
     builder.requires(this.getRequirement());
-    builder.forward(this.getRedirect(), this.getRedirectModifier(), this.isFork());
+    builder.forward(
+      this.getRedirect(),
+      this.getRedirectModifier(),
+      this.isFork(),
+    );
     builder.suggests(this.#customSuggestions);
     const command = this.getCommand();
-    if (command)
+    if (command) {
       builder.executes(command);
+    }
     return builder;
   }
 

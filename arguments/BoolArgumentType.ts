@@ -9,11 +9,16 @@ export class BoolArgumentType extends ArgumentType<boolean> {
     return reader.readBoolean();
   }
 
-  override listSuggestions<S>(_context: CommandContext<S>, builder: SuggestionsBuilder): Promise<Suggestions> {
-    if ("true".startsWith(builder.remaining.toLowerCase()))
+  override listSuggestions<S>(
+    _context: CommandContext<S>,
+    builder: SuggestionsBuilder,
+  ): Promise<Suggestions> {
+    if ("true".startsWith(builder.remaining.toLowerCase())) {
       builder.suggest("true");
-    if ("false".startsWith(builder.remaining.toLowerCase()))
+    }
+    if ("false".startsWith(builder.remaining.toLowerCase())) {
       builder.suggest("false");
+    }
     return builder.buildPromise();
   }
 

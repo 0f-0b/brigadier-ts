@@ -21,7 +21,12 @@ export class CommandContextBuilder<S> {
   #modifier?: RedirectModifier<S>;
   #forks = false;
 
-  constructor(dispatcher: CommandDispatcher<S>, source: S, rootNode: CommandNode<S>, start: number) {
+  constructor(
+    dispatcher: CommandDispatcher<S>,
+    source: S,
+    rootNode: CommandNode<S>,
+    start: number,
+  ) {
     this.#rootNode = rootNode;
     this.#dispatcher = dispatcher;
     this.#source = source;
@@ -41,7 +46,10 @@ export class CommandContextBuilder<S> {
     return this.#rootNode;
   }
 
-  withArgument(name: string, argument: ParsedArgument<unknown>): CommandContextBuilder<S> {
+  withArgument(
+    name: string,
+    argument: ParsedArgument<unknown>,
+  ): CommandContextBuilder<S> {
     this.#arguments.set(name, argument);
     return this;
   }
@@ -64,7 +72,12 @@ export class CommandContextBuilder<S> {
   }
 
   copy(): CommandContextBuilder<S> {
-    const copy = new CommandContextBuilder<S>(this.#dispatcher, this.#source, this.#rootNode, this.#range.start);
+    const copy = new CommandContextBuilder<S>(
+      this.#dispatcher,
+      this.#source,
+      this.#rootNode,
+      this.#range.start,
+    );
     copy.#command = this.#command;
     setAll(copy.#arguments, this.#arguments);
     copy.#nodes.push(...this.#nodes);
@@ -87,8 +100,9 @@ export class CommandContextBuilder<S> {
     // deno-lint-ignore no-this-alias
     let result: CommandContextBuilder<S> = this;
     let child: CommandContextBuilder<S> | undefined;
-    while ((child = result.getChild()))
+    while ((child = result.getChild())) {
       result = child;
+    }
     return result;
   }
 
@@ -101,7 +115,18 @@ export class CommandContextBuilder<S> {
   }
 
   build(input: string): CommandContext<S> {
-    return new CommandContext(this.#source, input, this.#arguments, this.#command, this.#rootNode, this.#nodes, this.#range, this.#child?.build(input), this.#modifier, this.#forks);
+    return new CommandContext(
+      this.#source,
+      input,
+      this.#arguments,
+      this.#command,
+      this.#rootNode,
+      this.#nodes,
+      this.#range,
+      this.#child?.build(input),
+      this.#modifier,
+      this.#forks,
+    );
   }
 
   getDispatcher(): CommandDispatcher<S> {
@@ -115,8 +140,9 @@ export class CommandContextBuilder<S> {
   findSuggestionContext(cursor: number): SuggestionContext<S> {
     if (this.#range.start <= cursor) {
       if (this.#range.end < cursor) {
-        if (this.#child)
+        if (this.#child) {
           return this.#child.findSuggestionContext(cursor);
+        }
         const leaf = this.#nodes.at(-1);
         return leaf
           ? new SuggestionContext(leaf.node, leaf.range.end + 1)
@@ -125,12 +151,14 @@ export class CommandContextBuilder<S> {
         let prev = this.#rootNode;
         for (const node of this.#nodes) {
           const nodeRange = node.range;
-          if (nodeRange.start <= cursor && cursor <= nodeRange.end)
+          if (nodeRange.start <= cursor && cursor <= nodeRange.end) {
             return new SuggestionContext(prev, nodeRange.start);
+          }
           prev = node.node;
         }
-        if (prev)
+        if (prev) {
           return new SuggestionContext(prev, this.#range.start);
+        }
       }
     }
     throw new TypeError("Can't find node before cursor");

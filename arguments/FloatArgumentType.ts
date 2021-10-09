@@ -17,11 +17,19 @@ export class FloatArgumentType extends ArgumentType<number> {
     const result = reader.readFloat();
     if (result < this.minimum) {
       reader.setCursor(start);
-      throw CommandSyntaxError.builtInErrors.floatTooLow.createWithContext(reader, result, this.minimum);
+      throw CommandSyntaxError.builtInErrors.floatTooLow.createWithContext(
+        reader,
+        result,
+        this.minimum,
+      );
     }
     if (result > this.maximum) {
       reader.setCursor(start);
-      throw CommandSyntaxError.builtInErrors.floatTooHigh.createWithContext(reader, result, this.maximum);
+      throw CommandSyntaxError.builtInErrors.floatTooHigh.createWithContext(
+        reader,
+        result,
+        this.maximum,
+      );
     }
     return result;
   }
@@ -31,6 +39,9 @@ export class FloatArgumentType extends ArgumentType<number> {
   }
 }
 
-export function float(min = -Number.MAX_VALUE, max = Number.MAX_VALUE): FloatArgumentType {
+export function float(
+  min = -Number.MAX_VALUE,
+  max = Number.MAX_VALUE,
+): FloatArgumentType {
   return new FloatArgumentType(min, max);
 }

@@ -6,7 +6,10 @@ import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 export abstract class ArgumentType<T> {
   abstract parse(reader: StringReader): T;
 
-  listSuggestions<S>(_context: CommandContext<S>, _builder: SuggestionsBuilder): Promise<Suggestions> {
+  listSuggestions<S>(
+    _context: CommandContext<S>,
+    _builder: SuggestionsBuilder,
+  ): Promise<Suggestions> {
     return Suggestions.empty();
   }
 

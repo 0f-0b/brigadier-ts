@@ -8,7 +8,11 @@ export class ParseResults<S> {
   readonly errors: Map<CommandNode<S>, CommandSyntaxError>;
   readonly reader: ImmutableStringReader;
 
-  constructor(context: CommandContextBuilder<S>, reader: ImmutableStringReader, errors: Map<CommandNode<S>, CommandSyntaxError>) {
+  constructor(
+    context: CommandContextBuilder<S>,
+    reader: ImmutableStringReader,
+    errors: Map<CommandNode<S>, CommandSyntaxError>,
+  ) {
     this.context = context;
     this.reader = reader;
     this.errors = errors;

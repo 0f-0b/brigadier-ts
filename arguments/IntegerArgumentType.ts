@@ -17,11 +17,19 @@ export class IntegerArgumentType extends ArgumentType<number> {
     const result = reader.readInt();
     if (result < this.minimum) {
       reader.setCursor(start);
-      throw CommandSyntaxError.builtInErrors.integerTooLow.createWithContext(reader, result, this.minimum);
+      throw CommandSyntaxError.builtInErrors.integerTooLow.createWithContext(
+        reader,
+        result,
+        this.minimum,
+      );
     }
     if (result > this.maximum) {
       reader.setCursor(start);
-      throw CommandSyntaxError.builtInErrors.integerTooHigh.createWithContext(reader, result, this.maximum);
+      throw CommandSyntaxError.builtInErrors.integerTooHigh.createWithContext(
+        reader,
+        result,
+        this.maximum,
+      );
     }
     return result;
   }
@@ -31,6 +39,9 @@ export class IntegerArgumentType extends ArgumentType<number> {
   }
 }
 
-export function integer(min = -0x80000000, max = 0x7fffffff): IntegerArgumentType {
+export function integer(
+  min = -0x80000000,
+  max = 0x7fffffff,
+): IntegerArgumentType {
   return new IntegerArgumentType(min, max);
 }

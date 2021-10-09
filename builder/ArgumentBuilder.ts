@@ -17,10 +17,12 @@ export abstract class ArgumentBuilder<S> {
   }
 
   then(argument: ArgumentBuilder<S> | CommandNode<S>): this {
-    if (this.#target)
+    if (this.#target) {
       throw new TypeError("Cannot add children to a redirected node");
-    if (argument instanceof ArgumentBuilder)
+    }
+    if (argument instanceof ArgumentBuilder) {
       argument = argument.build();
+    }
     this.#arguments.addChild(argument);
     return this;
   }
@@ -55,7 +57,11 @@ export abstract class ArgumentBuilder<S> {
     return this.forward(target, modifier, true);
   }
 
-  forward(target: CommandNode<S> | undefined, modifier: RedirectModifier<S> | undefined, forks: boolean): this {
+  forward(
+    target: CommandNode<S> | undefined,
+    modifier: RedirectModifier<S> | undefined,
+    forks: boolean,
+  ): this {
     this.#target = target;
     this.#modifier = modifier;
     this.#forks = forks;

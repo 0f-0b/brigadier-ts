@@ -24,22 +24,28 @@ export class Suggestions {
         return input[0];
       default: {
         const texts = new Set<Suggestion>();
-        for (const suggestions of input)
+        for (const suggestions of input) {
           addAll(texts, suggestions.list);
+        }
         return this.create(command, Array.from(texts));
       }
     }
   }
 
-  static create(command: string, suggestions: readonly Suggestion[]): Suggestions {
-    if (suggestions.length === 0)
+  static create(
+    command: string,
+    suggestions: readonly Suggestion[],
+  ): Suggestions {
+    if (suggestions.length === 0) {
       return this.EMPTY;
-    const start = minOf(suggestions, suggestion => suggestion.range.start);
-    const end = maxOf(suggestions, suggestion => suggestion.range.end);
+    }
+    const start = minOf(suggestions, (suggestion) => suggestion.range.start);
+    const end = maxOf(suggestions, (suggestion) => suggestion.range.end);
     const range = new StringRange(start, end);
     const texts = new Set<Suggestion>();
-    for (const suggestion of suggestions)
+    for (const suggestion of suggestions) {
       texts.add(suggestion.expand(command, range));
+    }
     const sorted = Array.from(texts);
     sorted.sort((a, b) => {
       const as = a.text.toLowerCase();

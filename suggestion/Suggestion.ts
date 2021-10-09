@@ -13,26 +13,32 @@ export class Suggestion {
   }
 
   apply(input: string): string {
-    if (this.range.start == 0 && this.range.end === input.length)
+    if (this.range.start == 0 && this.range.end === input.length) {
       return this.text;
-    const result: string[] = [];
-    if (this.range.start > 0)
-      result.push(input.substring(0, this.range.start));
-    result.push(this.text);
-    if (this.range.end < input.length)
-      result.push(input.substring(this.range.end));
-    return result.join("");
+    }
+    let result = "";
+    if (this.range.start > 0) {
+      result += input.substring(0, this.range.start);
+    }
+    result += this.text;
+    if (this.range.end < input.length) {
+      result += input.substring(this.range.end);
+    }
+    return result;
   }
 
   expand(command: string, range: StringRange): Suggestion {
-    if (range.start === this.range.start && range.end === this.range.end)
+    if (range.start === this.range.start && range.end === this.range.end) {
       return this;
-    const result: string[] = [];
-    if (range.start < this.range.start)
-      result.push(command.substring(range.start, this.range.start));
-    result.push(this.text);
-    if (range.end > this.range.end)
-      result.push(command.substring(this.range.end, range.end));
-    return new Suggestion(range, result.join(""), this.tooltip);
+    }
+    let result = "";
+    if (range.start < this.range.start) {
+      result += command.substring(range.start, this.range.start);
+    }
+    result += this.text;
+    if (range.end > this.range.end) {
+      result += command.substring(this.range.end, range.end);
+    }
+    return new Suggestion(range, result, this.tooltip);
   }
 }
