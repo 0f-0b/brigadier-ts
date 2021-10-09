@@ -1,8 +1,8 @@
 import type { Command } from "../Command.ts";
 import type { CommandDispatcher } from "../CommandDispatcher.ts";
-import type { CommandNode } from "../CommandNode.ts";
 import { CommandContext } from "../context/CommandContext.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
+import type { CommandNode } from "../tree/CommandNode.ts";
 import { setAll } from "../util.ts";
 import { ParsedArgument } from "./ParsedArgument.ts";
 import { ParsedCommandNode } from "./ParsedCommandNode.ts";

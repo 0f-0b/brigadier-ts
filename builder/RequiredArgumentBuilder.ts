@@ -1,6 +1,7 @@
+import "./LiteralArgumentBuilder.ts";
 import type { ArgumentType } from "../arguments/ArgumentType.ts";
-import { ArgumentCommandNode } from "../CommandNode.ts";
 import type { SuggestionProvider } from "../suggestion/SuggestionProvider.ts";
+import { ArgumentCommandNode } from "../tree/ArgumentCommandNode.ts";
 import { ArgumentBuilder } from "./ArgumentBuilder.ts";
 
 export class RequiredArgumentBuilder<S, T> extends ArgumentBuilder<S> {

@@ -1,8 +1,8 @@
 import type { Command } from "../Command.ts";
-import type { CommandNode } from "../CommandNode.ts";
-import { RootCommandNode } from "../CommandNode.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
+import type { CommandNode } from "../tree/CommandNode.ts";
+import { RootCommandNode } from "../tree/RootCommandNode.ts";
 
 export abstract class ArgumentBuilder<S> {
   readonly #arguments = new RootCommandNode<S>();

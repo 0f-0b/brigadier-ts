@@ -1,7 +1,6 @@
 export * from "./AmbiguityConsumer.ts";
 export * from "./Command.ts";
 export * from "./CommandDispatcher.ts";
-export * from "./CommandNode.ts";
 export * from "./ImmutableStringReader.ts";
 export * from "./LiteralMessage.ts";
 export * from "./Message.ts";
@@ -31,3 +30,7 @@ export * from "./suggestion/Suggestion.ts";
 export * from "./suggestion/SuggestionProvider.ts";
 export * from "./suggestion/Suggestions.ts";
 export * from "./suggestion/SuggestionsBuilder.ts";
+export * from "./tree/ArgumentCommandNode.ts";
+export * from "./tree/CommandNode.ts";
+export * from "./tree/LiteralCommandNode.ts";
+export * from "./tree/RootCommandNode.ts";

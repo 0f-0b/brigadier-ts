@@ -1,4 +1,5 @@
-import { LiteralCommandNode } from "../CommandNode.ts";
+import "./RequiredArgumentBuilder.ts";
+import { LiteralCommandNode } from "../tree/LiteralCommandNode.ts";
 import { ArgumentBuilder } from "./ArgumentBuilder.ts";
 
 export class LiteralArgumentBuilder<S> extends ArgumentBuilder<S> {

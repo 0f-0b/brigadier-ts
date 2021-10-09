@@ -1,7 +1,5 @@
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
-import type { CommandNode, LiteralCommandNode } from "./CommandNode.ts";
-import { RootCommandNode } from "./CommandNode.ts";
 import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
 import { minWith } from "./deps.ts";
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
@@ -10,6 +8,9 @@ import type { ResultConsumer } from "./ResultConsumer.ts";
 import { StringReader } from "./StringReader.ts";
 import { SuggestionsBuilder } from "./suggestion/SuggestionsBuilder.ts";
 import { Suggestions } from "./suggestion/Suggestions.ts";
+import type { CommandNode } from "./tree/CommandNode.ts";
+import type { LiteralCommandNode } from "./tree/LiteralCommandNode.ts";
+import { RootCommandNode } from "./tree/RootCommandNode.ts";
 import { joinToString } from "./util.ts";
 
 export class CommandDispatcher<S> {

@@ -1,6 +1,6 @@
 import type { Command } from "../Command.ts";
-import type { CommandNode } from "../CommandNode.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
+import type { CommandNode } from "../tree/CommandNode.ts";
 import type { ParsedArgument } from "./ParsedArgument.ts";
 import type { ParsedCommandNode } from "./ParsedCommandNode.ts";
 import type { StringRange } from "./StringRange.ts";
