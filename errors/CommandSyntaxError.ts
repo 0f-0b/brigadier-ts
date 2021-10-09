@@ -119,7 +119,7 @@ export class CommandSyntaxError extends Error {
   }
 
   getContext(amount = 10, marker = "<--[HERE]"): string | undefined {
-    if (this.input === undefined || this.cursor == undefined) {
+    if (this.input === undefined || this.cursor === undefined) {
       return undefined;
     }
     let builder = "";

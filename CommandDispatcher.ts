@@ -41,7 +41,7 @@ export class CommandDispatcher<S> {
       parse = this.parse(parse, source!);
     }
     if (parse.reader.canRead()) {
-      if (parse.errors.size == 1) {
+      if (parse.errors.size === 1) {
         throw parse.errors.values().next().value;
       }
       throw (parse.context.getRange().isEmpty()
@@ -72,7 +72,7 @@ export class CommandDispatcher<S> {
                 for (const source of modifier(context)) {
                   next.push(child.copyFor(source));
                 }
-              } catch (e) {
+              } catch (e: unknown) {
                 if (!(e instanceof CommandSyntaxError)) {
                   throw e;
                 }
@@ -92,7 +92,7 @@ export class CommandDispatcher<S> {
               result += value;
               this.#consumer(context, true, value);
               successfulForks++;
-            } catch (e) {
+            } catch (e: unknown) {
               if (!(e instanceof CommandSyntaxError)) {
                 throw e;
               }
@@ -144,18 +144,21 @@ export class CommandDispatcher<S> {
       try {
         try {
           child.parse(reader, context);
-        } catch (e) {
+        } catch (e: unknown) {
           if (e instanceof CommandSyntaxError) {
             throw e;
           }
           throw CommandSyntaxError.builtInErrors.dispatcherParseError
-            .createWithContext(reader, e.message);
+            .createWithContext(
+              reader,
+              e instanceof Error ? e.message : String(e),
+            );
         }
         if (reader.canRead() && reader.peek() !== " ") {
           throw CommandSyntaxError.builtInErrors
             .dispatcherExpectedArgumentSeparator.createWithContext(reader);
         }
-      } catch (e) {
+      } catch (e: unknown) {
         if (!(e instanceof CommandSyntaxError)) {
           throw e;
         }
@@ -329,7 +332,7 @@ export class CommandDispatcher<S> {
             start,
           ),
         );
-      } catch (e) {
+      } catch (e: unknown) {
         if (!(e instanceof CommandSyntaxError)) {
           throw e;
         }
@@ -348,7 +351,7 @@ export class CommandDispatcher<S> {
     const nodes: CommandNode<S>[][] = [];
     this.#addPaths(this.root, nodes, []);
     for (const list of nodes) {
-      if (list.at(-1) == target) {
+      if (list.at(-1) === target) {
         const result: string[] = [];
         for (const node of list) {
           if (node !== this.root) {

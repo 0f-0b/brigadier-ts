@@ -13,7 +13,7 @@ export class Suggestion {
   }
 
   apply(input: string): string {
-    if (this.range.start == 0 && this.range.end === input.length) {
+    if (this.range.start === 0 && this.range.end === input.length) {
       return this.text;
     }
     let result = "";

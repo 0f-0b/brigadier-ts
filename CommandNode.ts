@@ -135,7 +135,7 @@ export abstract class CommandNode<S> {
   getRelevantNodes(input: StringReader): Iterable<CommandNode<S>> {
     if (this.literals.size > 0) {
       const cursor = input.getCursor();
-      while (input.canRead() && input.peek() != " ") {
+      while (input.canRead() && input.peek() !== " ") {
         input.skip();
       }
       const text = input.getString().substring(cursor, input.getCursor());
@@ -361,8 +361,8 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     try {
       const reader = new StringReader(input);
       this.#type.parse(reader);
-      return !reader.canRead() || reader.peek() == " ";
-    } catch (_) {
+      return !reader.canRead() || reader.peek() === " ";
+    } catch {
       return false;
     }
   }
