@@ -60,7 +60,7 @@ export abstract class CommandNode<S> {
     return this.#requirement(source);
   }
 
-  addChild(node: CommandNode<S>): void {
+  addChild<T extends CommandNode<S>>(node: T): T {
     if (node instanceof RootCommandNode) {
       throw new TypeError(
         "Cannot add a RootCommandNode as a child to any other CommandNode",
@@ -82,6 +82,7 @@ export abstract class CommandNode<S> {
         this.arguments.set(node.getName(), node);
       }
     }
+    return node;
   }
 
   findAmbiguities(consumer: AmbiguityConsumer<S>): void {

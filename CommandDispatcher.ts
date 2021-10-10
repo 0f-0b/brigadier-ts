@@ -23,9 +23,7 @@ export class CommandDispatcher<S> {
   }
 
   register(command: LiteralArgumentBuilder<S>): LiteralCommandNode<S> {
-    const build = command.build();
-    this.root.addChild(build);
-    return build;
+    return this.root.addChild(command.build());
   }
 
   setConsumer(consumer: ResultConsumer<S>): void {
