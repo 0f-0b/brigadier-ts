@@ -1,6 +1,7 @@
 import type { Command } from "../Command.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
+import type { OutRef } from "../Ref.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
 import { RootCommandNode } from "../tree/RootCommandNode.ts";
 
@@ -81,4 +82,9 @@ export abstract class ArgumentBuilder<S> {
   }
 
   abstract build(): CommandNode<S>;
+
+  addTo(node: CommandNode<S>, ref: OutRef<CommandNode<S>>): this {
+    ref.set(node.addChild(this.build()));
+    return this;
+  }
 }

@@ -14,7 +14,6 @@ import { RootCommandNode } from "./tree/RootCommandNode.ts";
 import { joinToString } from "./util.ts";
 
 export class CommandDispatcher<S> {
-  static readonly ARGUMENT_SEPARATOR = " ";
   readonly root: RootCommandNode<S>;
   #consumer: ResultConsumer<S> = () => {};
 

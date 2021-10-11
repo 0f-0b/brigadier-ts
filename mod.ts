@@ -7,6 +7,7 @@ export * from "./Message.ts";
 export * from "./ParseResults.ts";
 export * from "./Predicate.ts";
 export * from "./RedirectModifier.ts";
+export * from "./Ref.ts";
 export * from "./ResultConsumer.ts";
 export * from "./SingleRedirectModifier.ts";
 export * from "./StringReader.ts";
