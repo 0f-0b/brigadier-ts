@@ -1,7 +1,7 @@
+import { minWith } from "https://deno.land/std@0.122.0/collections/min_with.ts";
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
 import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
-import { minWith } from "./deps.ts";
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { ParseResults } from "./ParseResults.ts";
 import type { ResultConsumer } from "./ResultConsumer.ts";
