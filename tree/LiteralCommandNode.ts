@@ -1,5 +1,3 @@
-import "./ArgumentCommandNode.ts";
-import "./RootCommandNode.ts";
 import type { LiteralArgumentBuilder } from "../builder/LiteralArgumentBuilder.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import type { Command } from "../Command.ts";
@@ -33,6 +31,21 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
 
   getLiteral(): string {
     return this.#literal;
+  }
+
+  override _addTo(node: CommandNode<S>): void {
+    const child = node.children.get(this.getName());
+    if (child) {
+      if (this.getCommand()) {
+        child.command = this.getCommand();
+      }
+      for (const grandchild of this.getChildren()) {
+        child.addChild(grandchild);
+      }
+    } else {
+      node.children.set(this.getName(), this);
+      node.literals.set(this.getName(), this);
+    }
   }
 
   override getName(): string {

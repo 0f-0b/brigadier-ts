@@ -1,4 +1,3 @@
-import "./RequiredArgumentBuilder.ts";
 import { LiteralCommandNode } from "../tree/LiteralCommandNode.ts";
 import { ArgumentBuilder } from "./ArgumentBuilder.ts";
 

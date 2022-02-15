@@ -1,5 +1,3 @@
-import "./LiteralCommandNode.ts";
-import "./RootCommandNode.ts";
 import type { ArgumentType } from "../arguments/ArgumentType.ts";
 import type { RequiredArgumentBuilder } from "../builder/RequiredArgumentBuilder.ts";
 import { argument } from "../builder/RequiredArgumentBuilder.ts";
@@ -38,6 +36,21 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
 
   getType(): ArgumentType<T> {
     return this.#type;
+  }
+
+  override _addTo(node: CommandNode<S>): void {
+    const child = node.children.get(this.getName());
+    if (child) {
+      if (this.getCommand()) {
+        child.command = this.getCommand();
+      }
+      for (const grandchild of this.getChildren()) {
+        child.addChild(grandchild);
+      }
+    } else {
+      node.children.set(this.getName(), this);
+      node.arguments.set(this.getName(), this);
+    }
   }
 
   override getName(): string {

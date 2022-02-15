@@ -1,11 +1,15 @@
-import "./ArgumentCommandNode.ts";
-import "./LiteralCommandNode.ts";
 import { Suggestions } from "../suggestion/Suggestions.ts";
 import { CommandNode } from "./CommandNode.ts";
 
 export class RootCommandNode<S> extends CommandNode<S> {
   constructor() {
     super(undefined, () => true, undefined, (s) => [s.getSource()], false);
+  }
+
+  override _addTo(): void {
+    throw new TypeError(
+      "Cannot add a RootCommandNode as a child to any other CommandNode",
+    );
   }
 
   override getName(): string {

@@ -8,9 +8,8 @@ import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import { Suggestions } from "../suggestion/Suggestions.ts";
-import { ArgumentCommandNode } from "./ArgumentCommandNode.ts";
-import { LiteralCommandNode } from "./LiteralCommandNode.ts";
-import { RootCommandNode } from "./RootCommandNode.ts";
+import type { ArgumentCommandNode } from "./ArgumentCommandNode.ts";
+import type { LiteralCommandNode } from "./LiteralCommandNode.ts";
 
 export abstract class CommandNode<S> {
   readonly children: Map<string, CommandNode<S>> = new Map();
@@ -61,29 +60,11 @@ export abstract class CommandNode<S> {
   }
 
   addChild<T extends CommandNode<S>>(node: T): T {
-    if (node instanceof RootCommandNode) {
-      throw new TypeError(
-        "Cannot add a RootCommandNode as a child to any other CommandNode",
-      );
-    }
-    const child = this.children.get(node.getName());
-    if (child) {
-      if (node.getCommand()) {
-        child.command = node.getCommand();
-      }
-      for (const grandchild of node.getChildren()) {
-        child.addChild(grandchild);
-      }
-    } else {
-      this.children.set(node.getName(), node);
-      if (node instanceof LiteralCommandNode) {
-        this.literals.set(node.getName(), node);
-      } else if (node instanceof ArgumentCommandNode) {
-        this.arguments.set(node.getName(), node);
-      }
-    }
+    node._addTo(this);
     return node;
   }
+
+  abstract _addTo(node: CommandNode<S>): void;
 
   findAmbiguities(consumer: AmbiguityConsumer<S>): void {
     let matches = new Set<string>();

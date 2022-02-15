@@ -1,4 +1,3 @@
-import "./LiteralArgumentBuilder.ts";
 import type { ArgumentType } from "../arguments/ArgumentType.ts";
 import type { SuggestionProvider } from "../suggestion/SuggestionProvider.ts";
 import { ArgumentCommandNode } from "../tree/ArgumentCommandNode.ts";
