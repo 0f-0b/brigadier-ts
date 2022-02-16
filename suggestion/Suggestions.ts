@@ -1,15 +1,38 @@
+import {
+  combineHashes,
+  defaultComparer,
+  Equatable,
+  tupleEqualer,
+} from "../deps.ts";
 import { StringRange } from "../context/StringRange.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";
 import { addAll, maxOf, minOf } from "../util.ts";
 
-export class Suggestions {
+export class Suggestions implements Equatable {
   static readonly EMPTY = new Suggestions(StringRange.at(0), []);
   readonly range: StringRange;
-  readonly list: Suggestion[];
+  readonly list: readonly Suggestion[];
 
   constructor(range: StringRange, suggestions: Suggestion[]) {
     this.range = range;
     this.list = suggestions;
+  }
+
+  isEmpty(): boolean {
+    return this.list.length === 0;
+  }
+
+  [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof Suggestions &&
+      this.range[Equatable.equals](other.range) &&
+      tupleEqualer.equals(this.list, other.list));
+  }
+
+  [Equatable.hash](): number {
+    return combineHashes(
+      this.range[Equatable.hash](),
+      tupleEqualer.hash(this.list),
+    );
   }
 
   static empty(): Promise<Suggestions> {
@@ -47,11 +70,7 @@ export class Suggestions {
       texts.add(suggestion.expand(command, range));
     }
     const sorted = Array.from(texts);
-    sorted.sort((a, b) => {
-      const as = a.text.toLowerCase();
-      const bs = b.text.toLowerCase();
-      return as > bs ? 1 : as < bs ? -1 : 0;
-    });
+    sorted.sort(defaultComparer.compare);
     return new Suggestions(range, sorted);
   }
 }

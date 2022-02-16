@@ -1,3 +1,11 @@
+import {
+  combineHashes,
+  Comparable,
+  defaultComparer,
+  defaultEqualer,
+  Equatable,
+  mapEqualer,
+} from "../deps.ts";
 import type { AmbiguityConsumer } from "../AmbiguityConsumer.ts";
 import type { ArgumentBuilder } from "../builder/ArgumentBuilder.ts";
 import type { Command } from "../Command.ts";
@@ -11,7 +19,7 @@ import { Suggestions } from "../suggestion/Suggestions.ts";
 import type { ArgumentCommandNode } from "./ArgumentCommandNode.ts";
 import type { LiteralCommandNode } from "./LiteralCommandNode.ts";
 
-export abstract class CommandNode<S> {
+export abstract class CommandNode<S> implements Equatable, Comparable {
   readonly children: Map<string, CommandNode<S>> = new Map();
   readonly literals: Map<string, LiteralCommandNode<S>> = new Map();
   readonly arguments: Map<string, ArgumentCommandNode<S, unknown>> = new Map();
@@ -89,6 +97,19 @@ export abstract class CommandNode<S> {
 
   abstract isValidInput(input: string): boolean;
 
+  [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof CommandNode &&
+      defaultEqualer.equals(this.command, other.command) &&
+      mapEqualer.equals(this.children, other.children));
+  }
+
+  [Equatable.hash](): number {
+    return combineHashes(
+      defaultEqualer.hash(this.command),
+      mapEqualer.hash(this.children),
+    );
+  }
+
   getRequirement(): Predicate<S> {
     return this.#requirement;
   }
@@ -123,6 +144,13 @@ export abstract class CommandNode<S> {
     }
     return this.arguments.values();
   }
+
+  [Comparable.compareTo](other: CommandNode<S>): number {
+    return this._sortOrder() - other._sortOrder() ||
+      defaultComparer.compare(this.getSortedKey(), other.getSortedKey());
+  }
+
+  abstract _sortOrder(): number;
 
   isFork(): boolean {
     return this.#forks;

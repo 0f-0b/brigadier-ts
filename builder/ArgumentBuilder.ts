@@ -1,7 +1,8 @@
+import type { Reference } from "../deps.ts";
 import type { Command } from "../Command.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
-import type { OutRef } from "../Ref.ts";
+import type { SingleRedirectModifier } from "../SingleRedirectModifier.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
 import { RootCommandNode } from "../tree/RootCommandNode.ts";
 
@@ -50,11 +51,11 @@ export abstract class ArgumentBuilder<S> {
     return this.#requirement;
   }
 
-  redirect(target: CommandNode<S>, modifier?: RedirectModifier<S>): this {
-    return this.forward(target, modifier, false);
+  redirect(target: CommandNode<S>, modifier?: SingleRedirectModifier<S>): this {
+    return this.forward(target, modifier && ((c) => [modifier(c)]), false);
   }
 
-  fork(target: CommandNode<S>, modifier?: RedirectModifier<S>): this {
+  fork(target: CommandNode<S>, modifier: RedirectModifier<S>): this {
     return this.forward(target, modifier, true);
   }
 
@@ -63,6 +64,9 @@ export abstract class ArgumentBuilder<S> {
     modifier: RedirectModifier<S> | undefined,
     forks: boolean,
   ): this {
+    if (this.#arguments.children.size !== 0) {
+      throw new TypeError("Cannot forward a node with children");
+    }
     this.#target = target;
     this.#modifier = modifier;
     this.#forks = forks;
@@ -83,8 +87,8 @@ export abstract class ArgumentBuilder<S> {
 
   abstract build(): CommandNode<S>;
 
-  addTo(node: CommandNode<S>, ref: OutRef<CommandNode<S>>): this {
-    ref.set(node.addChild(this.build()));
+  addTo(node: CommandNode<S>, ref: Reference<CommandNode<S>>): this {
+    ref.value = node.addChild(this.build());
     return this;
   }
 }

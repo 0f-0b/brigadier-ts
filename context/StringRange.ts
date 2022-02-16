@@ -1,6 +1,7 @@
+import { combineHashes, Equatable, rawHash } from "../deps.ts";
 import type { ImmutableStringReader } from "../ImmutableStringReader.ts";
 
-export class StringRange {
+export class StringRange implements Equatable {
   readonly start: number;
   readonly end: number;
 
@@ -34,5 +35,14 @@ export class StringRange {
 
   getLength(): number {
     return this.end - this.start;
+  }
+
+  [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof StringRange &&
+      this.start === other.start && this.end === other.end);
+  }
+
+  [Equatable.hash](): number {
+    return combineHashes(rawHash(this.start), rawHash(this.end));
   }
 }

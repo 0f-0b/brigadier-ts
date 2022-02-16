@@ -1,0 +1,28 @@
+import { assertStrictEquals } from "../test_deps.ts";
+import { assertIterator } from "../test_util.ts";
+import { integer } from "../arguments/IntegerArgumentType.ts";
+import { argument } from "./RequiredArgumentBuilder.ts";
+
+const type = integer();
+const command = () => 0;
+
+Deno.test("build", () => {
+  const node = argument("foo", type).build();
+  assertStrictEquals(node.getName(), "foo");
+  assertStrictEquals(node.getType(), type);
+});
+
+Deno.test("buildWithExecutor", () => {
+  const node = argument("foo", type).executes(command).build();
+  assertStrictEquals(node.getName(), "foo");
+  assertStrictEquals(node.getType(), type);
+  assertStrictEquals(node.getCommand(), command);
+});
+
+Deno.test("buildWithChildren", () => {
+  const node = argument("foo", type)
+    .then(argument("bar", integer()))
+    .then(argument("baz", integer()))
+    .build();
+  assertIterator(node.getChildren(), [Object, Object]);
+});

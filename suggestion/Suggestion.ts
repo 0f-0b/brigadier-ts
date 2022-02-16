@@ -1,7 +1,15 @@
+import {
+  combineHashesV,
+  Comparable,
+  defaultComparer,
+  defaultEqualer,
+  Equatable,
+  rawHash,
+} from "../deps.ts";
 import type { StringRange } from "../context/StringRange.ts";
 import type { Message } from "../Message.ts";
 
-export class Suggestion {
+export class Suggestion implements Equatable, Comparable {
   readonly range: StringRange;
   readonly text: string;
   readonly tooltip?: Message;
@@ -25,6 +33,28 @@ export class Suggestion {
       result += input.substring(this.range.end);
     }
     return result;
+  }
+
+  [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof Suggestion &&
+      this.range[Equatable.equals](other.range) &&
+      this.text === other.text &&
+      defaultEqualer.equals(this.tooltip, other.tooltip));
+  }
+
+  [Equatable.hash](): number {
+    return combineHashesV(
+      this.range[Equatable.hash](),
+      rawHash(this.text),
+      defaultEqualer.hash(this.tooltip),
+    );
+  }
+
+  [Comparable.compareTo](other: Suggestion): number {
+    return defaultComparer.compare(
+      this.text.toLowerCase(),
+      other.text.toLowerCase(),
+    );
   }
 
   expand(command: string, range: StringRange): Suggestion {

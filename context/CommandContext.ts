@@ -1,3 +1,10 @@
+import {
+  combineHashesV,
+  defaultEqualer,
+  Equatable,
+  mapEqualer,
+  tupleEqualer,
+} from "../deps.ts";
 import type { Command } from "../Command.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
@@ -5,7 +12,7 @@ import type { ParsedArgument } from "./ParsedArgument.ts";
 import type { ParsedCommandNode } from "./ParsedCommandNode.ts";
 import type { StringRange } from "./StringRange.ts";
 
-export class CommandContext<S> {
+export class CommandContext<S> implements Equatable {
   readonly #source: S;
   readonly #input: string;
   readonly #command?: Command<S>;
@@ -87,6 +94,27 @@ export class CommandContext<S> {
       throw new TypeError(`No such argument '${name}' exists on this command`);
     }
     return argument.result as T;
+  }
+
+  [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof CommandContext &&
+      mapEqualer.equals(this.#arguments, other.#arguments) &&
+      this.#rootNode[Equatable.equals](other.#rootNode) &&
+      tupleEqualer.equals(this.#nodes, other.#nodes) &&
+      defaultEqualer.equals(this.#command, other.#command) &&
+      defaultEqualer.equals(this.#source, other.#source) &&
+      defaultEqualer.equals(this.#child, other.#child));
+  }
+
+  [Equatable.hash](): number {
+    return combineHashesV(
+      mapEqualer.hash(this.#arguments),
+      this.#rootNode[Equatable.hash](),
+      tupleEqualer.hash(this.#nodes),
+      defaultEqualer.hash(this.#command),
+      defaultEqualer.hash(this.#source),
+      defaultEqualer.hash(this.#child),
+    );
   }
 
   getRedirectModifier(): RedirectModifier<S> | undefined {

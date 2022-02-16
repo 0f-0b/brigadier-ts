@@ -33,7 +33,7 @@ export class CommandContextBuilder<S> {
     this.#range = StringRange.at(start);
   }
 
-  withSource(source: S): CommandContextBuilder<S> {
+  withSource(source: S): this {
     this.#source = source;
     return this;
   }
@@ -46,10 +46,7 @@ export class CommandContextBuilder<S> {
     return this.#rootNode;
   }
 
-  withArgument(
-    name: string,
-    argument: ParsedArgument<unknown>,
-  ): CommandContextBuilder<S> {
+  withArgument(name: string, argument: ParsedArgument<unknown>): this {
     this.#arguments.set(name, argument);
     return this;
   }
@@ -58,12 +55,12 @@ export class CommandContextBuilder<S> {
     return this.#arguments;
   }
 
-  withCommand(command: Command<S> | undefined): CommandContextBuilder<S> {
+  withCommand(command: Command<S> | undefined): this {
     this.#command = command;
     return this;
   }
 
-  withNode(node: CommandNode<S>, range: StringRange): CommandContextBuilder<S> {
+  withNode(node: CommandNode<S>, range: StringRange): this {
     this.#nodes.push(new ParsedCommandNode<S>(node, range));
     this.#range = StringRange.encompassing(this.#range, range);
     this.#modifier = node.getRedirectModifier();
@@ -87,7 +84,7 @@ export class CommandContextBuilder<S> {
     return copy;
   }
 
-  withChild(child: CommandContextBuilder<S>): CommandContextBuilder<S> {
+  withChild(child: CommandContextBuilder<S>): this {
     this.#child = child;
     return this;
   }

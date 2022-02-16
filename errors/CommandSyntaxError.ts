@@ -2,8 +2,6 @@ import type { Message } from "../Message.ts";
 import { LiteralMessage } from "../LiteralMessage.ts";
 import { CommandErrorType } from "./CommandErrorType.ts";
 
-export const contextAmount = 10;
-
 export class CommandSyntaxError extends Error {
   static enableCommandStackTraces = true;
   static builtInErrors = Object.freeze({

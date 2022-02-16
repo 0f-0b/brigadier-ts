@@ -91,10 +91,8 @@ export class StringReader implements ImmutableStringReader {
     const result = Number(number);
     if (!Number.isInteger(result)) {
       this.#cursor = start;
-      throw CommandSyntaxError.builtInErrors.readerInvalidInt.createWithContext(
-        this,
-        number,
-      );
+      throw CommandSyntaxError.builtInErrors.readerInvalidInt
+        .createWithContext(this, number);
     }
     return result;
   }

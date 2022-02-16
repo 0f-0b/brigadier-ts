@@ -1,4 +1,4 @@
-import { minWith } from "https://deno.land/std@0.122.0/collections/min_with.ts";
+import { minWith } from "https://deno.land/std@0.125.0/collections/min_with.ts";
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
 import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
@@ -147,10 +147,7 @@ export class CommandDispatcher<S> {
             throw e;
           }
           throw CommandSyntaxError.builtInErrors.dispatcherParseError
-            .createWithContext(
-              reader,
-              e instanceof Error ? e.message : String(e),
-            );
+            .createWithContext(reader, String(e));
         }
         if (reader.canRead() && reader.peek() !== " ") {
           throw CommandSyntaxError.builtInErrors

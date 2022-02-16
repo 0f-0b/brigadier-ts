@@ -1,3 +1,4 @@
+import { combineHashesV, Equatable, rawHash } from "../deps.ts";
 import type { ArgumentType } from "../arguments/ArgumentType.ts";
 import type { RequiredArgumentBuilder } from "../builder/RequiredArgumentBuilder.ts";
 import { argument } from "../builder/RequiredArgumentBuilder.ts";
@@ -61,6 +62,10 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     return `<${this.#name}>`;
   }
 
+  getCustomSuggestions(): SuggestionProvider<S> | undefined {
+    return this.#customSuggestions;
+  }
+
   override parse(
     reader: StringReader,
     contextBuilder: CommandContextBuilder<S>,
@@ -76,8 +81,9 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     context: CommandContext<S>,
     builder: SuggestionsBuilder,
   ): Promise<Suggestions> {
-    return this.#customSuggestions?.(context, builder) ??
-      this.#type.listSuggestions(context, builder);
+    return this.#customSuggestions
+      ? this.#customSuggestions(context, builder)
+      : this.#type.listSuggestions(context, builder);
   }
 
   override createBuilder(): RequiredArgumentBuilder<S, T> {
@@ -106,11 +112,34 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     }
   }
 
+  override [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof ArgumentCommandNode &&
+      super[Equatable.equals](other) &&
+      this.#name === other.#name &&
+      this.#type[Equatable.equals](other.#type));
+  }
+
+  override [Equatable.hash](): number {
+    return combineHashesV(
+      super[Equatable.hash](),
+      rawHash(this.#name),
+      this.#type[Equatable.hash](),
+    );
+  }
+
   override getSortedKey(): string {
     return this.#name;
   }
 
+  override _sortOrder(): number {
+    return 0;
+  }
+
   override getExamples(): Iterable<string> {
     return this.#type.getExamples();
+  }
+
+  override toString(): string {
+    return `<argument ${this.#name}:${this.#type}>`;
   }
 }

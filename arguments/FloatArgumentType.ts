@@ -1,3 +1,4 @@
+import { combineHashes, Equatable, rawHash } from "../deps.ts";
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import type { StringReader } from "../StringReader.ts";
 import { ArgumentType } from "./ArgumentType.ts";
@@ -17,21 +18,34 @@ export class FloatArgumentType extends ArgumentType<number> {
     const result = reader.readFloat();
     if (result < this.minimum) {
       reader.setCursor(start);
-      throw CommandSyntaxError.builtInErrors.floatTooLow.createWithContext(
-        reader,
-        result,
-        this.minimum,
-      );
+      throw CommandSyntaxError.builtInErrors.floatTooLow
+        .createWithContext(reader, result, this.minimum);
     }
     if (result > this.maximum) {
       reader.setCursor(start);
-      throw CommandSyntaxError.builtInErrors.floatTooHigh.createWithContext(
-        reader,
-        result,
-        this.maximum,
-      );
+      throw CommandSyntaxError.builtInErrors.floatTooHigh
+        .createWithContext(reader, result, this.maximum);
     }
     return result;
+  }
+
+  override [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof FloatArgumentType &&
+      this.minimum === other.minimum && this.maximum === other.maximum);
+  }
+
+  override [Equatable.hash](): number {
+    return combineHashes(rawHash(this.minimum), rawHash(this.maximum));
+  }
+
+  override toString(): string {
+    if (this.maximum < Number.MAX_VALUE) {
+      return `float(${this.minimum}, ${this.maximum})`;
+    }
+    if (this.minimum > -Number.MAX_VALUE) {
+      return `float(${this.minimum})`;
+    }
+    return "float()";
   }
 
   override getExamples(): Iterable<string> {

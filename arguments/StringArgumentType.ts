@@ -1,11 +1,15 @@
-import type { StringReader } from "../StringReader.ts";
+import { Equatable, rawHash } from "../deps.ts";
+import { StringReader } from "../StringReader.ts";
 import { never } from "../util.ts";
 import { ArgumentType } from "./ArgumentType.ts";
 
+export const singleWord = Symbol("singleWord");
+export const quotablePhrase = Symbol("quotablePhrase");
+export const greedyPhrase = Symbol("greedyPhrase");
 export type StringType =
-  | "single_word"
-  | "quotable_phrase"
-  | "greedy_phrase";
+  | typeof singleWord
+  | typeof quotablePhrase
+  | typeof greedyPhrase;
 
 export class StringArgumentType extends ArgumentType<string> {
   readonly type: StringType;
@@ -17,11 +21,11 @@ export class StringArgumentType extends ArgumentType<string> {
 
   override parse(reader: StringReader): string {
     switch (this.type) {
-      case "single_word":
+      case singleWord:
         return reader.readUnquotedString();
-      case "quotable_phrase":
+      case quotablePhrase:
         return reader.readString();
-      case "greedy_phrase": {
+      case greedyPhrase: {
         const text = reader.getRemaining();
         reader.setCursor(reader.getTotalLength());
         return text;
@@ -31,13 +35,35 @@ export class StringArgumentType extends ArgumentType<string> {
     }
   }
 
+  override [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof StringArgumentType &&
+      this.type === other.type);
+  }
+
+  override [Equatable.hash](): number {
+    return rawHash(this.type);
+  }
+
+  override toString(): string {
+    switch (this.type) {
+      case singleWord:
+        return "word()";
+      case quotablePhrase:
+        return "string()";
+      case greedyPhrase:
+        return "greedyString()";
+      default:
+        never(this.type);
+    }
+  }
+
   override getExamples(): Iterable<string> {
     switch (this.type) {
-      case "single_word":
+      case singleWord:
         return ["word", "words_with_underscores"];
-      case "quotable_phrase":
+      case quotablePhrase:
         return ['"quoted phrase"', "word", '""'];
-      case "greedy_phrase":
+      case greedyPhrase:
         return ["word", "words with spaces", '"and symbols"'];
       default:
         never(this.type);
@@ -46,13 +72,22 @@ export class StringArgumentType extends ArgumentType<string> {
 }
 
 export function word(): StringArgumentType {
-  return new StringArgumentType("single_word");
+  return new StringArgumentType(singleWord);
 }
 
 export function string(): StringArgumentType {
-  return new StringArgumentType("quotable_phrase");
+  return new StringArgumentType(quotablePhrase);
 }
 
 export function greedyString(): StringArgumentType {
-  return new StringArgumentType("greedy_phrase");
+  return new StringArgumentType(greedyPhrase);
+}
+
+export function escapeIfRequired(input: string): string {
+  for (const c of input) {
+    if (!StringReader.isAllowedInUnquotedString(c)) {
+      return `"${input.replace(/[\\"]/g, "\\$&")}"`;
+    }
+  }
+  return input;
 }

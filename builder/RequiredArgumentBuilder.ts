@@ -14,11 +14,21 @@ export class RequiredArgumentBuilder<S, T> extends ArgumentBuilder<S> {
     this.#type = type;
   }
 
-  suggests(
-    provider: SuggestionProvider<S> | undefined,
-  ): RequiredArgumentBuilder<S, T> {
+  suggests(provider: SuggestionProvider<S> | undefined): this {
     this.#suggestionsProvider = provider;
     return this;
+  }
+
+  getSuggestionsProvider(): SuggestionProvider<S> | undefined {
+    return this.#suggestionsProvider;
+  }
+
+  getType(): ArgumentType<T> {
+    return this.#type;
+  }
+
+  getName(): string {
+    return this.#name;
   }
 
   override build(): ArgumentCommandNode<S, T> {

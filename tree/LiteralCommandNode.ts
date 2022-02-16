@@ -1,3 +1,4 @@
+import { combineHashes, Equatable, rawHash } from "../deps.ts";
 import type { LiteralArgumentBuilder } from "../builder/LiteralArgumentBuilder.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import type { Command } from "../Command.ts";
@@ -59,10 +60,8 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     const start = reader.getCursor();
     const end = this.#parse(reader);
     if (end === undefined) {
-      throw CommandSyntaxError.builtInErrors.literalIncorrect.createWithContext(
-        reader,
-        this.#literal,
-      );
+      throw CommandSyntaxError.builtInErrors.literalIncorrect
+        .createWithContext(reader, this.#literal);
     }
     contextBuilder.withNode(this, StringRange.between(start, end));
   }
@@ -87,14 +86,22 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     _context: CommandContext<S>,
     builder: SuggestionsBuilder,
   ): Promise<Suggestions> {
-    if (this.#literalLowerCase.startsWith(builder.remainingLowerCase)) {
-      return builder.suggest(this.#literal).buildPromise();
-    }
-    return Suggestions.empty();
+    return this.#literalLowerCase.startsWith(builder.remainingLowerCase)
+      ? builder.suggest(this.#literal).buildPromise()
+      : Suggestions.empty();
   }
 
   override isValidInput(input: string): boolean {
     return this.#parse(new StringReader(input)) !== undefined;
+  }
+
+  override [Equatable.equals](other: unknown): boolean {
+    return this === other || (other instanceof LiteralCommandNode &&
+      super[Equatable.equals](other) && this.#literal === other.#literal);
+  }
+
+  override [Equatable.hash](): number {
+    return combineHashes(super[Equatable.hash](), rawHash(this.#literal));
   }
 
   override getUsageText(): string {
@@ -120,7 +127,15 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     return this.#literal;
   }
 
+  override _sortOrder(): number {
+    return -1;
+  }
+
   override getExamples(): Iterable<string> {
     return [this.#literal];
+  }
+
+  override toString(): string {
+    return `<literal ${this.#literal}>`;
   }
 }
