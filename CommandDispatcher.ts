@@ -1,4 +1,4 @@
-import { minWith } from "https://deno.land/std@0.125.0/collections/min_with.ts";
+import { minWith } from "https://deno.land/std@0.126.0/collections/min_with.ts";
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
 import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
