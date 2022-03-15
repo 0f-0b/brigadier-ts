@@ -1,17 +1,17 @@
-import { minWith } from "https://deno.land/std@0.126.0/collections/min_with.ts";
+import { joinToString } from "./deps/std/collections/join_to_string.ts";
+import { minWith } from "./deps/std/collections/min_with.ts";
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
-import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
-import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
-import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { ParseResults } from "./ParseResults.ts";
 import type { ResultConsumer } from "./ResultConsumer.ts";
 import { StringReader } from "./StringReader.ts";
-import { SuggestionsBuilder } from "./suggestion/SuggestionsBuilder.ts";
+import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
+import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
+import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { Suggestions } from "./suggestion/Suggestions.ts";
+import { SuggestionsBuilder } from "./suggestion/SuggestionsBuilder.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";
 import type { LiteralCommandNode } from "./tree/LiteralCommandNode.ts";
 import { RootCommandNode } from "./tree/RootCommandNode.ts";
-import { joinToString } from "./util.ts";
 
 export class CommandDispatcher<S> {
   readonly root: RootCommandNode<S>;

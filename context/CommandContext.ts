@@ -1,10 +1,10 @@
 import {
-  combineHashesV,
+  combineHashes,
   defaultEqualer,
   Equatable,
-  mapEqualer,
   tupleEqualer,
-} from "../deps.ts";
+} from "../deps/@esfx/equatable.ts";
+import { mapEqualer } from "../util.ts";
 import type { Command } from "../Command.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
@@ -107,14 +107,13 @@ export class CommandContext<S> implements Equatable {
   }
 
   [Equatable.hash](): number {
-    return combineHashesV(
-      mapEqualer.hash(this.#arguments),
-      this.#rootNode[Equatable.hash](),
-      tupleEqualer.hash(this.#nodes),
-      defaultEqualer.hash(this.#command),
-      defaultEqualer.hash(this.#source),
-      defaultEqualer.hash(this.#child),
-    );
+    let hash = mapEqualer.hash(this.#arguments);
+    hash = combineHashes(hash, this.#rootNode[Equatable.hash]());
+    hash = combineHashes(hash, tupleEqualer.hash(this.#nodes));
+    hash = combineHashes(hash, defaultEqualer.hash(this.#command));
+    hash = combineHashes(hash, defaultEqualer.hash(this.#source));
+    hash = combineHashes(hash, defaultEqualer.hash(this.#child));
+    return hash;
   }
 
   getRedirectModifier(): RedirectModifier<S> | undefined {

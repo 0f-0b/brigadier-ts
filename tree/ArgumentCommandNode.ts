@@ -1,17 +1,19 @@
-import { combineHashesV, Equatable, rawHash } from "../deps.ts";
-import type { ArgumentType } from "../arguments/ArgumentType.ts";
-import type { RequiredArgumentBuilder } from "../builder/RequiredArgumentBuilder.ts";
-import { argument } from "../builder/RequiredArgumentBuilder.ts";
+import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
 import type { Command } from "../Command.ts";
-import type { CommandContext } from "../context/CommandContext.ts";
-import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
-import { ParsedArgument } from "../context/ParsedArgument.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
+import type { ArgumentType } from "../arguments/ArgumentType.ts";
+import {
+  argument,
+  type RequiredArgumentBuilder,
+} from "../builder/RequiredArgumentBuilder.ts";
+import type { CommandContext } from "../context/CommandContext.ts";
+import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
+import { ParsedArgument } from "../context/ParsedArgument.ts";
 import type { SuggestionProvider } from "../suggestion/SuggestionProvider.ts";
+import type { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
-import { Suggestions } from "../suggestion/Suggestions.ts";
 import { CommandNode } from "./CommandNode.ts";
 
 export class ArgumentCommandNode<S, T> extends CommandNode<S> {
@@ -120,9 +122,8 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
   }
 
   override [Equatable.hash](): number {
-    return combineHashesV(
-      super[Equatable.hash](),
-      rawHash(this.#name),
+    return combineHashes(
+      combineHashes(super[Equatable.hash](), rawHash(this.#name)),
       this.#type[Equatable.hash](),
     );
   }

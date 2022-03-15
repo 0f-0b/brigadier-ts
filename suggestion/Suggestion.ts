@@ -1,13 +1,13 @@
 import {
-  combineHashesV,
+  combineHashes,
   Comparable,
   defaultComparer,
   defaultEqualer,
   Equatable,
   rawHash,
-} from "../deps.ts";
-import type { StringRange } from "../context/StringRange.ts";
+} from "../deps/@esfx/equatable.ts";
 import type { Message } from "../Message.ts";
+import type { StringRange } from "../context/StringRange.ts";
 
 export class Suggestion implements Equatable, Comparable {
   readonly range: StringRange;
@@ -43,9 +43,8 @@ export class Suggestion implements Equatable, Comparable {
   }
 
   [Equatable.hash](): number {
-    return combineHashesV(
-      this.range[Equatable.hash](),
-      rawHash(this.text),
+    return combineHashes(
+      combineHashes(this.range[Equatable.hash](), rawHash(this.text)),
       defaultEqualer.hash(this.tooltip),
     );
   }

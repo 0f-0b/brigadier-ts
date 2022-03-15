@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "../test_deps.ts";
+import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
 import { assertIterator } from "../test_util.ts";
 import { integer } from "../arguments/IntegerArgumentType.ts";
 import { argument } from "./RequiredArgumentBuilder.ts";

@@ -1,5 +1,5 @@
-import type { Message } from "../Message.ts";
 import { LiteralMessage } from "../LiteralMessage.ts";
+import type { Message } from "../Message.ts";
 import { CommandErrorType } from "./CommandErrorType.ts";
 
 export class CommandSyntaxError extends Error {

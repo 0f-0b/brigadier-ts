@@ -1,9 +1,8 @@
 import type { Command } from "../Command.ts";
 import type { CommandDispatcher } from "../CommandDispatcher.ts";
-import { CommandContext } from "../context/CommandContext.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
+import { CommandContext } from "../context/CommandContext.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
-import { setAll } from "../util.ts";
 import { ParsedArgument } from "./ParsedArgument.ts";
 import { ParsedCommandNode } from "./ParsedCommandNode.ts";
 import { StringRange } from "./StringRange.ts";
@@ -76,7 +75,9 @@ export class CommandContextBuilder<S> {
       this.#range.start,
     );
     copy.#command = this.#command;
-    setAll(copy.#arguments, this.#arguments);
+    for (const [name, argument] of this.#arguments) {
+      copy.#arguments.set(name, argument);
+    }
     copy.#nodes.push(...this.#nodes);
     copy.#child = this.#child;
     copy.#range = this.#range;

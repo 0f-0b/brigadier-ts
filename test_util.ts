@@ -1,5 +1,5 @@
-import { Equatable } from "./deps.ts";
-import { assert } from "./test_deps.ts";
+import { Equatable } from "./deps/@esfx/equatable.ts";
+import { assert } from "./deps/std/testing/asserts.ts";
 
 function isIterable(x: unknown): x is Iterable<unknown> {
   return (typeof x === "object" || typeof x === "function") && x !== null &&

@@ -1,6 +1,6 @@
+import type { ImmutableStringReader } from "./ImmutableStringReader.ts";
 import type { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
 import type { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
-import type { ImmutableStringReader } from "./ImmutableStringReader.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";
 
 export class ParseResults<S> {

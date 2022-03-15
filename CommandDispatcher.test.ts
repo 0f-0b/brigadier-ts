@@ -1,25 +1,25 @@
-import { Equatable, ref, tupleEqualer } from "./deps.ts";
+import { Equatable, tupleEqualer } from "./deps/@esfx/equatable.ts";
+import { ref } from "./deps/@esfx/ref.ts";
+import { assertSpyCall, assertSpyCalls } from "./deps/mock/asserts.ts";
+import { spy } from "./deps/mock/spy.ts";
 import {
   assert,
   assertEquals,
   assertExists,
   assertIsError,
   assertRejects,
-  assertSpyCall,
-  assertSpyCalls,
   assertStrictEquals,
-  spy,
   unreachable,
-} from "./test_deps.ts";
+} from "./deps/std/testing/asserts.ts";
+import { CommandDispatcher } from "./CommandDispatcher.ts";
+import { StringReader } from "./StringReader.ts";
 import { integer } from "./arguments/IntegerArgumentType.ts";
 import { word } from "./arguments/StringArgumentType.ts";
 import { literal } from "./builder/LiteralArgumentBuilder.ts";
 import { argument } from "./builder/RequiredArgumentBuilder.ts";
-import { CommandDispatcher } from "./CommandDispatcher.ts";
 import type { CommandContext } from "./context/CommandContext.ts";
 import { StringRange } from "./context/StringRange.ts";
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
-import { StringReader } from "./StringReader.ts";
 import { Suggestion } from "./suggestion/Suggestion.ts";
 import type { Suggestions } from "./suggestion/Suggestions.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";

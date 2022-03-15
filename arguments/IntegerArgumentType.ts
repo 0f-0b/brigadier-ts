@@ -1,6 +1,6 @@
-import { combineHashes, Equatable, rawHash } from "../deps.ts";
-import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
+import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
 import type { StringReader } from "../StringReader.ts";
+import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import { ArgumentType } from "./ArgumentType.ts";
 
 export class IntegerArgumentType extends ArgumentType<number> {

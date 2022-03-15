@@ -1,7 +1,7 @@
-import { assertStrictEquals } from "../test_deps.ts";
+import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
 import { assertIterator } from "../test_util.ts";
-import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
+import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import { CommandNode } from "./CommandNode.ts";
 import { RootCommandNode } from "./RootCommandNode.ts";
@@ -15,7 +15,7 @@ export const newContextBuilder = () =>
     0,
   );
 
-export function genericCommandNodeTest(
+export function testCommandNode(
   newNode: () => CommandNode<unknown>,
 ): void {
   Deno.test("addChild", () => {

@@ -2,10 +2,10 @@ import {
   assertIsError,
   assertStrictEquals,
   assertThrows,
-} from "../test_deps.ts";
+} from "../deps/std/testing/asserts.ts";
 import { assertEquatable } from "../test_util.ts";
-import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import { StringReader } from "../StringReader.ts";
+import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import { float } from "./FloatArgumentType.ts";
 
 Deno.test("parse", () => {

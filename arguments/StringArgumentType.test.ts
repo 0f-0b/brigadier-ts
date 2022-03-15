@@ -1,9 +1,6 @@
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  assertStrictEquals,
-  stub,
-} from "../test_deps.ts";
+import { assertSpyCall, assertSpyCalls } from "../deps/mock/asserts.ts";
+import { stub } from "../deps/mock/stub.ts";
+import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
 import { assertEquatable } from "../test_util.ts";
 import { StringReader } from "../StringReader.ts";
 import {

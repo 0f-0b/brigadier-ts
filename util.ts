@@ -1,3 +1,10 @@
+import {
+  combineHashes,
+  defaultEqualer,
+  Equaler,
+  rawHash,
+} from "./deps/@esfx/equatable.ts";
+
 export type Awaitable<T> = T | PromiseLike<T>;
 
 export function never(value: never): never {
@@ -38,55 +45,29 @@ export function maxOf<T>(
   return result;
 }
 
-export interface JoinToStringOptions {
-  separator?: string;
-  prefix?: string;
-  suffix?: string;
-  truncate?: {
-    after: number;
-    with?: string;
-  };
-}
-
-export function joinToString<T>(
-  it: Iterable<T>,
-  selector: (value: T) => string,
-  {
-    separator = ", ",
-    prefix = "",
-    suffix = "",
-    truncate: {
-      after: limit,
-      with: truncated = "...",
-    } = { after: Infinity },
-  }: JoinToStringOptions = {},
-): string {
-  let result = prefix;
-  let count = 0;
-  for (const elem of it) {
-    if (++count > 1) {
-      result += separator;
+export const mapEqualer = Equaler.create<ReadonlyMap<unknown, unknown>>(
+  (a, b) => {
+    Map.prototype.has.call(a, 0);
+    Map.prototype.has.call(b, 0);
+    if (a === b) {
+      return true;
     }
-    if (count > limit) {
-      result += truncated;
-      break;
+    if (a.size !== b.size) {
+      return false;
     }
-    result += selector(elem);
-  }
-  result += suffix;
-  return result;
-}
-
-export function addAll<T>(set: Set<T>, it: Iterable<T>): Set<T> {
-  for (const elem of it) {
-    set.add(elem);
-  }
-  return set;
-}
-
-export function setAll<K, V>(map: Map<K, V>, it: Iterable<[K, V]>): Map<K, V> {
-  for (const [key, value] of it) {
-    map.set(key, value);
-  }
-  return map;
-}
+    for (const [key, value] of a) {
+      if (!(b.has(key) && defaultEqualer.equals(value, b.get(key)!))) {
+        return false;
+      }
+    }
+    return true;
+  },
+  (x) => {
+    Map.prototype.has.call(x, 0);
+    let h = 0;
+    for (const [key, value] of x) {
+      h += combineHashes(rawHash(key), defaultEqualer.hash(value));
+    }
+    return h;
+  },
+);

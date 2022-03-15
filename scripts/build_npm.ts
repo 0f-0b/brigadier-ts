@@ -1,6 +1,6 @@
 #!/usr/bin/env -S deno run -A
 
-import { build, emptyDir } from "https://deno.land/x/dnt@0.18.1/mod.ts";
+import { build, emptyDir } from "../deps/dnt.ts";
 
 Deno.chdir(new URL("..", import.meta.url));
 const [version] = Deno.args;
@@ -15,11 +15,11 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?pin=v66": {
+    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?pin=v69": {
       name: "@esfx/equatable",
       version: "^1.0.0-pre.19",
     },
-    "https://esm.sh/@esfx/ref@1.0.0-pre.23?pin=v66": {
+    "https://esm.sh/@esfx/ref@1.0.0-pre.23?pin=v69": {
       name: "@esfx/ref",
       version: "^1.0.0-pre.23",
     },

@@ -3,10 +3,10 @@ import {
   defaultComparer,
   Equatable,
   tupleEqualer,
-} from "../deps.ts";
+} from "../deps/@esfx/equatable.ts";
+import { maxOf, minOf } from "../util.ts";
 import { StringRange } from "../context/StringRange.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";
-import { addAll, maxOf, minOf } from "../util.ts";
 
 export class Suggestions implements Equatable {
   static readonly EMPTY = new Suggestions(StringRange.at(0), []);
@@ -48,7 +48,9 @@ export class Suggestions implements Equatable {
       default: {
         const texts = new Set<Suggestion>();
         for (const suggestions of input) {
-          addAll(texts, suggestions.list);
+          for (const suggestion of suggestions.list) {
+            texts.add(suggestion);
+          }
         }
         return this.create(command, Array.from(texts));
       }

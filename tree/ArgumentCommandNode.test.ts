@@ -1,17 +1,17 @@
-import { assertStrictEquals } from "../test_deps.ts";
+import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
 import { assertEquatable } from "../test_util.ts";
+import { StringReader } from "../StringReader.ts";
 import { integer } from "../arguments/IntegerArgumentType.ts";
 import { argument } from "../builder/RequiredArgumentBuilder.ts";
-import { StringReader } from "../StringReader.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import {
   command,
-  genericCommandNodeTest,
   newContextBuilder,
+  testCommandNode,
 } from "./CommandNodeTest.ts";
 
 const newNode = () => argument("foo", integer()).build();
-genericCommandNodeTest(newNode);
+testCommandNode(newNode);
 
 Deno.test("parse", () => {
   const node = newNode();

@@ -1,3 +1,5 @@
+export * from "./deps/@esfx/equatable.ts";
+export * from "./deps/@esfx/ref.ts";
 export * from "./AmbiguityConsumer.ts";
 export * from "./Command.ts";
 export * from "./CommandDispatcher.ts";

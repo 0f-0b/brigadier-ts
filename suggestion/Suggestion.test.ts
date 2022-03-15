@@ -1,5 +1,5 @@
-import { Equatable } from "../deps.ts";
-import { assert, assertStrictEquals } from "../test_deps.ts";
+import { Equatable } from "../deps/@esfx/equatable.ts";
+import { assert, assertStrictEquals } from "../deps/std/testing/asserts.ts";
 import { StringRange } from "../context/StringRange.ts";
 import { Suggestion } from "./Suggestion.ts";
 

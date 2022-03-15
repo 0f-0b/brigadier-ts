@@ -1,16 +1,18 @@
-import { combineHashes, Equatable, rawHash } from "../deps.ts";
-import type { LiteralArgumentBuilder } from "../builder/LiteralArgumentBuilder.ts";
-import { literal } from "../builder/LiteralArgumentBuilder.ts";
+import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
 import type { Command } from "../Command.ts";
+import type { Predicate } from "../Predicate.ts";
+import type { RedirectModifier } from "../RedirectModifier.ts";
+import { StringReader } from "../StringReader.ts";
+import {
+  literal,
+  type LiteralArgumentBuilder,
+} from "../builder/LiteralArgumentBuilder.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import { StringRange } from "../context/StringRange.ts";
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
-import type { Predicate } from "../Predicate.ts";
-import type { RedirectModifier } from "../RedirectModifier.ts";
-import { StringReader } from "../StringReader.ts";
-import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import { Suggestions } from "../suggestion/Suggestions.ts";
+import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import { CommandNode } from "./CommandNode.ts";
 
 export class LiteralCommandNode<S> extends CommandNode<S> {

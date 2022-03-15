@@ -1,6 +1,6 @@
-import { bench, runBenchmarks } from "../bench_deps.ts";
-import { literal } from "../builder/LiteralArgumentBuilder.ts";
+import { bench, runBenchmarks } from "../deps/std/testing/bench.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
+import { literal } from "../builder/LiteralArgumentBuilder.ts";
 
 const dispatcher = new CommandDispatcher();
 dispatcher.register(literal("command").executes(() => 0));
