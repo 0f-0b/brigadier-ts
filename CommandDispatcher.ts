@@ -67,7 +67,7 @@ export class CommandDispatcher<S> {
               next.push(child.copyFor(context.getSource()));
             } else {
               try {
-                for (const source of modifier(context)) {
+                for await (const source of await modifier(context)) {
                   next.push(child.copyFor(source));
                 }
               } catch (e: unknown) {

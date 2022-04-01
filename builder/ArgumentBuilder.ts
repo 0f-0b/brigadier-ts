@@ -52,7 +52,11 @@ export abstract class ArgumentBuilder<S> {
   }
 
   redirect(target: CommandNode<S>, modifier?: SingleRedirectModifier<S>): this {
-    return this.forward(target, modifier && ((c) => [modifier(c)]), false);
+    return this.forward(
+      target,
+      modifier && (async (c) => [await modifier(c)]),
+      false,
+    );
   }
 
   fork(target: CommandNode<S>, modifier: RedirectModifier<S>): this {
