@@ -1,4 +1,3 @@
-import { bench, runBenchmarks } from "../deps/std/testing/bench.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 
@@ -63,34 +62,14 @@ subject.register(
 subject.register(literal("j").redirect(subject.getRoot()));
 subject.register(literal("k").redirect(h));
 
-bench({
-  name: "parse a1i",
-  func(timer) {
-    timer.start();
-    subject.parse("a 1 i", {});
-    timer.stop();
-  },
-  runs: 500000,
+Deno.bench("parse a1i", () => {
+  subject.parse("a 1 i", {});
 });
 
-bench({
-  name: "parse c",
-  func(timer) {
-    timer.start();
-    subject.parse("c", {});
-    timer.stop();
-  },
-  runs: 500000,
+Deno.bench("parse c", () => {
+  subject.parse("c", {});
 });
 
-bench({
-  name: "parse k1i",
-  func(timer) {
-    timer.start();
-    subject.parse("k 1 i", {});
-    timer.stop();
-  },
-  runs: 500000,
+Deno.bench("parse k1i", () => {
+  subject.parse("k 1 i", {});
 });
-
-await runBenchmarks();

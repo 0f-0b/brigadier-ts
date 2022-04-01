@@ -1,7 +1,5 @@
 import { Equatable, tupleEqualer } from "./deps/@esfx/equatable.ts";
 import { ref } from "./deps/@esfx/ref.ts";
-import { assertSpyCall, assertSpyCalls } from "./deps/mock/asserts.ts";
-import { spy } from "./deps/mock/spy.ts";
 import {
   assert,
   assertEquals,
@@ -9,8 +7,8 @@ import {
   assertIsError,
   assertRejects,
   assertStrictEquals,
-  unreachable,
 } from "./deps/std/testing/asserts.ts";
+import { assertSpyCalls, spy } from "./deps/std/testing/mock.ts";
 import { CommandDispatcher } from "./CommandDispatcher.ts";
 import { StringReader } from "./StringReader.ts";
 import { integer } from "./arguments/IntegerArgumentType.ts";
@@ -245,11 +243,9 @@ Deno.test("executeRedirectedMultipleTimes", async () => {
 });
 
 Deno.test("executeRedirected", async () => {
-  const command = spy(() => 42);
+  const command = spy((_c: CommandContext<unknown>) => 42);
   const modifier = (c: CommandContext<unknown>) => {
-    if (c.getSource() !== source) {
-      unreachable();
-    }
+    assertStrictEquals(c.getSource(), source);
     return [source1, source2];
   };
   const source1 = {};
@@ -279,9 +275,9 @@ Deno.test("executeRedirected", async () => {
   assertStrictEquals(parent.getNodes()[0].node, concreteNode);
   assertStrictEquals(parent.getSource(), source);
   assertStrictEquals(await subject.execute(parse), 2);
-  assertStrictEquals(assertSpyCall(command, 0).args[0].getSource(), source1);
-  assertStrictEquals(assertSpyCall(command, 1).args[0].getSource(), source2);
   assertSpyCalls(command, 2);
+  assertStrictEquals(command.calls[0].args[0].getSource(), source1);
+  assertStrictEquals(command.calls[1].args[0].getSource(), source2);
 });
 
 Deno.test("executeOrphanedSubcommand", async () => {

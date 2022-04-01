@@ -1,4 +1,3 @@
-import { bench, runBenchmarks } from "../deps/std/testing/bench.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 
@@ -12,34 +11,14 @@ const simple = dispatcher.parse("command", {});
 const singleRedirect = dispatcher.parse("redirect command", {});
 const forkedRedirect = dispatcher.parse("fork command", {});
 
-bench({
-  name: "execute simple",
-  func(timer) {
-    timer.start();
-    dispatcher.execute(simple);
-    timer.stop();
-  },
-  runs: 500000,
+Deno.bench("execute simple", () => {
+  dispatcher.execute(simple);
 });
 
-bench({
-  name: "execute single redirect",
-  func(timer) {
-    timer.start();
-    dispatcher.execute(singleRedirect);
-    timer.stop();
-  },
-  runs: 500000,
+Deno.bench("execute single redirect", () => {
+  dispatcher.execute(singleRedirect);
 });
 
-bench({
-  name: "execute forked redirect",
-  func(timer) {
-    timer.start();
-    dispatcher.execute(forkedRedirect);
-    timer.stop();
-  },
-  runs: 500000,
+Deno.bench("execute forked redirect", () => {
+  dispatcher.execute(forkedRedirect);
 });
-
-await runBenchmarks();
