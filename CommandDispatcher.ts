@@ -14,15 +14,15 @@ import type { LiteralCommandNode } from "./tree/LiteralCommandNode.ts";
 import { RootCommandNode } from "./tree/RootCommandNode.ts";
 
 export class CommandDispatcher<S> {
-  readonly root: RootCommandNode<S>;
+  readonly #root: RootCommandNode<S>;
   #consumer: ResultConsumer<S> = () => {};
 
   constructor(root = new RootCommandNode<S>()) {
-    this.root = root;
+    this.#root = root;
   }
 
   register(command: LiteralArgumentBuilder<S>): LiteralCommandNode<S> {
-    return this.root.addChild(command.build());
+    return this.#root.addChild(command.build());
   }
 
   setConsumer(consumer: ResultConsumer<S>): void {
@@ -120,10 +120,10 @@ export class CommandDispatcher<S> {
     const context = new CommandContextBuilder<S>(
       this,
       source,
-      this.root,
+      this.#root,
       reader.getCursor(),
     );
-    return this.#parseNodes(this.root, reader, context);
+    return this.#parseNodes(this.#root, reader, context);
   }
 
   #parseNodes(
@@ -217,7 +217,7 @@ export class CommandDispatcher<S> {
     if (redirect) {
       result.push(
         `${prefix || node.getUsageText()} ${
-          redirect === this.root ? "..." : "-> " + redirect.getUsageText()
+          redirect === this.#root ? "..." : "-> " + redirect.getUsageText()
         }`,
       );
       return;
@@ -260,7 +260,7 @@ export class CommandDispatcher<S> {
       const redirect = node.getRedirect();
       if (redirect) {
         return `${self} ${
-          redirect === this.root ? "..." : "-> " + redirect.getUsageText()
+          redirect === this.#root ? "..." : "-> " + redirect.getUsageText()
         }`;
       }
       const children = Array.from(node.getChildren()).filter((c) =>
@@ -341,17 +341,17 @@ export class CommandDispatcher<S> {
   }
 
   getRoot(): RootCommandNode<S> {
-    return this.root;
+    return this.#root;
   }
 
   getPath(target: CommandNode<S>): string[] {
     const nodes: CommandNode<S>[][] = [];
-    this.#addPaths(this.root, nodes, []);
+    this.#addPaths(this.#root, nodes, []);
     for (const list of nodes) {
       if (list.at(-1) === target) {
         const result: string[] = [];
         for (const node of list) {
-          if (node !== this.root) {
+          if (node !== this.#root) {
             result.push(node.getName());
           }
         }
@@ -362,7 +362,7 @@ export class CommandDispatcher<S> {
   }
 
   findNode(path: Iterable<string>): CommandNode<S> | undefined {
-    let node: CommandNode<S> | undefined = this.root;
+    let node: CommandNode<S> | undefined = this.#root;
     for (const name of path) {
       node = node.getChild(name);
       if (node === undefined) {
@@ -373,7 +373,7 @@ export class CommandDispatcher<S> {
   }
 
   findAmbiguities(consumer: AmbiguityConsumer<S>): void {
-    this.root.findAmbiguities(consumer);
+    this.#root.findAmbiguities(consumer);
   }
 
   #addPaths(

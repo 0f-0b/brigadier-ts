@@ -795,7 +795,7 @@ Deno.test("getCompletionSuggestions redirect lots", async () => {
   const redirectNode = ref.out<CommandNode<unknown>>();
   subject.register(
     literal("redirect")
-      .addTo(subject.root, redirectNode)
+      .addTo(subject.getRoot(), redirectNode)
       .then(
         literal("loop")
           .then(argument("loop", integer()).redirect(redirectNode.value)),
@@ -815,7 +815,7 @@ Deno.test("getCompletionSuggestions execute simulation", async () => {
   const executeNode = ref.out<CommandNode<unknown>>();
   subject.register(
     literal("execute")
-      .addTo(subject.root, executeNode)
+      .addTo(subject.getRoot(), executeNode)
       .then(
         literal("as")
           .then(argument("name", word()).redirect(executeNode.value)),
@@ -837,7 +837,7 @@ Deno.test("getCompletionSuggestions execute simulation partial", async () => {
   const executeNode = ref.out<CommandNode<unknown>>();
   subject.register(
     literal("execute")
-      .addTo(subject.root, executeNode)
+      .addTo(subject.getRoot(), executeNode)
       .then(
         literal("as")
           .then(literal("bar").redirect(executeNode.value))
