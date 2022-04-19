@@ -141,6 +141,7 @@ export class CommandDispatcher<S> {
       }
       const context = contextSoFar.copy();
       const reader = new StringReader(originalReader);
+      let skippedSeparator = -1;
       try {
         try {
           child.parse(reader, context);
@@ -151,9 +152,12 @@ export class CommandDispatcher<S> {
           throw CommandSyntaxError.builtInErrors.dispatcherParseError
             .createWithContext(reader, String(e));
         }
-        if (reader.canRead() && reader.peek() !== " ") {
-          throw CommandSyntaxError.builtInErrors
-            .dispatcherExpectedArgumentSeparator.createWithContext(reader);
+        if (reader.canRead()) {
+          skippedSeparator = reader.getCursor();
+          if (!this.skipArgumentSeparator(reader)) {
+            throw CommandSyntaxError.builtInErrors
+              .dispatcherExpectedArgumentSeparator.createWithContext(reader);
+          }
         }
       } catch (e: unknown) {
         if (!(e instanceof CommandSyntaxError)) {
@@ -165,8 +169,7 @@ export class CommandDispatcher<S> {
       }
       context.withCommand(child.getCommand());
       const redirect = child.getRedirect();
-      if (reader.canRead(redirect ? 1 : 2)) {
-        reader.skip();
+      if (skippedSeparator !== -1) {
         if (redirect) {
           const childContext = new CommandContextBuilder<S>(
             this,
@@ -174,11 +177,18 @@ export class CommandDispatcher<S> {
             redirect,
             reader.getCursor(),
           );
+          if (!reader.canRead()) {
+            reader.setCursor(skippedSeparator);
+          }
           const parse = this.#parseNodes(redirect, reader, childContext);
           context.withChild(parse.context);
           return new ParseResults<S>(context, parse.reader, parse.errors);
+        } else {
+          if (!reader.canRead()) {
+            reader.setCursor(skippedSeparator);
+          }
+          potentials.push(this.#parseNodes(child, reader, context));
         }
-        potentials.push(this.#parseNodes(child, reader, context));
       } else {
         potentials.push(new ParseResults(context, reader, new Map()));
       }
@@ -213,12 +223,14 @@ export class CommandDispatcher<S> {
     if (node.getCommand()) {
       result.push(prefix);
     }
+    const separator = this.usageArgumentSeparator();
     const redirect = node.getRedirect();
     if (redirect) {
       result.push(
-        `${prefix || node.getUsageText()} ${
-          redirect === this.#root ? "..." : "-> " + redirect.getUsageText()
-        }`,
+        (prefix || node.getUsageText()) + separator +
+          (redirect === this.#root
+            ? this.usageRedirectToRoot()
+            : this.usageRedirectTo(redirect.getUsageText())),
       );
       return;
     }
@@ -227,7 +239,7 @@ export class CommandDispatcher<S> {
         child,
         source,
         result,
-        `${prefix ? prefix + " " : ""}${child.getUsageText()}`,
+        (prefix ? prefix + separator : "") + child.getUsageText(),
         restricted,
       );
     }
@@ -254,18 +266,21 @@ export class CommandDispatcher<S> {
     if (!node.canUse(source)) {
       return undefined;
     }
-    const self = optional ? `[${node.getUsageText()}]` : node.getUsageText();
+    const self = optional
+      ? this.usageOptional(node.getUsageText())
+      : node.getUsageText();
     const childOptional = node.getCommand() !== undefined;
     if (!deep) {
+      const separator = this.usageArgumentSeparator();
       const redirect = node.getRedirect();
       if (redirect) {
-        return `${self} ${
-          redirect === this.#root ? "..." : "-> " + redirect.getUsageText()
-        }`;
+        return self + separator +
+          (redirect === this.#root
+            ? this.usageRedirectToRoot()
+            : this.usageRedirectTo(redirect.getUsageText()));
       }
-      const children = Array.from(node.getChildren()).filter((c) =>
-        c.canUse(source)
-      );
+      const children = Array.from(node.getChildren())
+        .filter((c) => c.canUse(source));
       if (children.length !== 0) {
         if (children.length === 1) {
           const usage = this.#getSmartUsage(
@@ -275,7 +290,7 @@ export class CommandDispatcher<S> {
             childOptional,
           );
           if (usage !== undefined) {
-            return `${self} ${usage}`;
+            return self + separator + usage;
           }
         } else {
           const childUsage = new Set<string>();
@@ -293,14 +308,18 @@ export class CommandDispatcher<S> {
           if (childUsage.size !== 0) {
             if (childUsage.size === 1) {
               const usage = childUsage.values().next().value;
-              return `${self} ${childOptional ? `[${usage}]` : usage}`;
+              return self + separator +
+                (childOptional ? this.usageOptional(usage) : usage);
             }
             const usage = joinToString(
               children,
               (child) => child.getUsageText(),
-              { separator: "|" },
+              { separator: this.usageOr() },
             );
-            return `${self} ${childOptional ? `[${usage}]` : `(${usage})`}`;
+            return self + separator +
+              (childOptional
+                ? this.usageOptional(usage)
+                : this.usageRequired(usage));
           }
         }
       }
@@ -386,5 +405,33 @@ export class CommandDispatcher<S> {
     for (const child of node.getChildren()) {
       this.#addPaths(child, result, current);
     }
+  }
+
+  skipArgumentSeparator(reader: StringReader): boolean {
+    return reader.read() === " ";
+  }
+
+  usageOr(): string {
+    return "|";
+  }
+
+  usageRequired(usage: string): string {
+    return `(${usage})`;
+  }
+
+  usageOptional(usage: string): string {
+    return `[${usage}]`;
+  }
+
+  usageRedirectTo(usage: string): string {
+    return `-> ${usage}`;
+  }
+
+  usageRedirectToRoot(): string {
+    return "...";
+  }
+
+  usageArgumentSeparator(): string {
+    return " ";
   }
 }
