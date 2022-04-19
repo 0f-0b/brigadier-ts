@@ -104,9 +104,10 @@ export class CommandSyntaxError extends Error {
       `${message} at position ${cursor}: ${context}`,
     amount?: number,
     marker?: string,
+    truncated?: string,
   ): string {
     const message = this.rawMessage.getString();
-    const context = this.getContext(amount, marker);
+    const context = this.getContext(amount, marker, truncated);
     return context === undefined
       ? message
       : contextBuilder(message, this.cursor!, context);
