@@ -6,6 +6,7 @@ import {
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
 import { assertEquatable } from "../test_util.ts";
+import { CommandSyntax } from "../CommandSyntax.ts";
 import { StringReader } from "../StringReader.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { StringRange } from "../context/StringRange.ts";
@@ -25,7 +26,7 @@ Deno.test("parse", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("foo bar");
-  node.parse(reader, contextBuilder);
+  node.parse(reader, contextBuilder, new CommandSyntax());
   assertStrictEquals(reader.getRemaining(), " bar");
 });
 
@@ -33,7 +34,7 @@ Deno.test("parseExact", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("foo");
-  node.parse(reader, contextBuilder);
+  node.parse(reader, contextBuilder, new CommandSyntax());
   assertStrictEquals(reader.getRemaining(), "");
 });
 
@@ -41,33 +42,39 @@ Deno.test("parseSimilar", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("foobar");
-  assertThrows(() => node.parse(reader, contextBuilder), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.literalIncorrect,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  assertThrows(
+    () => node.parse(reader, contextBuilder, new CommandSyntax()),
+    (e: Error) => {
+      assertIsError(e, CommandSyntaxError);
+      assertStrictEquals(
+        e.type,
+        CommandSyntaxError.builtInErrors.literalIncorrect,
+      );
+      assertStrictEquals(e.cursor, 0);
+    },
+  );
 });
 
 Deno.test("parseInvalid", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("bar");
-  assertThrows(() => node.parse(reader, contextBuilder), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.literalIncorrect,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  assertThrows(
+    () => node.parse(reader, contextBuilder, new CommandSyntax()),
+    (e: Error) => {
+      assertIsError(e, CommandSyntaxError);
+      assertStrictEquals(
+        e.type,
+        CommandSyntaxError.builtInErrors.literalIncorrect,
+      );
+      assertStrictEquals(e.cursor, 0);
+    },
+  );
 });
 
 Deno.test("usage", () => {
   const node = newNode();
-  assertStrictEquals(node.getUsageText(), "foo");
+  assertStrictEquals(node.getUsageText(new CommandSyntax()), "foo");
 });
 
 Deno.test("suggestions", async () => {

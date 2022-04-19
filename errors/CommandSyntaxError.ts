@@ -116,14 +116,18 @@ export class CommandSyntaxError extends Error {
     return this.getContext();
   }
 
-  getContext(amount = 10, marker = "<--[HERE]"): string | undefined {
+  getContext(
+    amount = 10,
+    marker = "<--[HERE]",
+    truncated = "...",
+  ): string | undefined {
     if (this.input === undefined || this.cursor === undefined) {
       return undefined;
     }
     let builder = "";
     const fixedCursor = Math.min(this.input.length, this.cursor);
     if (fixedCursor > amount) {
-      builder += "...";
+      builder += truncated;
     }
     builder += this.input.substring(
       Math.max(0, fixedCursor - amount),

@@ -3,6 +3,7 @@ import {
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
 import { assertEquatable } from "../test_util.ts";
+import { CommandSyntax } from "../CommandSyntax.ts";
 import { StringReader } from "../StringReader.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
@@ -16,7 +17,7 @@ Deno.test("parse", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("hello world");
-  node.parse(reader, contextBuilder);
+  node.parse(reader, contextBuilder, new CommandSyntax());
   assertStrictEquals(reader.getCursor(), 0);
 });
 
@@ -28,7 +29,7 @@ Deno.test("addChildNoRoot", () => {
 
 Deno.test("usage", () => {
   const node = newNode();
-  assertStrictEquals(node.getUsageText(), "");
+  assertStrictEquals(node.getUsageText(new CommandSyntax()), "");
 });
 
 Deno.test("suggestions", async () => {

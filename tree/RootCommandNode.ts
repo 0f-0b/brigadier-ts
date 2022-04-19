@@ -1,4 +1,5 @@
 import { Equatable } from "../deps/@esfx/equatable.ts";
+import type { CommandSyntax } from "../CommandSyntax.ts";
 import type { StringReader } from "../StringReader.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
@@ -21,13 +22,14 @@ export class RootCommandNode<S> extends CommandNode<S> {
     return "";
   }
 
-  override getUsageText(): string {
+  override getUsageText(_syntax: CommandSyntax): string {
     return "";
   }
 
   override parse(
     _reader: StringReader,
     _context: CommandContextBuilder<S>,
+    _syntax: CommandSyntax,
   ): void {}
 
   override listSuggestions(
@@ -37,7 +39,7 @@ export class RootCommandNode<S> extends CommandNode<S> {
     return Suggestions.empty();
   }
 
-  override isValidInput(): boolean {
+  override isValidInput(_input: string, _syntax: CommandSyntax): boolean {
     return false;
   }
 

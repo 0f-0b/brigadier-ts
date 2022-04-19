@@ -1,5 +1,6 @@
 import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
 import { assertEquatable } from "../test_util.ts";
+import { CommandSyntax } from "../CommandSyntax.ts";
 import { StringReader } from "../StringReader.ts";
 import { integer } from "../arguments/IntegerArgumentType.ts";
 import { argument } from "../builder/RequiredArgumentBuilder.ts";
@@ -17,14 +18,14 @@ Deno.test("parse", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("123 456");
-  node.parse(reader, contextBuilder);
+  node.parse(reader, contextBuilder, new CommandSyntax());
   assertStrictEquals(contextBuilder.getArguments().has("foo"), true);
   assertStrictEquals(contextBuilder.getArguments().get("foo")!.result, 123);
 });
 
 Deno.test("usage", () => {
   const node = newNode();
-  assertStrictEquals(node.getUsageText(), "<foo>");
+  assertStrictEquals(node.getUsageText(new CommandSyntax()), "<foo>");
 });
 
 Deno.test("suggestions", async () => {

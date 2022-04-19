@@ -1,5 +1,6 @@
 import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
 import type { Command } from "../Command.ts";
+import type { CommandSyntax } from "../CommandSyntax.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
@@ -58,9 +59,10 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
   override parse(
     reader: StringReader,
     contextBuilder: CommandContextBuilder<S>,
+    syntax: CommandSyntax,
   ): void {
     const start = reader.getCursor();
-    const end = this.#parse(reader);
+    const end = this.#parse(reader, syntax);
     if (end === undefined) {
       throw CommandSyntaxError.builtInErrors.literalIncorrect
         .createWithContext(reader, this.#literal);
@@ -68,17 +70,21 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     contextBuilder.withNode(this, StringRange.between(start, end));
   }
 
-  #parse(reader: StringReader): number | undefined {
+  #parse(reader: StringReader, syntax: CommandSyntax): number | undefined {
     const length = this.#literal.length;
     const start = reader.getCursor();
     if (reader.canRead(length)) {
       const end = start + length;
       if (reader.getString().substring(start, end) === this.#literal) {
         reader.setCursor(end);
-        if (!reader.canRead() || reader.peek() === " ") {
-          return end;
+        if (reader.canRead()) {
+          if (!syntax.skipArgumentSeparator(reader)) {
+            reader.setCursor(start);
+            return undefined;
+          }
+          reader.setCursor(end);
         }
-        reader.setCursor(start);
+        return end;
       }
     }
     return undefined;
@@ -93,8 +99,8 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
       : Suggestions.empty();
   }
 
-  override isValidInput(input: string): boolean {
-    return this.#parse(new StringReader(input)) !== undefined;
+  override isValidInput(input: string, syntax: CommandSyntax): boolean {
+    return this.#parse(new StringReader(input), syntax) !== undefined;
   }
 
   override [Equatable.equals](other: unknown): boolean {
@@ -106,7 +112,7 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     return combineHashes(super[Equatable.hash](), rawHash(this.#literal));
   }
 
-  override getUsageText(): string {
+  override getUsageText(_syntax: CommandSyntax): string {
     return this.#literal;
   }
 

@@ -3,6 +3,7 @@ export * from "./deps/@esfx/ref.ts";
 export * from "./AmbiguityConsumer.ts";
 export * from "./Command.ts";
 export * from "./CommandDispatcher.ts";
+export * from "./CommandSyntax.ts";
 export * from "./ImmutableStringReader.ts";
 export * from "./LiteralMessage.ts";
 export * from "./Message.ts";
