@@ -53,9 +53,6 @@ export class FloatArgumentType extends ArgumentType<number> {
   }
 }
 
-export function float(
-  min = -Number.MAX_VALUE,
-  max = Number.MAX_VALUE,
-): FloatArgumentType {
+export function float(min?: number, max?: number): FloatArgumentType {
   return new FloatArgumentType(min, max);
 }

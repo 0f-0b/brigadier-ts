@@ -56,9 +56,6 @@ export class IntegerArgumentType extends ArgumentType<number> {
   }
 }
 
-export function integer(
-  min = -Number.MAX_SAFE_INTEGER,
-  max = Number.MAX_SAFE_INTEGER,
-): IntegerArgumentType {
+export function integer(min?: number, max?: number): IntegerArgumentType {
   return new IntegerArgumentType(min, max);
 }
