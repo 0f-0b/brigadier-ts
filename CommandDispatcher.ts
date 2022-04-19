@@ -114,7 +114,9 @@ export class CommandDispatcher<S> {
   }
 
   parse(reader: string | StringReader, source: S): ParseResults<S> {
-    reader = new StringReader(reader);
+    if (typeof reader === "string") {
+      reader = new StringReader(reader);
+    }
     const context = new CommandContextBuilder<S>(
       this,
       source,
