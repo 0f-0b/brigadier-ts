@@ -1,7 +1,8 @@
 import { joinToString } from "./deps/std/collections/join_to_string.ts";
 import { minWith } from "./deps/std/collections/min_with.ts";
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
-import { CommandSyntax } from "./CommandSyntax.ts";
+import { type ArgumentSeparator, defaultArgumentSeparator } from "./ArgumentSeparator.ts";
+import { CommandUsageFormatter } from "./CommandUsageFormatter.ts";
 import { ParseResults } from "./ParseResults.ts";
 import type { ResultConsumer } from "./ResultConsumer.ts";
 import { StringReader } from "./StringReader.ts";
@@ -16,12 +17,11 @@ import { RootCommandNode } from "./tree/RootCommandNode.ts";
 
 export class CommandDispatcher<S> {
   readonly #root: RootCommandNode<S>;
-  readonly #syntax: CommandSyntax;
+  #argumentSeparator: ArgumentSeparator = defaultArgumentSeparator;
   #consumer: ResultConsumer<S> = () => {};
 
-  constructor(root = new RootCommandNode<S>(), syntax = new CommandSyntax()) {
+  constructor(root = new RootCommandNode<S>()) {
     this.#root = root;
-    this.#syntax = syntax;
   }
 
   register(command: LiteralArgumentBuilder<S>): LiteralCommandNode<S> {
@@ -30,6 +30,10 @@ export class CommandDispatcher<S> {
 
   setConsumer(consumer: ResultConsumer<S>): void {
     this.#consumer = consumer;
+  }
+
+  setArgumentSeparator(argumentSeparator: ArgumentSeparator): void {
+    this.#argumentSeparator = argumentSeparator;
   }
 
   execute(input: string | StringReader, source: S): Promise<number>;
@@ -138,7 +142,12 @@ export class CommandDispatcher<S> {
     const errors = new Map<CommandNode<S>, CommandSyntaxError>();
     const potentials: ParseResults<S>[] = [];
     const cursor = originalReader.getCursor();
-    for (const child of node.getRelevantNodes(originalReader, this.#syntax)) {
+    for (
+      const child of node.getRelevantNodes(
+        originalReader,
+        this.#argumentSeparator,
+      )
+    ) {
       if (!child.canUse(source)) {
         continue;
       }
@@ -147,7 +156,7 @@ export class CommandDispatcher<S> {
       let skippedSeparator = -1;
       try {
         try {
-          child.parse(reader, context, this.#syntax);
+          child.parse(reader, context, this.#argumentSeparator);
         } catch (e: unknown) {
           if (e instanceof CommandSyntaxError) {
             throw e;
@@ -157,7 +166,7 @@ export class CommandDispatcher<S> {
         }
         if (reader.canRead()) {
           skippedSeparator = reader.getCursor();
-          if (!this.#syntax.skipArgumentSeparator(reader)) {
+          if (!this.#argumentSeparator(reader)) {
             throw CommandSyntaxError.builtInErrors
               .dispatcherExpectedArgumentSeparator.createWithContext(reader);
           }
@@ -207,9 +216,14 @@ export class CommandDispatcher<S> {
     return new ParseResults(contextSoFar, originalReader, errors);
   }
 
-  getAllUsage(node: CommandNode<S>, source: S, restricted: boolean): string[] {
+  getAllUsage(
+    node: CommandNode<S>,
+    source: S,
+    restricted: boolean,
+    formatter = new CommandUsageFormatter(),
+  ): string[] {
     const result: string[] = [];
-    this.#getAllUsage(node, source, result, "", restricted);
+    this.#getAllUsage(node, source, result, "", restricted, formatter);
     return result;
   }
 
@@ -219,6 +233,7 @@ export class CommandDispatcher<S> {
     result: string[],
     prefix: string,
     restricted: boolean,
+    formatter: CommandUsageFormatter,
   ): void {
     if (restricted && !node.canUse(source)) {
       return;
@@ -226,14 +241,14 @@ export class CommandDispatcher<S> {
     if (node.getCommand()) {
       result.push(prefix);
     }
-    const separator = this.#syntax.argumentSeparator();
+    const separator = formatter.argumentSeparator();
     const redirect = node.getRedirect();
     if (redirect) {
       result.push(
-        (prefix || node.getUsageText(this.#syntax)) + separator +
+        (prefix || node.getUsageText(formatter)) + separator +
           (redirect === this.#root
-            ? this.#syntax.redirectToRoot()
-            : this.#syntax.redirectTo(redirect.getUsageText(this.#syntax))),
+            ? formatter.redirectToRoot()
+            : formatter.redirectTo(redirect.getUsageText(formatter))),
       );
       return;
     }
@@ -242,17 +257,28 @@ export class CommandDispatcher<S> {
         child,
         source,
         result,
-        (prefix ? prefix + separator : "") + child.getUsageText(this.#syntax),
+        (prefix ? prefix + separator : "") + child.getUsageText(formatter),
         restricted,
+        formatter,
       );
     }
   }
 
-  getSmartUsage(node: CommandNode<S>, source: S): Map<CommandNode<S>, string> {
+  getSmartUsage(
+    node: CommandNode<S>,
+    source: S,
+    formatter = new CommandUsageFormatter(),
+  ): Map<CommandNode<S>, string> {
     const result = new Map<CommandNode<S>, string>();
     const optional = node.getCommand() !== undefined;
     for (const child of node.getChildren()) {
-      const usage = this.#getSmartUsage(child, source, optional, false);
+      const usage = this.#getSmartUsage(
+        child,
+        source,
+        optional,
+        false,
+        formatter,
+      );
       if (usage !== undefined) {
         result.set(child, usage);
       }
@@ -265,22 +291,23 @@ export class CommandDispatcher<S> {
     source: S,
     optional: boolean,
     deep: boolean,
+    formatter: CommandUsageFormatter,
   ): string | undefined {
     if (!node.canUse(source)) {
       return undefined;
     }
     const self = optional
-      ? this.#syntax.optional(node.getUsageText(this.#syntax))
-      : node.getUsageText(this.#syntax);
+      ? formatter.optional(node.getUsageText(formatter))
+      : node.getUsageText(formatter);
     const childOptional = node.getCommand() !== undefined;
     if (!deep) {
-      const separator = this.#syntax.argumentSeparator();
+      const separator = formatter.argumentSeparator();
       const redirect = node.getRedirect();
       if (redirect) {
         return self + separator +
           (redirect === this.#root
-            ? this.#syntax.redirectToRoot()
-            : this.#syntax.redirectTo(redirect.getUsageText(this.#syntax)));
+            ? formatter.redirectToRoot()
+            : formatter.redirectTo(redirect.getUsageText(formatter)));
       }
       const children = Array.from(node.getChildren())
         .filter((c) => c.canUse(source));
@@ -291,6 +318,7 @@ export class CommandDispatcher<S> {
             source,
             childOptional,
             childOptional,
+            formatter,
           );
           if (usage !== undefined) {
             return self + separator + usage;
@@ -303,6 +331,7 @@ export class CommandDispatcher<S> {
               source,
               childOptional,
               true,
+              formatter,
             );
             if (usage !== undefined) {
               childUsage.add(usage);
@@ -312,17 +341,17 @@ export class CommandDispatcher<S> {
             if (childUsage.size === 1) {
               const usage = childUsage.values().next().value;
               return self + separator +
-                (childOptional ? this.#syntax.optional(usage) : usage);
+                (childOptional ? formatter.optional(usage) : usage);
             }
             const usage = joinToString(
               children,
-              (child) => child.getUsageText(this.#syntax),
-              { separator: this.#syntax.or() },
+              (child) => child.getUsageText(formatter),
+              { separator: formatter.or() },
             );
             return self + separator +
               (childOptional
-                ? this.#syntax.optional(usage)
-                : this.#syntax.required(usage));
+                ? formatter.optional(usage)
+                : formatter.required(usage));
           }
         }
       }
@@ -395,7 +424,7 @@ export class CommandDispatcher<S> {
   }
 
   findAmbiguities(consumer: AmbiguityConsumer<S>): void {
-    this.#root.findAmbiguities(consumer, this.#syntax);
+    this.#root.findAmbiguities(consumer, this.#argumentSeparator);
   }
 
   #addPaths(

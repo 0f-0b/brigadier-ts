@@ -1,7 +1,6 @@
-import type { StringReader } from "./StringReader.ts";
 import type { ArgumentType } from "./arguments/ArgumentType.ts";
 
-export class CommandSyntax {
+export class CommandUsageFormatter {
   argument(name: string, _type: ArgumentType<unknown>): string {
     return `<${name}>`;
   }
@@ -28,13 +27,5 @@ export class CommandSyntax {
 
   argumentSeparator(): string {
     return " ";
-  }
-
-  skipArgumentSeparator(reader: StringReader): boolean {
-    if (reader.peek() === " ") {
-      reader.skip();
-      return true;
-    }
-    return false;
   }
 }

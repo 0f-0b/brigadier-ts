@@ -7,8 +7,12 @@ import {
 } from "../deps/@esfx/equatable.ts";
 import { mapEqualer } from "../util.ts";
 import type { AmbiguityConsumer } from "../AmbiguityConsumer.ts";
+import {
+  type ArgumentSeparator,
+  defaultArgumentSeparator,
+} from "../ArgumentSeparator.ts";
 import type { Command } from "../Command.ts";
-import type { CommandSyntax } from "../CommandSyntax.ts";
+import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
@@ -75,7 +79,10 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
 
   abstract _addTo(node: CommandNode<S>): void;
 
-  findAmbiguities(consumer: AmbiguityConsumer<S>, syntax: CommandSyntax): void {
+  findAmbiguities(
+    consumer: AmbiguityConsumer<S>,
+    argumentSeparator = defaultArgumentSeparator,
+  ): void {
     let matches = new Set<string>();
     for (const child of this.children.values()) {
       for (const sibling of this.children.values()) {
@@ -83,7 +90,7 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
           continue;
         }
         for (const input of child.getExamples()) {
-          if (sibling.isValidInput(input, syntax)) {
+          if (sibling.isValidInput(input, argumentSeparator)) {
             matches.add(input);
           }
         }
@@ -92,11 +99,14 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
           matches = new Set();
         }
       }
-      child.findAmbiguities(consumer, syntax);
+      child.findAmbiguities(consumer, argumentSeparator);
     }
   }
 
-  abstract isValidInput(input: string, syntax: CommandSyntax): boolean;
+  abstract isValidInput(
+    input: string,
+    argumentSeparator?: ArgumentSeparator,
+  ): boolean;
 
   [Equatable.equals](other: unknown): boolean {
     return this === other || (other instanceof CommandNode &&
@@ -117,12 +127,12 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
 
   abstract getName(): string;
 
-  abstract getUsageText(syntax: CommandSyntax): string;
+  abstract getUsageText(formatter?: CommandUsageFormatter): string;
 
   abstract parse(
     reader: StringReader,
     context: CommandContextBuilder<S>,
-    syntax: CommandSyntax,
+    argumentSeparator?: ArgumentSeparator,
   ): void;
 
   abstract listSuggestions(
@@ -136,13 +146,13 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
 
   getRelevantNodes(
     input: StringReader,
-    syntax: CommandSyntax,
+    argumentSeparator = defaultArgumentSeparator,
   ): Iterable<CommandNode<S>> {
     if (this.literals.size > 0) {
       const start = input.getCursor();
       while (input.canRead()) {
         const cursor = input.getCursor();
-        if (syntax.skipArgumentSeparator(input)) {
+        if (argumentSeparator(input)) {
           input.setCursor(cursor);
           break;
         }

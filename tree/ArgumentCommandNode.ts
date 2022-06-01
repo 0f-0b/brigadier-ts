@@ -1,6 +1,7 @@
 import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
+import { defaultArgumentSeparator } from "../ArgumentSeparator.ts";
 import type { Command } from "../Command.ts";
-import type { CommandSyntax } from "../CommandSyntax.ts";
+import { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
@@ -61,8 +62,8 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     return this.#name;
   }
 
-  override getUsageText(syntax: CommandSyntax): string {
-    return syntax.argument(this.#name, this.#type);
+  override getUsageText(formatter = new CommandUsageFormatter()): string {
+    return formatter.argument(this.#name, this.#type);
   }
 
   getCustomSuggestions(): SuggestionProvider<S> | undefined {
@@ -72,7 +73,7 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
   override parse(
     reader: StringReader,
     contextBuilder: CommandContextBuilder<S>,
-    _syntax: CommandSyntax,
+    _argumentSeparator = defaultArgumentSeparator,
   ): void {
     const start = reader.getCursor();
     const result = this.#type.parse(reader);
@@ -106,11 +107,14 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     return builder;
   }
 
-  override isValidInput(input: string, syntax: CommandSyntax): boolean {
+  override isValidInput(
+    input: string,
+    argumentSeparator = defaultArgumentSeparator,
+  ): boolean {
     try {
       const reader = new StringReader(input);
       this.#type.parse(reader);
-      return !reader.canRead() || syntax.skipArgumentSeparator(reader);
+      return !reader.canRead() || argumentSeparator(reader);
     } catch {
       return false;
     }
