@@ -15,11 +15,11 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v85": {
+    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v86": {
       name: "@esfx/equatable",
       version: "^1.0.0-pre.19",
     },
-    "https://esm.sh/@esfx/ref@1.0.0-pre.23?target=esnext&pin=v85": {
+    "https://esm.sh/@esfx/ref@1.0.0-pre.23?target=esnext&pin=v86": {
       name: "@esfx/ref",
       version: "^1.0.0-pre.23",
     },
@@ -29,11 +29,11 @@ await build({
     version,
     description: "TypeScript port of Brigadier.",
     keywords: ["command", "minecraft"],
-    homepage: "https://github.com/sjx233/brigadier-ts#readme",
-    bugs: "https://github.com/sjx233/brigadier-ts/issues",
+    homepage: "https://github.com/0f-0b/brigadier-ts#readme",
+    bugs: "https://github.com/0f-0b/brigadier-ts/issues",
     license: "MIT",
     author: "ud2",
-    repository: "github:sjx233/brigadier-ts",
+    repository: "github:0f-0b/brigadier-ts",
   },
 });
 await Promise.all([

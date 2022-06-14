@@ -1,1 +1,1 @@
-export * from "https://deno.land/std@0.141.0/collections/min_with.ts";
+export * from "https://deno.land/std@0.143.0/collections/min_with.ts";
