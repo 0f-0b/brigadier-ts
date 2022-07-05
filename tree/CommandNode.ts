@@ -77,12 +77,12 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
     return node;
   }
 
-  abstract _addTo(node: CommandNode<S>): void;
+  abstract _addTo(node: CommandNode<S>): undefined;
 
   findAmbiguities(
     consumer: AmbiguityConsumer<S>,
     argumentSeparator = defaultArgumentSeparator,
-  ): void {
+  ): undefined {
     let matches = new Set<string>();
     for (const child of this.children.values()) {
       for (const sibling of this.children.values()) {
@@ -101,6 +101,7 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
       }
       child.findAmbiguities(consumer, argumentSeparator);
     }
+    return;
   }
 
   abstract isValidInput(
@@ -133,7 +134,7 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
     reader: StringReader,
     context: CommandContextBuilder<S>,
     argumentSeparator?: ArgumentSeparator,
-  ): void;
+  ): undefined;
 
   abstract listSuggestions(
     context: CommandContext<S>,

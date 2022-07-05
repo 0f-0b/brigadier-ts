@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "noImplicitOverride": true
+  },
+  "fmt": {
+    "files": {
+      "exclude": [
+        "npm"
+      ]
+    }
+  },
+  "lint": {
+    "files": {
+      "exclude": [
+        "npm"
+      ]
+    }
+  }
+}

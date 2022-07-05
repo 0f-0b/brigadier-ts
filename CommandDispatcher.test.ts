@@ -4,7 +4,6 @@ import {
   assert,
   assertEquals,
   assertExists,
-  assertIsError,
   assertRejects,
   assertStrictEquals,
 } from "./deps/std/testing/asserts.ts";
@@ -60,66 +59,71 @@ Deno.test("executeUnknownCommand", async () => {
   const subject = new CommandDispatcher();
   subject.register(literal("bar"));
   subject.register(literal("baz"));
-  await assertRejects(() => subject.execute("foo", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("executeImpermissibleCommand", async () => {
   const subject = new CommandDispatcher();
   subject.register(literal("foo").requires(() => false));
-  await assertRejects(() => subject.execute("foo", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("executeEmptyCommand", async () => {
   const subject = new CommandDispatcher();
   subject.register(literal(""));
-  await assertRejects(() => subject.execute("", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = await assertRejects(
+    () => subject.execute("", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("executeUnknownSubcommand", async () => {
   const subject = new CommandDispatcher();
   subject.register(literal("foo").executes(() => 0));
-  await assertRejects(() => subject.execute("foo bar", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownArgument,
-    );
-    assertStrictEquals(e.cursor, 4);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo bar", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownArgument,
+  );
+  assertStrictEquals(e.cursor, 4);
 });
 
 Deno.test("executeIncorrectLiteral", async () => {
   const subject = new CommandDispatcher();
   subject.register(literal("foo").executes(() => 0).then(literal("bar")));
-  await assertRejects(() => subject.execute("foo baz", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownArgument,
-    );
-    assertStrictEquals(e.cursor, 4);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo baz", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownArgument,
+  );
+  assertStrictEquals(e.cursor, 4);
 });
 
 Deno.test("executeAmbiguousIncorrectArgument", async () => {
@@ -127,17 +131,15 @@ Deno.test("executeAmbiguousIncorrectArgument", async () => {
   subject.register(
     literal("foo").executes(() => 0).then(literal("bar")).then(literal("baz")),
   );
-  await assertRejects(
+  const e = await assertRejects(
     () => subject.execute("foo unknown", source),
-    (e: Error) => {
-      assertIsError(e, CommandSyntaxError);
-      assertStrictEquals(
-        e.type,
-        CommandSyntaxError.builtInErrors.dispatcherUnknownArgument,
-      );
-      assertStrictEquals(e.cursor, 4);
-    },
+    CommandSyntaxError,
   );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownArgument,
+  );
+  assertStrictEquals(e.cursor, 4);
 });
 
 Deno.test("executeSubcommand", async () => {
@@ -285,14 +287,15 @@ Deno.test("executeOrphanedSubcommand", async () => {
   subject.register(
     literal("foo").then(argument("bar", integer())).executes(() => 0),
   );
-  await assertRejects(() => subject.execute("foo 5", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
-    );
-    assertStrictEquals(e.cursor, 5);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo 5", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
+  );
+  assertStrictEquals(e.cursor, 5);
 });
 
 Deno.test("execute invalidOther", async () => {
@@ -312,14 +315,15 @@ Deno.test("parse noSpaceSeparator", async () => {
   subject.register(
     literal("foo").then(argument("bar", integer()).executes(command)),
   );
-  await assertRejects(() => subject.execute("foo$", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo$", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("executeInvalidSubcommand", async () => {
@@ -328,14 +332,15 @@ Deno.test("executeInvalidSubcommand", async () => {
   subject.register(
     literal("foo").then(argument("bar", integer())).executes(command),
   );
-  await assertRejects(() => subject.execute("foo bar", source), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedInt,
-    );
-    assertStrictEquals(e.cursor, 4);
-  });
+  const e = await assertRejects(
+    () => subject.execute("foo bar", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedInt,
+  );
+  assertStrictEquals(e.cursor, 4);
 });
 
 Deno.test("getPath", () => {
@@ -523,7 +528,7 @@ function assertSuggestions(
   suggestions: Suggestions,
   range: StringRange,
   texts: readonly string[],
-): void {
+): undefined {
   assert(range[Equatable.equals](suggestions.range));
   assert(
     tupleEqualer.equals(
@@ -531,6 +536,7 @@ function assertSuggestions(
       suggestions.list,
     ),
   );
+  return;
 }
 
 Deno.test("getCompletionSuggestions rootCommands", async () => {

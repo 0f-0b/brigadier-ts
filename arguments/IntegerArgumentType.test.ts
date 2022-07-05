@@ -1,5 +1,4 @@
 import {
-  assertIsError,
   assertStrictEquals,
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
@@ -16,20 +15,22 @@ Deno.test("parse", () => {
 
 Deno.test("parse tooSmall", () => {
   const reader = new StringReader("-5");
-  assertThrows(() => integer(0, 100).parse(reader), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.integerTooLow);
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(
+    () => integer(0, 100).parse(reader),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.integerTooLow);
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("parse tooBig", () => {
   const reader = new StringReader("5");
-  assertThrows(() => integer(-100, 0).parse(reader), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.integerTooHigh);
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(
+    () => integer(-100, 0).parse(reader),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.integerTooHigh);
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("equals", () => {

@@ -1,7 +1,7 @@
 import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
 import { defaultArgumentSeparator } from "../ArgumentSeparator.ts";
 import type { Command } from "../Command.ts";
-import { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
+import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
@@ -38,7 +38,7 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     return this.#literal;
   }
 
-  override _addTo(node: CommandNode<S>): void {
+  override _addTo(node: CommandNode<S>): undefined {
     const child = node.children.get(this.getName());
     if (child) {
       if (this.getCommand()) {
@@ -51,6 +51,7 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
       node.children.set(this.getName(), this);
       node.literals.set(this.getName(), this);
     }
+    return;
   }
 
   override getName(): string {
@@ -61,7 +62,7 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     reader: StringReader,
     contextBuilder: CommandContextBuilder<S>,
     argumentSeparator = defaultArgumentSeparator,
-  ): void {
+  ): undefined {
     const start = reader.getCursor();
     const end = this.#parse(reader, argumentSeparator);
     if (end === undefined) {
@@ -69,6 +70,7 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
         .createWithContext(reader, this.#literal);
     }
     contextBuilder.withNode(this, StringRange.between(start, end));
+    return;
   }
 
   #parse(
@@ -120,7 +122,7 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
     return combineHashes(super[Equatable.hash](), rawHash(this.#literal));
   }
 
-  override getUsageText(_formatter = new CommandUsageFormatter()): string {
+  override getUsageText(_formatter?: CommandUsageFormatter): string {
     return this.#literal;
   }
 

@@ -17,7 +17,7 @@ export const newContextBuilder = () =>
 
 export function testCommandNode(
   newNode: () => CommandNode<unknown>,
-): void {
+): undefined {
   Deno.test("addChild", () => {
     const node = newNode();
     node.addChild(literal("child1").build());
@@ -52,4 +52,6 @@ export function testCommandNode(
       (x) => assertStrictEquals(x.getCommand(), command),
     ]);
   });
+
+  return;
 }

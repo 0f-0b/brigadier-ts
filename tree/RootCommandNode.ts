@@ -1,6 +1,6 @@
 import { Equatable } from "../deps/@esfx/equatable.ts";
-import { defaultArgumentSeparator } from "../ArgumentSeparator.ts";
-import { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
+import type { ArgumentSeparator } from "../ArgumentSeparator.ts";
+import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { StringReader } from "../StringReader.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
@@ -13,7 +13,7 @@ export class RootCommandNode<S> extends CommandNode<S> {
     super(undefined, () => true, undefined, (s) => [s.getSource()], false);
   }
 
-  override _addTo(): void {
+  override _addTo(): never {
     throw new TypeError(
       "Cannot add a RootCommandNode as a child to any other CommandNode",
     );
@@ -23,15 +23,17 @@ export class RootCommandNode<S> extends CommandNode<S> {
     return "";
   }
 
-  override getUsageText(_formatter = new CommandUsageFormatter()): string {
+  override getUsageText(_formatter?: CommandUsageFormatter): string {
     return "";
   }
 
   override parse(
     _reader: StringReader,
     _context: CommandContextBuilder<S>,
-    _argumentSeparator = defaultArgumentSeparator,
-  ): void {}
+    _argumentSeparator?: ArgumentSeparator,
+  ): undefined {
+    return;
+  }
 
   override listSuggestions(
     _context: CommandContext<S>,
@@ -42,7 +44,7 @@ export class RootCommandNode<S> extends CommandNode<S> {
 
   override isValidInput(
     _input: string,
-    _argumentSeparator = defaultArgumentSeparator,
+    _argumentSeparator?: ArgumentSeparator,
   ): boolean {
     return false;
   }

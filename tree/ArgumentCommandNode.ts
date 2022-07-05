@@ -1,5 +1,8 @@
 import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
-import { defaultArgumentSeparator } from "../ArgumentSeparator.ts";
+import {
+  type ArgumentSeparator,
+  defaultArgumentSeparator,
+} from "../ArgumentSeparator.ts";
 import type { Command } from "../Command.ts";
 import { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { Predicate } from "../Predicate.ts";
@@ -43,7 +46,7 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     return this.#type;
   }
 
-  override _addTo(node: CommandNode<S>): void {
+  override _addTo(node: CommandNode<S>): undefined {
     const child = node.children.get(this.getName());
     if (child) {
       if (this.getCommand()) {
@@ -56,6 +59,7 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
       node.children.set(this.getName(), this);
       node.arguments.set(this.getName(), this);
     }
+    return;
   }
 
   override getName(): string {
@@ -73,13 +77,14 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
   override parse(
     reader: StringReader,
     contextBuilder: CommandContextBuilder<S>,
-    _argumentSeparator = defaultArgumentSeparator,
-  ): void {
+    _argumentSeparator?: ArgumentSeparator,
+  ): undefined {
     const start = reader.getCursor();
     const result = this.#type.parse(reader);
     const parsed = new ParsedArgument<T>(start, reader.getCursor(), result);
     contextBuilder.withArgument(this.#name, parsed);
     contextBuilder.withNode(this, parsed.range);
+    return;
   }
 
   override listSuggestions(

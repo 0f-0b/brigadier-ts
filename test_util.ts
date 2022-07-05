@@ -8,8 +8,8 @@ function isIterable(x: unknown): x is Iterable<unknown> {
 
 export function assertIterator<T>(
   it: Iterable<T> | Iterator<T>,
-  fns: readonly ((elem: T) => void)[],
-): void {
+  fns: readonly ((elem: T) => unknown)[],
+): undefined {
   if (isIterable(it)) {
     it = it[Symbol.iterator]();
   }
@@ -19,13 +19,14 @@ export function assertIterator<T>(
     fn(value);
   }
   assert(it.next().done, "Iterator yielded too many values");
+  return;
 }
 
 const singleton = Object.freeze({});
 
 export function assertEquatable<T extends Equatable>(
   groups: readonly (readonly T[])[],
-): void {
+): undefined {
   for (const as of groups) {
     for (const a of as) {
       assert(!a[Equatable.equals](undefined), "Value equals to undefined");
@@ -50,4 +51,5 @@ export function assertEquatable<T extends Equatable>(
       }
     }
   }
+  return;
 }

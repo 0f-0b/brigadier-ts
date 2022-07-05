@@ -1,5 +1,4 @@
 import {
-  assertIsError,
   assertStrictEquals,
   assertThrows,
 } from "./deps/std/testing/asserts.ts";
@@ -206,50 +205,42 @@ Deno.test("readQuotedString withImmediateRemaining", () => {
 
 Deno.test("readQuotedString noOpen", () => {
   const reader = new StringReader('hello world"');
-  assertThrows(() => reader.readQuotedString(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedStartOfQuote,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readQuotedString(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedStartOfQuote,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readQuotedString noClose", () => {
   const reader = new StringReader('"hello world');
-  assertThrows(() => reader.readQuotedString(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedEndOfQuote,
-    );
-    assertStrictEquals(e.cursor, 12);
-  });
+  const e = assertThrows(() => reader.readQuotedString(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedEndOfQuote,
+  );
+  assertStrictEquals(e.cursor, 12);
 });
 
 Deno.test("readQuotedString invalidEscape", () => {
   const reader = new StringReader('"hello\\nworld"');
-  assertThrows(() => reader.readQuotedString(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerInvalidEscape,
-    );
-    assertStrictEquals(e.cursor, 7);
-  });
+  const e = assertThrows(() => reader.readQuotedString(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerInvalidEscape,
+  );
+  assertStrictEquals(e.cursor, 7);
 });
 
 Deno.test("readQuotedString invalidQuoteEscape", () => {
   const reader = new StringReader("'hello\\\"'world");
-  assertThrows(() => reader.readQuotedString(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerInvalidEscape,
-    );
-    assertStrictEquals(e.cursor, 7);
-  });
+  const e = assertThrows(() => reader.readQuotedString(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerInvalidEscape,
+  );
+  assertStrictEquals(e.cursor, 7);
 });
 
 Deno.test("readString noQuotes", () => {
@@ -289,26 +280,19 @@ Deno.test("readInt negative", () => {
 
 Deno.test("readInt invalid", () => {
   const reader = new StringReader("12.34");
-  assertThrows(() => reader.readInt(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerInvalidInt,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readInt(), CommandSyntaxError);
+  assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.readerInvalidInt);
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readInt none", () => {
   const reader = new StringReader("");
-  assertThrows(() => reader.readInt(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedInt,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readInt(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedInt,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readInt withRemaining", () => {
@@ -348,26 +332,22 @@ Deno.test("readFloat negative", () => {
 
 Deno.test("readFloat invalid", () => {
   const reader = new StringReader("12.34.56");
-  assertThrows(() => reader.readFloat(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerInvalidFloat,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readFloat(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerInvalidFloat,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readFloat none", () => {
   const reader = new StringReader("");
-  assertThrows(() => reader.readFloat(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedFloat,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readFloat(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedFloat,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readFloat withRemaining", () => {
@@ -392,26 +372,22 @@ Deno.test("expect correct", () => {
 
 Deno.test("expect incorrect", () => {
   const reader = new StringReader("bcd");
-  assertThrows(() => reader.expect("a"), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedSymbol,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.expect("a"), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedSymbol,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("expect none", () => {
   const reader = new StringReader("");
-  assertThrows(() => reader.expect("a"), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedSymbol,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.expect("a"), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedSymbol,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readBoolean correct", () => {
@@ -422,24 +398,20 @@ Deno.test("readBoolean correct", () => {
 
 Deno.test("readBoolean incorrect", () => {
   const reader = new StringReader("tuesday");
-  assertThrows(() => reader.readBoolean(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerInvalidBool,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readBoolean(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerInvalidBool,
+  );
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("readBoolean none", () => {
   const reader = new StringReader("");
-  assertThrows(() => reader.readBoolean(), (e: Error) => {
-    assertIsError(e, CommandSyntaxError);
-    assertStrictEquals(
-      e.type,
-      CommandSyntaxError.builtInErrors.readerExpectedBool,
-    );
-    assertStrictEquals(e.cursor, 0);
-  });
+  const e = assertThrows(() => reader.readBoolean(), CommandSyntaxError);
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.readerExpectedBool,
+  );
+  assertStrictEquals(e.cursor, 0);
 });

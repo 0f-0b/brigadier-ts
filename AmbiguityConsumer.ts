@@ -5,4 +5,4 @@ export type AmbiguityConsumer<S> = (
   child: CommandNode<S>,
   sibling: CommandNode<S>,
   inputs: Iterable<string>,
-) => void;
+) => unknown;

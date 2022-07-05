@@ -95,7 +95,7 @@ export class CommandSyntaxError extends Error {
     }
   }
 
-  get message(): string {
+  override get message(): string {
     return this.getMessage();
   }
 

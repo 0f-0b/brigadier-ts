@@ -1,7 +1,10 @@
 import { joinToString } from "./deps/std/collections/join_to_string.ts";
 import { minWith } from "./deps/std/collections/min_with.ts";
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
-import { type ArgumentSeparator, defaultArgumentSeparator } from "./ArgumentSeparator.ts";
+import {
+  type ArgumentSeparator,
+  defaultArgumentSeparator,
+} from "./ArgumentSeparator.ts";
 import { CommandUsageFormatter } from "./CommandUsageFormatter.ts";
 import { ParseResults } from "./ParseResults.ts";
 import type { ResultConsumer } from "./ResultConsumer.ts";
@@ -28,12 +31,14 @@ export class CommandDispatcher<S> {
     return this.#root.addChild(command.build());
   }
 
-  setConsumer(consumer: ResultConsumer<S>): void {
+  setConsumer(consumer: ResultConsumer<S>): undefined {
     this.#consumer = consumer;
+    return;
   }
 
-  setArgumentSeparator(argumentSeparator: ArgumentSeparator): void {
+  setArgumentSeparator(argumentSeparator: ArgumentSeparator): undefined {
     this.#argumentSeparator = argumentSeparator;
+    return;
   }
 
   execute(input: string | StringReader, source: S): Promise<number>;
@@ -234,7 +239,7 @@ export class CommandDispatcher<S> {
     prefix: string,
     restricted: boolean,
     formatter: CommandUsageFormatter,
-  ): void {
+  ): undefined {
     if (restricted && !node.canUse(source)) {
       return;
     }
@@ -423,19 +428,21 @@ export class CommandDispatcher<S> {
     return node;
   }
 
-  findAmbiguities(consumer: AmbiguityConsumer<S>): void {
+  findAmbiguities(consumer: AmbiguityConsumer<S>): undefined {
     this.#root.findAmbiguities(consumer, this.#argumentSeparator);
+    return;
   }
 
   #addPaths(
     node: CommandNode<S>,
     result: CommandNode<S>[][],
     parents: CommandNode<S>[],
-  ): void {
+  ): undefined {
     const current = [...parents, node];
     result.push(current);
     for (const child of node.getChildren()) {
       this.#addPaths(child, result, current);
     }
+    return;
   }
 }

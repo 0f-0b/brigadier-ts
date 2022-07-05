@@ -1,7 +1,6 @@
 import { tupleEqualer } from "../deps/@esfx/equatable.ts";
 import {
   assert,
-  assertIsError,
   assertStrictEquals,
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
@@ -41,34 +40,24 @@ Deno.test("parseSimilar", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("foobar");
-  assertThrows(
+  const e = assertThrows(
     () => node.parse(reader, contextBuilder),
-    (e: Error) => {
-      assertIsError(e, CommandSyntaxError);
-      assertStrictEquals(
-        e.type,
-        CommandSyntaxError.builtInErrors.literalIncorrect,
-      );
-      assertStrictEquals(e.cursor, 0);
-    },
+    CommandSyntaxError,
   );
+  assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.literalIncorrect);
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("parseInvalid", () => {
   const node = newNode();
   const contextBuilder = newContextBuilder();
   const reader = new StringReader("bar");
-  assertThrows(
+  const e = assertThrows(
     () => node.parse(reader, contextBuilder),
-    (e: Error) => {
-      assertIsError(e, CommandSyntaxError);
-      assertStrictEquals(
-        e.type,
-        CommandSyntaxError.builtInErrors.literalIncorrect,
-      );
-      assertStrictEquals(e.cursor, 0);
-    },
+    CommandSyntaxError,
   );
+  assertStrictEquals(e.type, CommandSyntaxError.builtInErrors.literalIncorrect);
+  assertStrictEquals(e.cursor, 0);
 });
 
 Deno.test("usage", () => {
