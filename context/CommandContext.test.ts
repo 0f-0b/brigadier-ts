@@ -1,9 +1,10 @@
-import { Equatable } from "../deps/@esfx/equatable.ts";
+import { Equatable } from "../deps/esfx/equatable.ts";
 import {
   assertStrictEquals,
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
-import { assertEquatable } from "../test_util.ts";
+
+import { assertEquatable } from "../assert_equatable.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { RootCommandNode } from "../tree/RootCommandNode.ts";
 import { CommandContextBuilder } from "./CommandContextBuilder.ts";

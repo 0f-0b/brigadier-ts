@@ -2,7 +2,8 @@ import {
   combineHashes,
   defaultEqualer,
   Equatable,
-} from "../deps/@esfx/equatable.ts";
+} from "../deps/esfx/equatable.ts";
+
 import { StringRange } from "./StringRange.ts";
 
 export class ParsedArgument<T> implements Equatable {

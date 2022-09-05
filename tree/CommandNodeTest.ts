@@ -1,7 +1,8 @@
 import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
-import { assertIterator } from "../test_util.ts";
-import { CommandDispatcher } from "../CommandDispatcher.ts";
+
+import { assertIterator } from "../assert_iterator.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
+import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import { CommandNode } from "./CommandNode.ts";
 import { RootCommandNode } from "./RootCommandNode.ts";

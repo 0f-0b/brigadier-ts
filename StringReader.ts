@@ -1,5 +1,5 @@
-import type { ImmutableStringReader } from "./ImmutableStringReader.ts";
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
+import type { ImmutableStringReader } from "./ImmutableStringReader.ts";
 
 const allowedNumber = new Set("0123456789.-");
 const quotedStringStart = new Set("\"'");

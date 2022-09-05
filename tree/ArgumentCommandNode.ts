@@ -1,21 +1,22 @@
-import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
+import { combineHashes, Equatable, rawHash } from "../deps/esfx/equatable.ts";
+
+import type { ArgumentType } from "../arguments/ArgumentType.ts";
 import {
   type ArgumentSeparator,
   defaultArgumentSeparator,
 } from "../ArgumentSeparator.ts";
-import type { Command } from "../Command.ts";
-import { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
-import type { Predicate } from "../Predicate.ts";
-import type { RedirectModifier } from "../RedirectModifier.ts";
-import { StringReader } from "../StringReader.ts";
-import type { ArgumentType } from "../arguments/ArgumentType.ts";
 import {
   argument,
   type RequiredArgumentBuilder,
 } from "../builder/RequiredArgumentBuilder.ts";
+import type { Command } from "../Command.ts";
+import { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import { ParsedArgument } from "../context/ParsedArgument.ts";
+import type { Predicate } from "../Predicate.ts";
+import type { RedirectModifier } from "../RedirectModifier.ts";
+import { StringReader } from "../StringReader.ts";
 import type { SuggestionProvider } from "../suggestion/SuggestionProvider.ts";
 import type { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";

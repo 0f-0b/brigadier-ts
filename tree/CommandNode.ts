@@ -4,23 +4,24 @@ import {
   defaultComparer,
   defaultEqualer,
   Equatable,
-} from "../deps/@esfx/equatable.ts";
-import { mapEqualer } from "../util.ts";
+} from "../deps/esfx/equatable.ts";
+
 import type { AmbiguityConsumer } from "../AmbiguityConsumer.ts";
 import {
   type ArgumentSeparator,
   defaultArgumentSeparator,
 } from "../ArgumentSeparator.ts";
+import type { ArgumentBuilder } from "../builder/ArgumentBuilder.ts";
 import type { Command } from "../Command.ts";
 import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
+import type { CommandContext } from "../context/CommandContext.ts";
+import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import { StringReader } from "../StringReader.ts";
-import type { ArgumentBuilder } from "../builder/ArgumentBuilder.ts";
-import type { CommandContext } from "../context/CommandContext.ts";
-import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import type { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
+import { mapEqualer } from "../util.ts";
 import type { ArgumentCommandNode } from "./ArgumentCommandNode.ts";
 import type { LiteralCommandNode } from "./LiteralCommandNode.ts";
 

@@ -1,6 +1,7 @@
-import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
-import type { StringReader } from "../StringReader.ts";
+import { combineHashes, Equatable, rawHash } from "../deps/esfx/equatable.ts";
+
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
+import type { StringReader } from "../StringReader.ts";
 import { ArgumentType } from "./ArgumentType.ts";
 
 export class FloatArgumentType extends ArgumentType<number> {

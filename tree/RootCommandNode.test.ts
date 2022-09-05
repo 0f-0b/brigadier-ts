@@ -2,9 +2,10 @@ import {
   assertStrictEquals,
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
-import { assertEquatable } from "../test_util.ts";
-import { StringReader } from "../StringReader.ts";
+
+import { assertEquatable } from "../assert_equatable.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
+import { StringReader } from "../StringReader.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import { newContextBuilder, testCommandNode } from "./CommandNodeTest.ts";
 import { RootCommandNode } from "./RootCommandNode.ts";

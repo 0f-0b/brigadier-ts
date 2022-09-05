@@ -1,5 +1,5 @@
-import type { Message } from "../Message.ts";
 import { StringRange } from "../context/StringRange.ts";
+import type { Message } from "../Message.ts";
 import { NumberSuggestion } from "./NumberSuggestion.ts";
 import { Suggestion } from "./Suggestion.ts";
 import { Suggestions } from "./Suggestions.ts";

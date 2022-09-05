@@ -1,14 +1,15 @@
-import { tupleEqualer } from "../deps/@esfx/equatable.ts";
+import { tupleEqualer } from "../deps/esfx/equatable.ts";
 import {
   assert,
   assertStrictEquals,
   assertThrows,
 } from "../deps/std/testing/asserts.ts";
-import { assertEquatable } from "../test_util.ts";
-import { StringReader } from "../StringReader.ts";
+
+import { assertEquatable } from "../assert_equatable.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { StringRange } from "../context/StringRange.ts";
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
+import { StringReader } from "../StringReader.ts";
 import { Suggestion } from "../suggestion/Suggestion.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import {

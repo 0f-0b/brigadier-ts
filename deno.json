@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "noImplicitOverride": true
-  },
   "fmt": {
     "files": {
       "exclude": [
@@ -15,5 +12,16 @@
         "npm"
       ]
     }
+  },
+  "test": {
+    "files": {
+      "exclude": [
+        "npm"
+      ]
+    }
+  },
+  "tasks": {
+    "lint": "deno fmt --check && deno lint && deno check --remote mod.ts scripts/build_npm.ts",
+    "test": "deno test --check=all --parallel"
   }
 }

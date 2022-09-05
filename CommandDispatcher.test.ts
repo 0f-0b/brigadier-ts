@@ -1,5 +1,5 @@
-import { Equatable, tupleEqualer } from "./deps/@esfx/equatable.ts";
-import { ref } from "./deps/@esfx/ref.ts";
+import { Equatable, tupleEqualer } from "./deps/esfx/equatable.ts";
+import { ref } from "./deps/esfx/ref.ts";
 import {
   assert,
   assertEquals,
@@ -8,15 +8,16 @@ import {
   assertStrictEquals,
 } from "./deps/std/testing/asserts.ts";
 import { assertSpyCalls, spy } from "./deps/std/testing/mock.ts";
-import { CommandDispatcher } from "./CommandDispatcher.ts";
-import { StringReader } from "./StringReader.ts";
+
 import { integer } from "./arguments/IntegerArgumentType.ts";
 import { word } from "./arguments/StringArgumentType.ts";
 import { literal } from "./builder/LiteralArgumentBuilder.ts";
 import { argument } from "./builder/RequiredArgumentBuilder.ts";
+import { CommandDispatcher } from "./CommandDispatcher.ts";
 import type { CommandContext } from "./context/CommandContext.ts";
 import { StringRange } from "./context/StringRange.ts";
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
+import { StringReader } from "./StringReader.ts";
 import { Suggestion } from "./suggestion/Suggestion.ts";
 import type { Suggestions } from "./suggestion/Suggestions.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";

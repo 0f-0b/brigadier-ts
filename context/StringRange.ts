@@ -1,4 +1,5 @@
-import { combineHashes, Equatable, rawHash } from "../deps/@esfx/equatable.ts";
+import { combineHashes, Equatable, rawHash } from "../deps/esfx/equatable.ts";
+
 import type { ImmutableStringReader } from "../ImmutableStringReader.ts";
 
 export class StringRange implements Equatable {

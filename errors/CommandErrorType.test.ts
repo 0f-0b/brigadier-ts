@@ -1,4 +1,5 @@
 import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
+
 import { LiteralMessage } from "../LiteralMessage.ts";
 import { StringReader } from "../StringReader.ts";
 import { CommandErrorType } from "./CommandErrorType.ts";

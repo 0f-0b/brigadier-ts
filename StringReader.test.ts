@@ -2,8 +2,9 @@ import {
   assertStrictEquals,
   assertThrows,
 } from "./deps/std/testing/asserts.ts";
-import { StringReader } from "./StringReader.ts";
+
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
+import { StringReader } from "./StringReader.ts";
 
 Deno.test("canRead", () => {
   const reader = new StringReader("abc");

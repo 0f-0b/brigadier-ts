@@ -3,9 +3,10 @@ import {
   Comparable,
   Equatable,
   rawHash,
-} from "../deps/@esfx/equatable.ts";
-import { Message } from "../Message.ts";
+} from "../deps/esfx/equatable.ts";
+
 import { StringRange } from "../context/StringRange.ts";
+import { Message } from "../Message.ts";
 import { Suggestion } from "./Suggestion.ts";
 
 export class NumberSuggestion extends Suggestion {

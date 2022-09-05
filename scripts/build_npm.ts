@@ -15,11 +15,11 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v86": {
+    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v92": {
       name: "@esfx/equatable",
       version: "^1.0.0-pre.19",
     },
-    "https://esm.sh/@esfx/ref@1.0.0-pre.23?target=esnext&pin=v86": {
+    "https://esm.sh/@esfx/ref@1.0.0-pre.23?target=esnext&pin=v92": {
       name: "@esfx/ref",
       version: "^1.0.0-pre.23",
     },
@@ -35,8 +35,8 @@ await build({
     author: "ud2",
     repository: "github:0f-0b/brigadier-ts",
   },
+  postBuild() {
+    Deno.copyFileSync("LICENSE", "npm/LICENSE");
+    Deno.copyFileSync("README.md", "npm/README.md");
+  },
 });
-await Promise.all([
-  Deno.copyFile("LICENSE", "npm/LICENSE"),
-  Deno.copyFile("README.md", "npm/README.md"),
-]);

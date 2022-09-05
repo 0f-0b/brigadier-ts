@@ -1,9 +1,10 @@
-import { Equatable } from "../deps/@esfx/equatable.ts";
+import { Equatable } from "../deps/esfx/equatable.ts";
+
 import type { ArgumentSeparator } from "../ArgumentSeparator.ts";
 import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
-import type { StringReader } from "../StringReader.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
+import type { StringReader } from "../StringReader.ts";
 import { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import { CommandNode } from "./CommandNode.ts";

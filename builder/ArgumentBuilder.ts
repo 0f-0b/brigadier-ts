@@ -1,4 +1,5 @@
-import type { Reference } from "../deps/@esfx/ref.ts";
+import type { Reference } from "../deps/esfx/ref.ts";
+
 import type { Command } from "../Command.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";

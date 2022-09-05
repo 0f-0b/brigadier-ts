@@ -3,10 +3,11 @@ import {
   defaultComparer,
   Equatable,
   tupleEqualer,
-} from "../deps/@esfx/equatable.ts";
-import { maxOf, minOf } from "../util.ts";
+} from "../deps/esfx/equatable.ts";
+
 import { StringRange } from "../context/StringRange.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";
+import { maxOf, minOf } from "../util.ts";
 
 export class Suggestions implements Equatable {
   static readonly EMPTY = new Suggestions(StringRange.at(0), []);

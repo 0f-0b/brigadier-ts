@@ -1,5 +1,6 @@
 import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
-import { assertEquatable } from "../test_util.ts";
+
+import { assertEquatable } from "../assert_equatable.ts";
 import { StringReader } from "../StringReader.ts";
 import { ParsedArgument } from "./ParsedArgument.ts";
 

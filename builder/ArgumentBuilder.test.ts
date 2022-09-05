@@ -1,11 +1,12 @@
-import { Equatable } from "../deps/@esfx/equatable.ts";
+import { Equatable } from "../deps/esfx/equatable.ts";
 import {
   assertStrictEquals,
   assertThrows,
   unreachable,
 } from "../deps/std/testing/asserts.ts";
-import { assertIterator } from "../test_util.ts";
+
 import { integer } from "../arguments/IntegerArgumentType.ts";
+import { assertIterator } from "../assert_iterator.ts";
 import { CommandNode } from "../tree/CommandNode.ts";
 import { RootCommandNode } from "../tree/RootCommandNode.ts";
 import { ArgumentBuilder } from "./ArgumentBuilder.ts";

@@ -3,7 +3,7 @@ import {
   defaultEqualer,
   Equaler,
   rawHash,
-} from "./deps/@esfx/equatable.ts";
+} from "./deps/esfx/equatable.ts";
 
 export type Awaitable<T> = T | PromiseLike<T>;
 

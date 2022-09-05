@@ -1,17 +1,18 @@
 import { joinToString } from "./deps/std/collections/join_to_string.ts";
 import { minWith } from "./deps/std/collections/min_with.ts";
+
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import {
   type ArgumentSeparator,
   defaultArgumentSeparator,
 } from "./ArgumentSeparator.ts";
+import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
 import { CommandUsageFormatter } from "./CommandUsageFormatter.ts";
+import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
+import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { ParseResults } from "./ParseResults.ts";
 import type { ResultConsumer } from "./ResultConsumer.ts";
 import { StringReader } from "./StringReader.ts";
-import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
-import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
-import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { Suggestions } from "./suggestion/Suggestions.ts";
 import { SuggestionsBuilder } from "./suggestion/SuggestionsBuilder.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";

@@ -5,9 +5,10 @@ import {
   defaultEqualer,
   Equatable,
   rawHash,
-} from "../deps/@esfx/equatable.ts";
-import type { Message } from "../Message.ts";
+} from "../deps/esfx/equatable.ts";
+
 import type { StringRange } from "../context/StringRange.ts";
+import type { Message } from "../Message.ts";
 
 export class Suggestion implements Equatable, Comparable {
   readonly range: StringRange;

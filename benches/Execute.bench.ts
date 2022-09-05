@@ -1,5 +1,5 @@
-import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
+import { CommandDispatcher } from "../CommandDispatcher.ts";
 
 const dispatcher = new CommandDispatcher();
 dispatcher.register(literal("command").executes(() => 0));

@@ -1,8 +1,9 @@
 import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
-import { assertEquatable } from "../test_util.ts";
-import { StringReader } from "../StringReader.ts";
+
 import { integer } from "../arguments/IntegerArgumentType.ts";
+import { assertEquatable } from "../assert_equatable.ts";
 import { argument } from "../builder/RequiredArgumentBuilder.ts";
+import { StringReader } from "../StringReader.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import {
   command,

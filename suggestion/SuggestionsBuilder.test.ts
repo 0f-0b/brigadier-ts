@@ -1,10 +1,11 @@
-import { Equatable, tupleEqualer } from "../deps/@esfx/equatable.ts";
+import { Equatable, tupleEqualer } from "../deps/esfx/equatable.ts";
 import {
   assert,
   assertEquals,
   assertNotStrictEquals,
   assertStrictEquals,
 } from "../deps/std/testing/asserts.ts";
+
 import { StringRange } from "../context/StringRange.ts";
 import { Suggestion } from "./Suggestion.ts";
 import { SuggestionsBuilder } from "./SuggestionsBuilder.ts";
