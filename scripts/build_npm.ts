@@ -15,13 +15,13 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v92": {
+    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v94": {
       name: "@esfx/equatable",
       version: "^1.0.0-pre.19",
     },
-    "https://esm.sh/@esfx/ref@1.0.0-pre.23?target=esnext&pin=v92": {
+    "https://esm.sh/@esfx/ref@1.0.0-pre.37?pin=v94": {
       name: "@esfx/ref",
-      version: "^1.0.0-pre.23",
+      version: "^1.0.0-pre.37",
     },
   },
   package: {

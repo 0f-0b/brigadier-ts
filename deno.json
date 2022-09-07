@@ -22,6 +22,6 @@
   },
   "tasks": {
     "lint": "deno fmt --check && deno lint && deno check --remote mod.ts scripts/build_npm.ts",
-    "test": "deno test --check=all --parallel"
+    "test": "deno test --check=all"
   }
 }
