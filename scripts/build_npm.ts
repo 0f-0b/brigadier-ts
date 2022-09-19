@@ -2,11 +2,12 @@
 
 import { build, emptyDir } from "../deps/dnt.ts";
 
-Deno.chdir(new URL("..", import.meta.url));
 const [version] = Deno.args;
 if (!version) {
+  console.error("usage: ./scripts/build_npm.ts <version>");
   Deno.exit(2);
 }
+Deno.chdir(new URL("..", import.meta.url));
 await emptyDir("npm");
 await build({
   entryPoints: ["mod.ts"],
@@ -15,13 +16,13 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.0-pre.19?target=esnext&pin=v94": {
+    "https://esm.sh/@esfx/equatable@1.0.0-pre.39?target=esnext&pin=v95": {
       name: "@esfx/equatable",
-      version: "^1.0.0-pre.19",
+      version: "1.0.0-pre.19",
     },
-    "https://esm.sh/@esfx/ref@1.0.0-pre.37?pin=v94": {
+    "https://esm.sh/@esfx/ref@1.0.0-pre.39?target=esnext&pin=v95": {
       name: "@esfx/ref",
-      version: "^1.0.0-pre.37",
+      version: "1.0.0-pre.39",
     },
   },
   package: {
@@ -34,6 +35,9 @@ await build({
     license: "MIT",
     author: "ud2",
     repository: "github:0f-0b/brigadier-ts",
+    publishConfig: {
+      access: "public",
+    },
   },
   postBuild() {
     Deno.copyFileSync("LICENSE", "npm/LICENSE");
