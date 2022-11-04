@@ -88,9 +88,7 @@ export class CommandSyntaxError extends Error {
     this.rawMessage = message;
     this.input = input;
     this.cursor = cursor;
-    if (CommandSyntaxError.enableCommandStackTraces) {
-      Error.captureStackTrace?.(this, CommandSyntaxError);
-    } else {
+    if (!CommandSyntaxError.enableCommandStackTraces) {
       this.stack = undefined;
     }
   }
