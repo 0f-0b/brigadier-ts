@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run --lock -A
+#!/usr/bin/env -S deno run -A
 
 import { build, emptyDir } from "../deps/dnt.ts";
 
@@ -16,11 +16,11 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.0-pre.39?target=esnext&pin=v96": {
+    "https://esm.sh/@esfx/equatable@1.0.0-pre.39?target=esnext&pin=v98": {
       name: "@esfx/equatable",
       version: "^1.0.2",
     },
-    "https://esm.sh/@esfx/ref@1.0.0?target=esnext&pin=v96": {
+    "https://esm.sh/@esfx/ref@1.0.0?target=esnext&pin=v98": {
       name: "@esfx/ref",
       version: "^1.0.0",
     },

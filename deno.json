@@ -21,8 +21,8 @@
     }
   },
   "tasks": {
-    "lint": "deno fmt --check && deno lint && deno check --lock --remote mod.ts scripts/build_npm.ts",
-    "test": "deno test --lock --check=all",
-    "bench": "deno bench --unstable --check=all"
+    "lint": "deno fmt --check && deno lint && deno check --remote scripts/build_npm.ts",
+    "test": "deno test --check=all",
+    "bench": "deno bench --check=all"
   }
 }
