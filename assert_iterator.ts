@@ -1,14 +1,12 @@
 import { assert } from "./deps/std/testing/asserts.ts";
 
-import { isIterable } from "./common.ts";
+import { toIterator } from "./object.ts";
 
 export function assertIterator<T>(
-  it: Iterable<T> | Iterator<T>,
-  fns: readonly ((elem: T) => unknown)[],
+  o: Iterable<T> | Iterator<T>,
+  fns: readonly ((value: T) => unknown)[],
 ): undefined {
-  if (isIterable(it)) {
-    it = it[Symbol.iterator]();
-  }
+  const it = toIterator(o);
   for (const fn of fns) {
     const { value, done } = it.next();
     assert(!done, "Iterator yielded too few values");
