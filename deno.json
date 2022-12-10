@@ -20,8 +20,15 @@
       ]
     }
   },
+  "bench": {
+    "files": {
+      "exclude": [
+        "npm"
+      ]
+    }
+  },
   "tasks": {
-    "lint": "deno fmt --check && deno lint && deno check --remote scripts/build_npm.ts",
+    "lint": "deno fmt --check && deno lint && deno check --all scripts/build_npm.ts",
     "test": "deno test --check=all",
     "bench": "deno bench --check=all"
   }
