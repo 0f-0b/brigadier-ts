@@ -283,6 +283,49 @@ Deno.test("executeRedirected", async () => {
   assertStrictEquals(command.calls[1].args[0].getSource(), source2);
 });
 
+Deno.test("incompleteRedirectShouldThrow", async () => {
+  const subject = new CommandDispatcher();
+  const foo = subject.register(
+    literal("foo")
+      .then(
+        literal("bar")
+          .then(
+            argument("value", integer())
+              .executes((context) => context.getArgument<number>("value")),
+          ),
+      )
+      .then(literal("awa").executes(() => 2)),
+  );
+  subject.register(literal("baz").redirect(foo));
+  const e = await assertRejects(
+    () => subject.execute("baz bar", source),
+    CommandSyntaxError,
+  );
+  assertStrictEquals(
+    e.type,
+    CommandSyntaxError.builtInErrors.dispatcherUnknownCommand,
+  );
+});
+
+Deno.test("redirectModifierEmptyResult", async () => {
+  const subject = new CommandDispatcher();
+  const foo = subject.register(
+    literal("foo")
+      .then(
+        literal("bar")
+          .then(
+            argument("value", integer())
+              .executes((context) => context.getArgument<number>("value")),
+          ),
+      )
+      .then(literal("awa").executes(() => 2)),
+  );
+  const emptyModifier = () => [];
+  subject.register(literal("baz").fork(foo, emptyModifier));
+  const result = await subject.execute("baz bar 100", source);
+  assertStrictEquals(result, 0);
+});
+
 Deno.test("executeOrphanedSubcommand", async () => {
   const subject = new CommandDispatcher();
   subject.register(

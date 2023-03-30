@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "noImplicitOverride": true
+  },
   "fmt": {
     "files": {
       "exclude": [

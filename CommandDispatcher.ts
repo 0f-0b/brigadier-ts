@@ -74,14 +74,19 @@ export class CommandDispatcher<S> {
         if (child) {
           forked ||= context.isForked();
           if (child.hasNodes()) {
-            foundCommand = true;
             const modifier = context.getRedirectModifier();
             if (modifier === undefined) {
               next.push(child.copyFor(context.getSource()));
             } else {
               try {
-                for await (const source of await modifier(context)) {
+                const results = await modifier(context);
+                let resultsIsEmpty = true;
+                for await (const source of results) {
                   next.push(child.copyFor(source));
+                  resultsIsEmpty = false;
+                }
+                if (resultsIsEmpty) {
+                  foundCommand = true;
                 }
               } catch (e: unknown) {
                 if (!(e instanceof CommandSyntaxError)) {
