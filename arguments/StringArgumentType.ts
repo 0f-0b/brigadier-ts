@@ -1,7 +1,6 @@
 import { Equatable, rawHash } from "../deps/esfx/equatable.ts";
 
 import { StringReader } from "../StringReader.ts";
-import { never } from "../util.ts";
 import { ArgumentType } from "./ArgumentType.ts";
 
 export const singleWord = Symbol("singleWord");
@@ -11,6 +10,10 @@ export type StringType =
   | typeof singleWord
   | typeof quotablePhrase
   | typeof greedyPhrase;
+
+function throwInvalidType(type: never): never {
+  throw new TypeError(`Invalid StringType: ${String(type)}`);
+}
 
 export class StringArgumentType extends ArgumentType<string> {
   readonly type: StringType;
@@ -32,7 +35,7 @@ export class StringArgumentType extends ArgumentType<string> {
         return text;
       }
       default:
-        never(this.type);
+        throwInvalidType(this.type);
     }
   }
 
@@ -54,7 +57,7 @@ export class StringArgumentType extends ArgumentType<string> {
       case greedyPhrase:
         return "greedyString()";
       default:
-        never(this.type);
+        throwInvalidType(this.type);
     }
   }
 
@@ -67,7 +70,7 @@ export class StringArgumentType extends ArgumentType<string> {
       case greedyPhrase:
         return ["word", "words with spaces", '"and symbols"'];
       default:
-        never(this.type);
+        throwInvalidType(this.type);
     }
   }
 }

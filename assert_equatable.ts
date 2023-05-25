@@ -1,7 +1,8 @@
 import { Equatable } from "./deps/esfx/equatable.ts";
 import { assert } from "./deps/std/testing/asserts.ts";
 
-const singleton = Object.freeze(Object.create(null));
+// deno-lint-ignore ban-types
+const singleton = Object.freeze({ __proto__: null } as object);
 
 export function assertEquatable<T extends Equatable>(
   groups: readonly (readonly T[])[],

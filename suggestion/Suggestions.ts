@@ -6,8 +6,9 @@ import {
 } from "../deps/esfx/equatable.ts";
 
 import { StringRange } from "../context/StringRange.ts";
+import { maxOf } from "../deps/std/collections/max_of.ts";
+import { minOf } from "../deps/std/collections/min_of.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";
-import { maxOf, minOf } from "../util.ts";
 
 export class Suggestions implements Equatable {
   static readonly EMPTY = new Suggestions(StringRange.at(0), []);
@@ -65,8 +66,8 @@ export class Suggestions implements Equatable {
     if (suggestions.length === 0) {
       return this.EMPTY;
     }
-    const start = minOf(suggestions, (suggestion) => suggestion.range.start);
-    const end = maxOf(suggestions, (suggestion) => suggestion.range.end);
+    const start = minOf(suggestions, (suggestion) => suggestion.range.start)!;
+    const end = maxOf(suggestions, (suggestion) => suggestion.range.end)!;
     const range = new StringRange(start, end);
     const texts = new Set<Suggestion>();
     for (const suggestion of suggestions) {

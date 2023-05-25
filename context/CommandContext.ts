@@ -6,9 +6,9 @@ import {
 } from "../deps/esfx/equatable.ts";
 
 import type { Command } from "../Command.ts";
+import { mapEqualer } from "../map_equaler.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
-import { mapEqualer } from "../util.ts";
 import type { ParsedArgument } from "./ParsedArgument.ts";
 import type { ParsedCommandNode } from "./ParsedCommandNode.ts";
 import type { StringRange } from "./StringRange.ts";

@@ -16,11 +16,11 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/@esfx/equatable@1.0.2?bundle&target=esnext&pin=v113": {
+    "https://esm.sh/v124/@esfx/equatable@1.0.2?bundle&target=esnext": {
       name: "@esfx/equatable",
       version: "^1.0.2",
     },
-    "https://esm.sh/@esfx/ref@1.0.0?target=esnext&pin=v113": {
+    "https://esm.sh/v124/@esfx/ref@1.0.0?target=esnext": {
       name: "@esfx/ref",
       version: "^1.0.0",
     },
