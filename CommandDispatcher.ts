@@ -149,71 +149,21 @@ export class CommandDispatcher<S> {
     originalReader: StringReader,
     contextSoFar: CommandContextBuilder<S>,
   ): ParseResults<S> {
-    const source = contextSoFar.getSource();
-    const errors = new Map<CommandNode<S>, CommandSyntaxError>();
     const potentials: ParseResults<S>[] = [];
-    const cursor = originalReader.getCursor();
+    const errors = new Map<CommandNode<S>, CommandSyntaxError>();
     for (
       const child of node.getRelevantNodes(
         originalReader,
         this.#argumentSeparator,
       )
     ) {
-      if (!child.canUse(source)) {
-        continue;
-      }
-      const context = contextSoFar.copy();
-      const reader = new StringReader(originalReader);
-      let skippedSeparator = -1;
-      try {
-        try {
-          child.parse(reader, context, this.#argumentSeparator);
-        } catch (e: unknown) {
-          if (e instanceof CommandSyntaxError) {
-            throw e;
-          }
-          throw CommandSyntaxError.builtInErrors.dispatcherParseError
-            .createWithContext(reader, String(e));
-        }
-        if (reader.canRead()) {
-          skippedSeparator = reader.getCursor();
-          if (!this.#argumentSeparator(reader)) {
-            throw CommandSyntaxError.builtInErrors
-              .dispatcherExpectedArgumentSeparator.createWithContext(reader);
-          }
-        }
-      } catch (e: unknown) {
-        if (!(e instanceof CommandSyntaxError)) {
-          throw e;
-        }
-        errors.set(child, e);
-        reader.setCursor(cursor);
-        continue;
-      }
-      context.withCommand(child.getCommand());
-      const redirect = child.getRedirect();
-      if (skippedSeparator !== -1) {
-        if (redirect) {
-          const childContext = new CommandContextBuilder(
-            this,
-            source,
-            redirect,
-            reader.getCursor(),
-          );
-          if (!reader.canRead()) {
-            reader.setCursor(skippedSeparator);
-          }
-          const parse = this.#parseNodes(redirect, reader, childContext);
-          context.withChild(parse.context);
-          return new ParseResults<S>(context, parse.reader, parse.errors);
-        } else {
-          if (!reader.canRead()) {
-            reader.setCursor(skippedSeparator);
-          }
-          potentials.push(this.#parseNodes(child, reader, context));
+      const parse = this.#parseChildNode(child, originalReader, contextSoFar);
+      if (parse.success) {
+        if (parse.results !== null) {
+          potentials.push(parse.results);
         }
       } else {
-        potentials.push(new ParseResults(context, reader, new Map()));
+        errors.set(child, parse.error);
       }
     }
     if (potentials.length !== 0) {
@@ -225,6 +175,80 @@ export class CommandDispatcher<S> {
       )!;
     }
     return new ParseResults(contextSoFar, originalReader, errors);
+  }
+
+  #parseChildNode(
+    child: CommandNode<S>,
+    originalReader: StringReader,
+    contextSoFar: CommandContextBuilder<S>,
+  ):
+    | { success: true; results: ParseResults<S> | null }
+    | { success: false; error: CommandSyntaxError } {
+    const source = contextSoFar.getSource();
+    if (!child.canUse(source)) {
+      return { success: true, results: null };
+    }
+    const context = contextSoFar.copy();
+    const reader = new StringReader(originalReader);
+    const cursor = reader.getCursor();
+    let skippedSeparator = -1;
+    try {
+      try {
+        child.parse(reader, context, this.#argumentSeparator);
+      } catch (e: unknown) {
+        if (e instanceof CommandSyntaxError) {
+          throw e;
+        }
+        throw CommandSyntaxError.builtInErrors.dispatcherParseError
+          .createWithContext(reader, String(e));
+      }
+      if (reader.canRead()) {
+        skippedSeparator = reader.getCursor();
+        if (!this.#argumentSeparator(reader)) {
+          throw CommandSyntaxError.builtInErrors
+            .dispatcherExpectedArgumentSeparator.createWithContext(reader);
+        }
+      }
+    } catch (e: unknown) {
+      if (!(e instanceof CommandSyntaxError)) {
+        throw e;
+      }
+      reader.setCursor(cursor);
+      return { success: false, error: e };
+    }
+    context.withCommand(child.getCommand());
+    if (skippedSeparator !== -1) {
+      const redirect = child.getRedirect();
+      if (redirect) {
+        const childContext = new CommandContextBuilder(
+          this,
+          source,
+          redirect,
+          reader.getCursor(),
+        );
+        if (reader.canRead()) {
+          const parse = this.#parseNodes(redirect, reader, childContext);
+          context.withChild(parse.context);
+          return {
+            success: true,
+            results: new ParseResults(context, parse.reader, parse.errors),
+          };
+        }
+        context.withChild(childContext);
+      } else {
+        if (reader.canRead()) {
+          return {
+            success: true,
+            results: this.#parseNodes(child, reader, context),
+          };
+        }
+      }
+      reader.setCursor(skippedSeparator);
+    }
+    return {
+      success: true,
+      results: new ParseResults(context, reader, new Map()),
+    };
   }
 
   getAllUsage(
