@@ -5,8 +5,8 @@ import type { CommandNode } from "./tree/CommandNode.ts";
 
 export class ParseResults<S> {
   readonly context: CommandContextBuilder<S>;
-  readonly errors: Map<CommandNode<S>, CommandSyntaxError>;
   readonly reader: ImmutableStringReader;
+  readonly errors: Map<CommandNode<S>, CommandSyntaxError>;
 
   constructor(
     context: CommandContextBuilder<S>,

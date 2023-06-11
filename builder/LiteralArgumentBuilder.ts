@@ -14,7 +14,7 @@ export class LiteralArgumentBuilder<S> extends ArgumentBuilder<S> {
   }
 
   build(): LiteralCommandNode<S> {
-    const result = new LiteralCommandNode<S>(
+    const result = new LiteralCommandNode(
       this.#literal,
       this.getCommand(),
       this.getRequirement(),

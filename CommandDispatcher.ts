@@ -135,7 +135,7 @@ export class CommandDispatcher<S> {
     if (typeof reader === "string") {
       reader = new StringReader(reader);
     }
-    const context = new CommandContextBuilder<S>(
+    const context = new CommandContextBuilder(
       this,
       source,
       this.#root,
@@ -194,7 +194,7 @@ export class CommandDispatcher<S> {
       const redirect = child.getRedirect();
       if (skippedSeparator !== -1) {
         if (redirect) {
-          const childContext = new CommandContextBuilder<S>(
+          const childContext = new CommandContextBuilder(
             this,
             source,
             redirect,

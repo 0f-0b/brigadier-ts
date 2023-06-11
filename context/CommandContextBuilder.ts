@@ -60,7 +60,7 @@ export class CommandContextBuilder<S> {
   }
 
   withNode(node: CommandNode<S>, range: StringRange): this {
-    this.#nodes.push(new ParsedCommandNode<S>(node, range));
+    this.#nodes.push(new ParsedCommandNode(node, range));
     this.#range = StringRange.encompassing(this.#range, range);
     this.#modifier = node.getRedirectModifier();
     this.#forks = node.isFork();
@@ -68,7 +68,7 @@ export class CommandContextBuilder<S> {
   }
 
   copy(): CommandContextBuilder<S> {
-    const copy = new CommandContextBuilder<S>(
+    const copy = new CommandContextBuilder(
       this.#dispatcher,
       this.#source,
       this.#rootNode,

@@ -53,7 +53,7 @@ export class CommandContext<S> implements Equatable {
     if (this.#source === source) {
       return this;
     }
-    return new CommandContext<S>(
+    return new CommandContext(
       source,
       this.#input,
       this.#arguments,
