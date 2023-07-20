@@ -34,12 +34,10 @@ export class CommandDispatcher<S> {
 
   setConsumer(consumer: ResultConsumer<S>): undefined {
     this.#consumer = consumer;
-    return;
   }
 
   setArgumentSeparator(argumentSeparator: ArgumentSeparator): undefined {
     this.#argumentSeparator = argumentSeparator;
-    return;
   }
 
   execute(input: string | StringReader, source: S): Promise<number>;
@@ -460,7 +458,6 @@ export class CommandDispatcher<S> {
 
   findAmbiguities(consumer: AmbiguityConsumer<S>): undefined {
     this.#root.findAmbiguities(consumer, this.#argumentSeparator);
-    return;
   }
 
   #addPaths(
@@ -473,6 +470,5 @@ export class CommandDispatcher<S> {
     for (const child of node.getChildren()) {
       this.#addPaths(child, result, current);
     }
-    return;
   }
 }

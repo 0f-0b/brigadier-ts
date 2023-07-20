@@ -32,9 +32,7 @@ export class RootCommandNode<S> extends CommandNode<S> {
     _reader: StringReader,
     _context: CommandContextBuilder<S>,
     _argumentSeparator?: ArgumentSeparator,
-  ): undefined {
-    return;
-  }
+  ): undefined {}
 
   override listSuggestions(
     _context: CommandContext<S>,

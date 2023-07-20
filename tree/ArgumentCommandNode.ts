@@ -60,7 +60,6 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
       node.children.set(this.getName(), this);
       node.arguments.set(this.getName(), this);
     }
-    return;
   }
 
   override getName(): string {
@@ -85,7 +84,6 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     const parsed = new ParsedArgument<T>(start, reader.getCursor(), result);
     contextBuilder.withArgument(this.#name, parsed);
     contextBuilder.withNode(this, parsed.range);
-    return;
   }
 
   override listSuggestions(

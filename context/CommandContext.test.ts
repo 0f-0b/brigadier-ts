@@ -1,8 +1,6 @@
 import { Equatable } from "../deps/esfx/equatable.ts";
-import {
-  assertStrictEquals,
-  assertThrows,
-} from "../deps/std/testing/asserts.ts";
+import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
+import { assertThrows } from "../deps/std/assert/assert_throws.ts";
 
 import { assertEquatable } from "../assert_equatable.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";

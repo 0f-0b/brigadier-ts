@@ -52,7 +52,6 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
       node.children.set(this.getName(), this);
       node.literals.set(this.getName(), this);
     }
-    return;
   }
 
   override getName(): string {
@@ -71,7 +70,6 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
         .createWithContext(reader, this.#literal);
     }
     contextBuilder.withNode(this, StringRange.between(start, end));
-    return;
   }
 
   #parse(

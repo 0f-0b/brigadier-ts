@@ -1,4 +1,4 @@
-import { assert } from "./deps/std/testing/asserts.ts";
+import { assert } from "./deps/std/assert/assert.ts";
 
 import { toIterator } from "./object.ts";
 
@@ -14,5 +14,4 @@ export function assertIterator<T>(
   }
   const { done } = it.next();
   assert(done, "Iterator yielded too many values");
-  return;
 }

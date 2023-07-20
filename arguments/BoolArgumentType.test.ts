@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
+import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
 import {
   assertSpyCall,
   assertSpyCalls,

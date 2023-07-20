@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "../deps/std/testing/asserts.ts";
+import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
 
 import { assertIterator } from "../assert_iterator.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
@@ -53,6 +53,4 @@ export function testCommandNode(
       (x) => assertStrictEquals(x.getCommand(), command),
     ]);
   });
-
-  return;
 }

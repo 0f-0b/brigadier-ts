@@ -1,4 +1,4 @@
-#!/usr/bin/env -S deno run -A
+#!/usr/bin/env -S deno run --allow-read --allow-write --allow-net --allow-env=DENO_AUTH_TOKENS,DENO_DIR,HOME --allow-run=npm
 
 import { build, emptyDir } from "../deps/dnt.ts";
 
@@ -16,11 +16,11 @@ await build({
     deno: { test: "dev" },
   },
   mappings: {
-    "https://esm.sh/v125/@esfx/equatable@1.0.2?bundle&target=esnext": {
+    "https://esm.sh/v128/@esfx/equatable@1.0.2?bundle&target=esnext": {
       name: "@esfx/equatable",
       version: "^1.0.2",
     },
-    "https://esm.sh/v125/@esfx/ref@1.0.0?target=esnext": {
+    "https://esm.sh/v128/@esfx/ref@1.0.0?target=esnext": {
       name: "@esfx/ref",
       version: "^1.0.0",
     },

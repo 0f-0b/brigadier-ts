@@ -1,1 +1,1 @@
-export * from "https://deno.land/std@0.191.0/testing/mock.ts";
+export * from "https://deno.land/std@0.195.0/testing/mock.ts";

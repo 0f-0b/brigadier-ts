@@ -1,12 +1,10 @@
 import { Equatable, tupleEqualer } from "./deps/esfx/equatable.ts";
 import { ref } from "./deps/esfx/ref.ts";
-import {
-  assert,
-  assertEquals,
-  assertExists,
-  assertRejects,
-  assertStrictEquals,
-} from "./deps/std/testing/asserts.ts";
+import { assert } from "./deps/std/assert/assert.ts";
+import { assertEquals } from "./deps/std/assert/assert_equals.ts";
+import { assertExists } from "./deps/std/assert/assert_exists.ts";
+import { assertRejects } from "./deps/std/assert/assert_rejects.ts";
+import { assertStrictEquals } from "./deps/std/assert/assert_strict_equals.ts";
 import { assertSpyCalls, spy } from "./deps/std/testing/mock.ts";
 
 import { integer } from "./arguments/IntegerArgumentType.ts";
@@ -580,7 +578,6 @@ function assertSuggestions(
       suggestions.list,
     ),
   );
-  return;
 }
 
 Deno.test("getCompletionSuggestions rootCommands", async () => {

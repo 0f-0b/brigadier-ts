@@ -1,7 +1,6 @@
 import { Equatable } from "./deps/esfx/equatable.ts";
-import { assert } from "./deps/std/testing/asserts.ts";
+import { assert } from "./deps/std/assert/assert.ts";
 
-// deno-lint-ignore ban-types
 const singleton = Object.freeze({ __proto__: null } as object);
 
 export function assertEquatable<T extends Equatable>(
@@ -35,5 +34,4 @@ export function assertEquatable<T extends Equatable>(
       }
     }
   }
-  return;
 }

@@ -1,4 +1,5 @@
-import { assert, assertEquals } from "./deps/std/testing/asserts.ts";
+import { assert } from "./deps/std/assert/assert.ts";
+import { assertEquals } from "./deps/std/assert/assert_equals.ts";
 
 import { isIterable, isObject, toIterator } from "./object.ts";
 

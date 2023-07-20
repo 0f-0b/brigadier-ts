@@ -102,7 +102,6 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
       }
       child.findAmbiguities(consumer, argumentSeparator);
     }
-    return;
   }
 
   abstract isValidInput(

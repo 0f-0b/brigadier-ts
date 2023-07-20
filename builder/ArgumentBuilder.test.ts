@@ -1,9 +1,7 @@
 import { Equatable } from "../deps/esfx/equatable.ts";
-import {
-  assertStrictEquals,
-  assertThrows,
-  unreachable,
-} from "../deps/std/testing/asserts.ts";
+import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
+import { assertThrows } from "../deps/std/assert/assert_throws.ts";
+import { unreachable } from "../deps/std/assert/unreachable.ts";
 
 import { integer } from "../arguments/IntegerArgumentType.ts";
 import { assertIterator } from "../assert_iterator.ts";

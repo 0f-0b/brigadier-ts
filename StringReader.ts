@@ -27,7 +27,6 @@ export class StringReader implements ImmutableStringReader {
 
   setCursor(cursor: number): undefined {
     this.#cursor = cursor;
-    return;
   }
 
   getRemainingLength(): number {
@@ -64,7 +63,6 @@ export class StringReader implements ImmutableStringReader {
 
   skip(): undefined {
     this.#cursor++;
-    return;
   }
 
   static isAllowedNumber(c: string): boolean {
@@ -78,7 +76,6 @@ export class StringReader implements ImmutableStringReader {
   skipWhitespace(): undefined {
     this.#cursor = this.getTotalLength() -
       this.getRemaining().trimStart().length;
-    return;
   }
 
   readInt(): number {
