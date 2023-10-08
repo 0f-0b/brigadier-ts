@@ -7,15 +7,17 @@ import { assertRejects } from "./deps/std/assert/assert_rejects.ts";
 import { assertStrictEquals } from "./deps/std/assert/assert_strict_equals.ts";
 import { assertSpyCalls, spy } from "./deps/std/testing/mock.ts";
 
+import type { Command } from "./Command.ts";
+import { CommandDispatcher } from "./CommandDispatcher.ts";
+import type { ResultConsumer } from "./ResultConsumer.ts";
+import { StringReader } from "./StringReader.ts";
 import { integer } from "./arguments/IntegerArgumentType.ts";
 import { word } from "./arguments/StringArgumentType.ts";
 import { literal } from "./builder/LiteralArgumentBuilder.ts";
 import { argument } from "./builder/RequiredArgumentBuilder.ts";
-import { CommandDispatcher } from "./CommandDispatcher.ts";
 import type { CommandContext } from "./context/CommandContext.ts";
 import { StringRange } from "./context/StringRange.ts";
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
-import { StringReader } from "./StringReader.ts";
 import { Suggestion } from "./suggestion/Suggestion.ts";
 import type { Suggestions } from "./suggestion/Suggestions.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";
@@ -243,8 +245,55 @@ Deno.test("executeRedirectedMultipleTimes", async () => {
   assertSpyCalls(command, 1);
 });
 
+Deno.test("correctExecuteContextAfterRedirect", async () => {
+  const subject = new CommandDispatcher<number>();
+  const root = subject.getRoot();
+  const add = literal<number>("add");
+  const blank = literal<number>("blank");
+  const addArg = argument<number, number>("value", integer());
+  const run = literal<number>("run");
+  subject.register(
+    add.then(
+      addArg.redirect(
+        root,
+        (c) => c.getSource() + (c.getArgument("value") as number),
+      ),
+    ),
+  );
+  subject.register(blank.redirect(root));
+  subject.register(run.executes((c) => c.getSource()));
+  assertStrictEquals(await subject.execute("run", 0), 0);
+  assertStrictEquals(await subject.execute("run", 1), 1);
+  assertStrictEquals(await subject.execute("add 5 run", 1), 1 + 5);
+  assertStrictEquals(await subject.execute("add 5 add 6 run", 2), 2 + 5 + 6);
+  assertStrictEquals(await subject.execute("add 5 blank run", 1), 1 + 5);
+  assertStrictEquals(await subject.execute("blank add 5 run", 1), 1 + 5);
+  assertStrictEquals(
+    await subject.execute("add 5 blank add 6 run", 2),
+    2 + 5 + 6,
+  );
+  assertStrictEquals(
+    await subject.execute("add 5 blank blank add 6 run", 2),
+    2 + 5 + 6,
+  );
+});
+
+Deno.test("sharedRedirectAndExecuteNodes", async () => {
+  const subject = new CommandDispatcher<number>();
+  const root = subject.getRoot();
+  const add = literal<number>("add");
+  const addArg = argument<number, number>("value", integer());
+  subject.register(add.then(
+    addArg
+      .redirect(root, (c) => c.getSource() + (c.getArgument("value") as number))
+      .executes((c) => c.getSource()),
+  ));
+  assertStrictEquals(await subject.execute("add 5", 1), 1);
+  assertStrictEquals(await subject.execute("add 5 add 6", 1), 1 + 5);
+});
+
 Deno.test("executeRedirected", async () => {
-  const command = spy((_c: CommandContext<unknown>) => 42);
+  const command = spy((_c) => 42) satisfies Command<unknown>;
   const modifier = (c: CommandContext<unknown>) => {
     assertStrictEquals(c.getSource(), source);
     return [source1, source2];
@@ -402,6 +451,164 @@ Deno.test("findNodeExists", () => {
 Deno.test("findNodeDoesntExist", () => {
   const subject = new CommandDispatcher();
   assertStrictEquals(subject.findNode(["foo", "bar"]), undefined);
+});
+
+Deno.test("resultConsumerInNonErrorRun", async () => {
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("foo").executes(() => 5));
+  assertStrictEquals(await subject.execute("foo", source), 5);
+  assertSpyCalls(consumer, 1);
+  assertStrictEquals(consumer.calls[0].args[1], true);
+  assertStrictEquals(consumer.calls[0].args[2], 5);
+});
+
+Deno.test("resultConsumerInForkedNonErrorRun", async () => {
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("foo").executes((c) => c.getSource() as number));
+  const contexts = [9, 10, 11];
+  subject.register(literal("repeat").fork(subject.getRoot(), () => contexts));
+  assertStrictEquals(
+    await subject.execute("repeat foo", source),
+    contexts.length,
+  );
+  assertSpyCalls(consumer, 3);
+  assertStrictEquals(consumer.calls[0].args[0].getSource(), contexts[0]);
+  assertStrictEquals(consumer.calls[0].args[1], true);
+  assertStrictEquals(consumer.calls[0].args[2], 9);
+  assertStrictEquals(consumer.calls[1].args[0].getSource(), contexts[1]);
+  assertStrictEquals(consumer.calls[1].args[1], true);
+  assertStrictEquals(consumer.calls[1].args[2], 10);
+  assertStrictEquals(consumer.calls[2].args[0].getSource(), contexts[2]);
+  assertStrictEquals(consumer.calls[2].args[1], true);
+  assertStrictEquals(consumer.calls[2].args[2], 11);
+});
+
+function fail(error: unknown): never {
+  throw error;
+}
+
+Deno.test("exceptionInNonForkedCommand", async () => {
+  const error = CommandSyntaxError.builtInErrors.readerExpectedBool.create();
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("crash").executes(() => fail(error)));
+  assertStrictEquals(
+    await assertRejects(() => subject.execute("crash", source)),
+    error,
+  );
+  assertSpyCalls(consumer, 1);
+  assertStrictEquals(consumer.calls[0].args[1], false);
+  assertStrictEquals(consumer.calls[0].args[2], 0);
+});
+
+Deno.test("exceptionInNonForkedRedirectedCommand", async () => {
+  const error = CommandSyntaxError.builtInErrors.readerExpectedBool.create();
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("crash").executes(() => fail(error)));
+  subject.register(literal("redirect").redirect(subject.getRoot()));
+  assertStrictEquals(
+    await assertRejects(() => subject.execute("redirect crash", source)),
+    error,
+  );
+  assertSpyCalls(consumer, 1);
+  assertStrictEquals(consumer.calls[0].args[1], false);
+  assertStrictEquals(consumer.calls[0].args[2], 0);
+});
+
+Deno.test("exceptionInForkedRedirectedCommand", async () => {
+  const error = CommandSyntaxError.builtInErrors.readerExpectedBool.create();
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("crash").executes(() => fail(error)));
+  subject.register(literal("redirect").fork(subject.getRoot(), (c) => [c]));
+  assertStrictEquals(await subject.execute("redirect crash", source), 0);
+  assertSpyCalls(consumer, 1);
+  assertStrictEquals(consumer.calls[0].args[1], false);
+  assertStrictEquals(consumer.calls[0].args[2], 0);
+});
+
+Deno.test("exceptionInNonForkedRedirect", async () => {
+  const error = CommandSyntaxError.builtInErrors.readerExpectedBool.create();
+  const command = spy((_c) => 3) satisfies Command<unknown>;
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("noop").executes(command));
+  subject.register(
+    literal("redirect").redirect(subject.getRoot(), () => fail(error)),
+  );
+  assertStrictEquals(
+    await assertRejects(() => subject.execute("redirect noop", source)),
+    error,
+  );
+  assertSpyCalls(command, 0);
+  assertSpyCalls(consumer, 1);
+  assertStrictEquals(consumer.calls[0].args[1], false);
+  assertStrictEquals(consumer.calls[0].args[2], 0);
+});
+
+Deno.test("exceptionInForkedRedirect", async () => {
+  const error = CommandSyntaxError.builtInErrors.readerExpectedBool.create();
+  const command = spy((_c) => 3) satisfies Command<unknown>;
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("noop").executes(command));
+  subject.register(
+    literal("redirect").fork(subject.getRoot(), () => fail(error)),
+  );
+  assertStrictEquals(await subject.execute("redirect noop", source), 0);
+  assertSpyCalls(command, 0);
+  assertSpyCalls(consumer, 1);
+  assertStrictEquals(consumer.calls[0].args[1], false);
+  assertStrictEquals(consumer.calls[0].args[2], 0);
+});
+
+Deno.test("partialExceptionInForkedRedirect", async () => {
+  const error = CommandSyntaxError.builtInErrors.readerExpectedBool.create();
+  const otherSource = {};
+  const rejectedSource = {};
+  const command = spy((_c) => 3) satisfies Command<unknown>;
+  const consumer = spy() satisfies ResultConsumer<unknown>;
+  const subject = new CommandDispatcher();
+  subject.setConsumer(consumer);
+  subject.register(literal("run").executes(command));
+  subject.register(
+    literal("split")
+      .fork(subject.getRoot(), () => [source, rejectedSource, otherSource]),
+  );
+  subject.register(
+    literal("filter")
+      .fork(subject.getRoot(), (context) => {
+        const currentSource = context.getSource();
+        if (currentSource === rejectedSource) {
+          throw error;
+        }
+        return [currentSource];
+      }),
+  );
+  assertStrictEquals(await subject.execute("split filter run", source), 2);
+  assertSpyCalls(command, 2);
+  assertStrictEquals(command.calls[0].args[0].getSource(), source);
+  assertStrictEquals(command.calls[1].args[0].getSource(), otherSource);
+  assertSpyCalls(consumer, 3);
+  assertStrictEquals(consumer.calls[0].args[0].getSource(), rejectedSource);
+  assertStrictEquals(consumer.calls[0].args[1], false);
+  assertStrictEquals(consumer.calls[0].args[2], 0);
+  assertStrictEquals(consumer.calls[1].args[0].getSource(), source);
+  assertStrictEquals(consumer.calls[1].args[1], true);
+  assertStrictEquals(consumer.calls[1].args[2], 3);
+  assertStrictEquals(consumer.calls[2].args[0].getSource(), otherSource);
+  assertStrictEquals(consumer.calls[2].args[1], true);
+  assertStrictEquals(consumer.calls[2].args[2], 3);
 });
 
 Deno.test("allUsage noCommands", () => {

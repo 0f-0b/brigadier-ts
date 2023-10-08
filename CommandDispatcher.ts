@@ -6,13 +6,14 @@ import {
   type ArgumentSeparator,
   defaultArgumentSeparator,
 } from "./ArgumentSeparator.ts";
-import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
 import { CommandUsageFormatter } from "./CommandUsageFormatter.ts";
-import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
-import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { ParseResults } from "./ParseResults.ts";
 import type { ResultConsumer } from "./ResultConsumer.ts";
 import { StringReader } from "./StringReader.ts";
+import type { LiteralArgumentBuilder } from "./builder/LiteralArgumentBuilder.ts";
+import { CommandContextBuilder } from "./context/CommandContextBuilder.ts";
+import { ContextChain } from "./context/ContextChain.ts";
+import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { Suggestions } from "./suggestion/Suggestions.ts";
 import { SuggestionsBuilder } from "./suggestion/SuggestionsBuilder.ts";
 import type { CommandNode } from "./tree/CommandNode.ts";
@@ -58,75 +59,15 @@ export class CommandDispatcher<S> {
         : CommandSyntaxError.builtInErrors.dispatcherUnknownArgument)
         .createWithContext(parse.reader);
     }
-    let result = 0;
-    let successfulForks = 0;
-    let forked = false;
-    let foundCommand = false;
     const command = parse.reader.getString();
     const original = parse.context.build(command);
-    let contexts = [original];
-    let next = [];
-    while (contexts.length !== 0) {
-      for (const context of contexts) {
-        const child = context.getChild();
-        if (child) {
-          forked ||= context.isForked();
-          if (child.hasNodes()) {
-            const modifier = context.getRedirectModifier();
-            if (modifier === undefined) {
-              next.push(child.copyFor(context.getSource()));
-            } else {
-              try {
-                const results = await modifier(context);
-                let resultsIsEmpty = true;
-                for await (const source of results) {
-                  next.push(child.copyFor(source));
-                  resultsIsEmpty = false;
-                }
-                if (resultsIsEmpty) {
-                  foundCommand = true;
-                }
-              } catch (e: unknown) {
-                if (!(e instanceof CommandSyntaxError)) {
-                  throw e;
-                }
-                this.#consumer(context, false, 0);
-                if (!forked) {
-                  throw e;
-                }
-              }
-            }
-          }
-        } else {
-          const command = context.getCommand();
-          if (command) {
-            foundCommand = true;
-            try {
-              const value = await command(context);
-              result += value;
-              this.#consumer(context, true, value);
-              successfulForks++;
-            } catch (e: unknown) {
-              if (!(e instanceof CommandSyntaxError)) {
-                throw e;
-              }
-              this.#consumer(context, false, 0);
-              if (!forked) {
-                throw e;
-              }
-            }
-          }
-        }
-      }
-      contexts = next;
-      next = [];
-    }
-    if (!foundCommand) {
+    const flatContext = ContextChain.tryFlatten(original);
+    if (!flatContext) {
       this.#consumer(original, false, 0);
       throw CommandSyntaxError.builtInErrors.dispatcherUnknownCommand
         .createWithContext(parse.reader);
     }
-    return forked ? successfulForks : result;
+    return await flatContext.executeAll(original.getSource(), this.#consumer);
   }
 
   parse(reader: string | StringReader, source: S): ParseResults<S> {
