@@ -14,6 +14,18 @@ await build({
   outDir: "npm",
   shims: {
     deno: { test: "dev" },
+    customDev: [
+      {
+        package: {
+          name: "core-js-pure",
+          version: "3.33.0",
+          subPath: "actual/iterator/index.js",
+        },
+        globalNames: [
+          { name: "Iterator", exportName: "default" },
+        ],
+      },
+    ],
   },
   mappings: {
     "https://esm.sh/v133/@esfx/equatable@1.0.2?bundle&target=esnext": {
@@ -38,6 +50,15 @@ await build({
     publishConfig: {
       access: "public",
     },
+  },
+  filterDiagnostic(diagnostic) {
+    switch (diagnostic.code) {
+      case 7016:
+      case 18046:
+        return false;
+      default:
+        return true;
+    }
   },
   postBuild() {
     Deno.copyFileSync("LICENSE", "npm/LICENSE");
