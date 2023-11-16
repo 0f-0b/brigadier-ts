@@ -2,7 +2,6 @@
   "compilerOptions": {
     "noImplicitOverride": true
   },
-  "importMap": "import_map.json",
   "exclude": [
     "npm"
   ],
