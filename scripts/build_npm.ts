@@ -3,9 +3,12 @@
 import { build, emptyDir } from "../deps/dnt.ts";
 
 const [version] = Deno.args;
-if (!version) {
-  console.error("usage: ./scripts/build_npm.ts <version>");
-  Deno.exit(2);
+if (version === undefined) {
+  console.warn(
+    "%cWarning%c Version is not provided; package will be unpublishable.",
+    "color: gold",
+    "",
+  );
 }
 Deno.chdir(new URL("..", import.meta.url));
 await emptyDir("npm");
@@ -28,16 +31,17 @@ await build({
     ],
   },
   mappings: {
-    "https://esm.sh/v133/@esfx/equatable@1.0.2?bundle&target=esnext": {
+    "https://esm.sh/v134/@esfx/equatable@1.0.2?bundle&target=esnext": {
       name: "@esfx/equatable",
       version: "^1.0.2",
     },
-    "https://esm.sh/v133/@esfx/ref@1.0.0?target=esnext": {
+    "https://esm.sh/v134/@esfx/ref@1.0.0?target=esnext": {
       name: "@esfx/ref",
       version: "^1.0.0",
     },
   },
   package: {
+    private: version === undefined,
     name: "@ud2/brigadier",
     version,
     description: "TypeScript port of Brigadier.",
@@ -53,6 +57,7 @@ await build({
   },
   filterDiagnostic(diagnostic) {
     switch (diagnostic.code) {
+      case 2699:
       case 7016:
       case 18046:
         return false;

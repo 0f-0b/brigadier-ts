@@ -1,1 +1,1 @@
-export * from "https://deno.land/std@0.204.0/assert/assert_exists.ts";
+export * from "https://deno.land/std@0.206.0/assert/assert_exists.ts";

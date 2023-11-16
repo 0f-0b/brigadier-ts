@@ -88,7 +88,7 @@ export class ContextChain<S> {
     resultConsumer: ResultConsumer<S>,
   ): Promise<number> {
     if (this.#modifiers.length === 0) {
-      return ContextChain.runExecutable(
+      return await ContextChain.runExecutable(
         this.#executable,
         source,
         resultConsumer,
