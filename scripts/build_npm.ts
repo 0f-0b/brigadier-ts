@@ -6,7 +6,7 @@ const [version] = Deno.args;
 if (version === undefined) {
   console.warn(
     "%cWarning%c Version is not provided; package will be unpublishable.",
-    "color: gold",
+    "color: yellow",
     "",
   );
 }
