@@ -1,5 +1,5 @@
-import { Equatable } from "./deps/esfx/equatable.ts";
-import { assert } from "./deps/std/assert/assert.ts";
+import { Equatable } from "@esfx/equatable";
+import { assert } from "@std/assert/assert";
 
 const singleton = Object.freeze({ __proto__: null } as object);
 

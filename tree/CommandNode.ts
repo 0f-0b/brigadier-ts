@@ -4,7 +4,7 @@ import {
   defaultComparer,
   defaultEqualer,
   Equatable,
-} from "../deps/esfx/equatable.ts";
+} from "@esfx/equatable";
 
 import type { AmbiguityConsumer } from "../AmbiguityConsumer.ts";
 import {
@@ -19,7 +19,7 @@ import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts"
 import { mapEqualer } from "../map_equaler.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
-import { StringReader } from "../StringReader.ts";
+import type { StringReader } from "../StringReader.ts";
 import type { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import type { ArgumentCommandNode } from "./ArgumentCommandNode.ts";

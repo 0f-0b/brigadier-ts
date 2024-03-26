@@ -1,4 +1,4 @@
-import { combineHashes, Equatable } from "../deps/esfx/equatable.ts";
+import { combineHashes, Equatable } from "@esfx/equatable";
 
 import type { CommandNode } from "../tree/CommandNode.ts";
 import type { StringRange } from "./StringRange.ts";

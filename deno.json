@@ -1,12 +1,86 @@
 {
+  "name": "@ud2/brigadier",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./mod.ts",
+    "./equatable": "./vendor/@esfx/equatable.ts",
+    "./ref": "./vendor/@esfx/ref.ts",
+    "./AmbiguityConsumer": "./AmbiguityConsumer.ts",
+    "./ArgumentSeparator": "./ArgumentSeparator.ts",
+    "./Command": "./Command.ts",
+    "./CommandDispatcher": "./CommandDispatcher.ts",
+    "./CommandUsageFormatter": "./CommandUsageFormatter.ts",
+    "./ImmutableStringReader": "./ImmutableStringReader.ts",
+    "./LiteralMessage": "./LiteralMessage.ts",
+    "./Message": "./Message.ts",
+    "./ParseResults": "./ParseResults.ts",
+    "./Predicate": "./Predicate.ts",
+    "./RedirectModifier": "./RedirectModifier.ts",
+    "./ResultConsumer": "./ResultConsumer.ts",
+    "./SingleRedirectModifier": "./SingleRedirectModifier.ts",
+    "./StringReader": "./StringReader.ts",
+    "./arguments/ArgumentType": "./arguments/ArgumentType.ts",
+    "./arguments/BoolArgumentType": "./arguments/BoolArgumentType.ts",
+    "./arguments/FloatArgumentType": "./arguments/FloatArgumentType.ts",
+    "./arguments/IntegerArgumentType": "./arguments/IntegerArgumentType.ts",
+    "./arguments/StringArgumentType": "./arguments/StringArgumentType.ts",
+    "./builder/ArgumentBuilder": "./builder/ArgumentBuilder.ts",
+    "./builder/LiteralArgumentBuilder": "./builder/LiteralArgumentBuilder.ts",
+    "./builder/RequiredArgumentBuilder": "./builder/RequiredArgumentBuilder.ts",
+    "./context/CommandContext": "./context/CommandContext.ts",
+    "./context/CommandContextBuilder": "./context/CommandContextBuilder.ts",
+    "./context/ContextChain": "./context/ContextChain.ts",
+    "./context/ParsedArgument": "./context/ParsedArgument.ts",
+    "./context/ParsedCommandNode": "./context/ParsedCommandNode.ts",
+    "./context/StringRange": "./context/StringRange.ts",
+    "./context/SuggestionContext": "./context/SuggestionContext.ts",
+    "./errors/CommandErrorType": "./errors/CommandErrorType.ts",
+    "./errors/CommandSyntaxError": "./errors/CommandSyntaxError.ts",
+    "./suggestion/NumberSuggestion": "./suggestion/NumberSuggestion.ts",
+    "./suggestion/Suggestion": "./suggestion/Suggestion.ts",
+    "./suggestion/SuggestionProvider": "./suggestion/SuggestionProvider.ts",
+    "./suggestion/Suggestions": "./suggestion/Suggestions.ts",
+    "./suggestion/SuggestionsBuilder": "./suggestion/SuggestionsBuilder.ts",
+    "./tree/ArgumentCommandNode": "./tree/ArgumentCommandNode.ts",
+    "./tree/CommandNode": "./tree/CommandNode.ts",
+    "./tree/LiteralCommandNode": "./tree/LiteralCommandNode.ts",
+    "./tree/RootCommandNode": "./tree/RootCommandNode.ts"
+  },
+  "imports": {
+    "@esfx/equatable": "./vendor/@esfx/equatable.ts",
+    "@esfx/ref": "./vendor/@esfx/ref.ts",
+    "@std/assert": "jsr:@std/assert@^0.220.1",
+    "@std/collections": "jsr:@std/collections@^0.220.1",
+    "@std/testing": "jsr:@std/testing@^0.220.1"
+  },
   "compilerOptions": {
     "noImplicitOverride": true
   },
-  "exclude": [
-    "npm"
-  ],
+  "publish": {
+    "exclude": [
+      ".github",
+      ".vscode",
+      "deno.lock",
+      "assert_equatable.ts",
+      "assert_iterator.ts",
+      "tree/CommandNodeTest.ts",
+      "**/test.ts",
+      "**/*.test.ts",
+      "**/*.bench.ts"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "vendor/_modules"
+    ]
+  },
+  "lint": {
+    "exclude": [
+      "vendor/_modules"
+    ]
+  },
   "tasks": {
-    "lint": "deno fmt --check && deno lint && deno check --all scripts/build_npm.ts",
+    "lint": "deno fmt --check && deno lint",
     "test": "deno test --check=all",
     "bench": "deno bench --check=all"
   }

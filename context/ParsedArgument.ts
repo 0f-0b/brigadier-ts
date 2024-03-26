@@ -1,8 +1,4 @@
-import {
-  combineHashes,
-  defaultEqualer,
-  Equatable,
-} from "../deps/esfx/equatable.ts";
+import { combineHashes, defaultEqualer, Equatable } from "@esfx/equatable";
 
 import { StringRange } from "./StringRange.ts";
 

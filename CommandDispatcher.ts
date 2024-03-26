@@ -1,5 +1,5 @@
-import { joinToString } from "./deps/std/collections/join_to_string.ts";
-import { minWith } from "./deps/std/collections/min_with.ts";
+import { joinToString } from "@std/collections/join_to_string";
+import { minWith } from "@std/collections/min_with";
 
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import {
@@ -25,7 +25,7 @@ export class CommandDispatcher<S> {
   #argumentSeparator: ArgumentSeparator = defaultArgumentSeparator;
   #consumer: ResultConsumer<S> = () => {};
 
-  constructor(root = new RootCommandNode<S>()) {
+  constructor(root: RootCommandNode<S> = new RootCommandNode<S>()) {
     this.#root = root;
   }
 
@@ -194,7 +194,7 @@ export class CommandDispatcher<S> {
     node: CommandNode<S>,
     source: S,
     restricted: boolean,
-    formatter = new CommandUsageFormatter(),
+    formatter: CommandUsageFormatter = new CommandUsageFormatter(),
   ): string[] {
     const result: string[] = [];
     this.#getAllUsage(node, source, result, "", restricted, formatter);
@@ -241,7 +241,7 @@ export class CommandDispatcher<S> {
   getSmartUsage(
     node: CommandNode<S>,
     source: S,
-    formatter = new CommandUsageFormatter(),
+    formatter: CommandUsageFormatter = new CommandUsageFormatter(),
   ): Map<CommandNode<S>, string> {
     const result = new Map<CommandNode<S>, string>();
     const optional = node.getCommand() !== undefined;
@@ -335,7 +335,7 @@ export class CommandDispatcher<S> {
 
   async getCompletionSuggestions(
     parse: ParseResults<S>,
-    cursor = parse.reader.getTotalLength(),
+    cursor: number = parse.reader.getTotalLength(),
   ): Promise<Suggestions> {
     const context = parse.context;
     const nodeBeforeCursor = context.findSuggestionContext(cursor);

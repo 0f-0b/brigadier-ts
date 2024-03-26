@@ -1,4 +1,4 @@
-import type { Reference } from "../deps/esfx/ref.ts";
+import type { Reference } from "@esfx/ref";
 
 import type { Command } from "../Command.ts";
 import type { Predicate } from "../Predicate.ts";

@@ -1,4 +1,4 @@
-import { assert } from "./deps/std/assert/assert.ts";
+import { assert } from "@std/assert/assert";
 
 declare global {
   interface IteratorConstructor {

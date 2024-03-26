@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
+import { assertStrictEquals } from "@std/assert/assert_strict_equals";
 
 import { assertEquatable } from "../assert_equatable.ts";
 import { StringReader } from "../StringReader.ts";

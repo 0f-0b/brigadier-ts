@@ -4,7 +4,27 @@ import { CommandErrorType } from "./CommandErrorType.ts";
 
 export class CommandSyntaxError extends Error {
   static enableCommandStackTraces = true;
-  static builtInErrors = Object.freeze({
+  static builtInErrors: {
+    readonly floatTooLow: CommandErrorType<[number, number]>;
+    readonly floatTooHigh: CommandErrorType<[number, number]>;
+    readonly integerTooLow: CommandErrorType<[number, number]>;
+    readonly integerTooHigh: CommandErrorType<[number, number]>;
+    readonly literalIncorrect: CommandErrorType<[string]>;
+    readonly readerExpectedStartOfQuote: CommandErrorType<[]>;
+    readonly readerExpectedEndOfQuote: CommandErrorType<[]>;
+    readonly readerInvalidEscape: CommandErrorType<[string]>;
+    readonly readerInvalidBool: CommandErrorType<[string]>;
+    readonly readerInvalidInt: CommandErrorType<[string]>;
+    readonly readerExpectedInt: CommandErrorType<[]>;
+    readonly readerInvalidFloat: CommandErrorType<[string]>;
+    readonly readerExpectedFloat: CommandErrorType<[]>;
+    readonly readerExpectedBool: CommandErrorType<[]>;
+    readonly readerExpectedSymbol: CommandErrorType<[string]>;
+    readonly dispatcherUnknownCommand: CommandErrorType<[]>;
+    readonly dispatcherUnknownArgument: CommandErrorType<[]>;
+    readonly dispatcherExpectedArgumentSeparator: CommandErrorType<[]>;
+    readonly dispatcherParseError: CommandErrorType<[string]>;
+  } = Object.freeze({
     floatTooLow: new CommandErrorType((found: number, min: number) =>
       new LiteralMessage(`Float must not be less than ${min}, found ${found}`)
     ),
@@ -98,7 +118,11 @@ export class CommandSyntaxError extends Error {
   }
 
   getMessage(
-    contextBuilder = (message: string, cursor: number, context: string) =>
+    contextBuilder: (
+      message: string,
+      cursor: number,
+      context: string,
+    ) => string = (message, cursor, context) =>
       `${message} at position ${cursor}: ${context}`,
     amount?: number,
     marker?: string,

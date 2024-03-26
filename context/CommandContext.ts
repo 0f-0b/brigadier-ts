@@ -3,7 +3,7 @@ import {
   defaultEqualer,
   Equatable,
   tupleEqualer,
-} from "../deps/esfx/equatable.ts";
+} from "@esfx/equatable";
 
 import type { Command } from "../Command.ts";
 import { mapEqualer } from "../map_equaler.ts";

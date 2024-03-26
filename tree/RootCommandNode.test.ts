@@ -1,5 +1,5 @@
-import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
-import { assertThrows } from "../deps/std/assert/assert_throws.ts";
+import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertThrows } from "@std/assert/assert_throws";
 
 import { assertEquatable } from "../assert_equatable.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";

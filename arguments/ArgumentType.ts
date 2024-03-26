@@ -1,4 +1,4 @@
-import type { Equatable } from "../deps/esfx/equatable.ts";
+import type { Equatable } from "@esfx/equatable";
 
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { StringReader } from "../StringReader.ts";

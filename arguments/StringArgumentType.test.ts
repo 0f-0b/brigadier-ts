@@ -1,9 +1,5 @@
-import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
-import {
-  assertSpyCall,
-  assertSpyCalls,
-  stub,
-} from "../deps/std/testing/mock.ts";
+import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertSpyCall, assertSpyCalls, stub } from "@std/testing/mock";
 
 import { assertEquatable } from "../assert_equatable.ts";
 import { StringReader } from "../StringReader.ts";
@@ -16,26 +12,18 @@ import {
 
 Deno.test("parseWord", () => {
   const reader = new StringReader("");
-  const readUnquotedString = stub(reader, "readUnquotedString", () => "hello");
-  try {
-    assertStrictEquals(word().parse(reader), "hello");
-    assertSpyCall(readUnquotedString, 0, { args: [], self: reader });
-    assertSpyCalls(readUnquotedString, 1);
-  } finally {
-    readUnquotedString.restore();
-  }
+  using readUnquotedString = stub(reader, "readUnquotedString", () => "hello");
+  assertStrictEquals(word().parse(reader), "hello");
+  assertSpyCall(readUnquotedString, 0, { args: [], self: reader });
+  assertSpyCalls(readUnquotedString, 1);
 });
 
 Deno.test("parseString", () => {
   const reader = new StringReader("");
-  const readString = stub(reader, "readString", () => "hello world");
-  try {
-    assertStrictEquals(string().parse(reader), "hello world");
-    assertSpyCall(readString, 0, { args: [], self: reader });
-    assertSpyCalls(readString, 1);
-  } finally {
-    readString.restore();
-  }
+  using readString = stub(reader, "readString", () => "hello world");
+  assertStrictEquals(string().parse(reader), "hello world");
+  assertSpyCall(readString, 0, { args: [], self: reader });
+  assertSpyCalls(readString, 1);
 });
 
 Deno.test("parseGreedyString", () => {

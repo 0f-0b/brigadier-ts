@@ -1,4 +1,4 @@
-import { combineHashes, Equatable, rawHash } from "../deps/esfx/equatable.ts";
+import { combineHashes, Equatable, rawHash } from "@esfx/equatable";
 
 import { defaultArgumentSeparator } from "../ArgumentSeparator.ts";
 import {

@@ -1,4 +1,4 @@
-import { combineHashes, Equatable, rawHash } from "../deps/esfx/equatable.ts";
+import { combineHashes, Equatable, rawHash } from "@esfx/equatable";
 
 import type { ArgumentType } from "../arguments/ArgumentType.ts";
 import {
@@ -66,7 +66,9 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     return this.#name;
   }
 
-  override getUsageText(formatter = new CommandUsageFormatter()): string {
+  override getUsageText(
+    formatter: CommandUsageFormatter = new CommandUsageFormatter(),
+  ): string {
     return formatter.argument(this.#name, this.#type);
   }
 

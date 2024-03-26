@@ -1,4 +1,4 @@
-import { Equatable } from "../deps/esfx/equatable.ts";
+import { Equatable } from "@esfx/equatable";
 
 import type { ArgumentSeparator } from "../ArgumentSeparator.ts";
 import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";

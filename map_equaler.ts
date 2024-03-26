@@ -3,7 +3,7 @@ import {
   defaultEqualer,
   Equaler,
   rawHash,
-} from "./deps/esfx/equatable.ts";
+} from "@esfx/equatable";
 
 type UnknownMap = ReadonlyMap<unknown, unknown>;
 

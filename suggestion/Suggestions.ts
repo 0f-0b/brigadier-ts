@@ -3,15 +3,15 @@ import {
   defaultComparer,
   Equatable,
   tupleEqualer,
-} from "../deps/esfx/equatable.ts";
+} from "@esfx/equatable";
+import { maxOf } from "@std/collections/max_of";
+import { minOf } from "@std/collections/min_of";
 
 import { StringRange } from "../context/StringRange.ts";
-import { maxOf } from "../deps/std/collections/max_of.ts";
-import { minOf } from "../deps/std/collections/min_of.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";
 
 export class Suggestions implements Equatable {
-  static readonly EMPTY = new Suggestions(StringRange.at(0), []);
+  static readonly EMPTY: Suggestions = new Suggestions(StringRange.at(0), []);
   readonly range: StringRange;
   readonly list: readonly Suggestion[];
 

@@ -1,4 +1,4 @@
-import { combineHashes, Equatable, rawHash } from "../deps/esfx/equatable.ts";
+import { combineHashes, Equatable, rawHash } from "@esfx/equatable";
 
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import type { StringReader } from "../StringReader.ts";

@@ -1,10 +1,10 @@
-import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
+import { assertStrictEquals } from "@std/assert/assert_strict_equals";
 
 import { assertIterator } from "../assert_iterator.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
-import { CommandNode } from "./CommandNode.ts";
+import type { CommandNode } from "./CommandNode.ts";
 import { RootCommandNode } from "./RootCommandNode.ts";
 
 export const command = () => 0;

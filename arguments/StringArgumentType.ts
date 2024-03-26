@@ -1,4 +1,4 @@
-import { Equatable, rawHash } from "../deps/esfx/equatable.ts";
+import { Equatable, rawHash } from "@esfx/equatable";
 
 import { StringReader } from "../StringReader.ts";
 import { ArgumentType } from "./ArgumentType.ts";

@@ -1,8 +1,8 @@
-import { Equatable } from "../deps/esfx/equatable.ts";
+import { Equatable } from "@esfx/equatable";
 
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { StringReader } from "../StringReader.ts";
-import { Suggestions } from "../suggestion/Suggestions.ts";
+import type { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 import { ArgumentType } from "./ArgumentType.ts";
 

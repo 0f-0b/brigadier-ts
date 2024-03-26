@@ -1,4 +1,4 @@
-import { Equatable, rawHash } from "./deps/esfx/equatable.ts";
+import { Equatable, rawHash } from "@esfx/equatable";
 
 import type { Message } from "./Message.ts";
 

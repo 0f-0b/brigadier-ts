@@ -1,12 +1,7 @@
-import {
-  combineHashes,
-  Comparable,
-  Equatable,
-  rawHash,
-} from "../deps/esfx/equatable.ts";
+import { combineHashes, Comparable, Equatable, rawHash } from "@esfx/equatable";
 
-import { StringRange } from "../context/StringRange.ts";
-import { Message } from "../Message.ts";
+import type { StringRange } from "../context/StringRange.ts";
+import type { Message } from "../Message.ts";
 import { Suggestion } from "./Suggestion.ts";
 
 export class NumberSuggestion extends Suggestion {

@@ -5,7 +5,7 @@ import {
   defaultEqualer,
   Equatable,
   rawHash,
-} from "../deps/esfx/equatable.ts";
+} from "@esfx/equatable";
 
 import type { StringRange } from "../context/StringRange.ts";
 import type { Message } from "../Message.ts";

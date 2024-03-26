@@ -1,6 +1,6 @@
-import { assert } from "../deps/std/assert/assert.ts";
-import { assertStrictEquals } from "../deps/std/assert/assert_strict_equals.ts";
-import { assertSpyCalls, spy } from "../deps/std/testing/mock.ts";
+import { assert } from "@std/assert/assert";
+import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertSpyCalls, spy } from "@std/testing/mock";
 
 import type { Command } from "../Command.ts";
 import { CommandDispatcher } from "../CommandDispatcher.ts";
