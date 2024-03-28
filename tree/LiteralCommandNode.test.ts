@@ -1,7 +1,7 @@
 import { tupleEqualer } from "@esfx/equatable";
 import { assert } from "@std/assert/assert";
-import { assertStrictEquals } from "@std/assert/assert_strict_equals";
-import { assertThrows } from "@std/assert/assert_throws";
+import { assertStrictEquals } from "@std/assert/assert-strict-equals";
+import { assertThrows } from "@std/assert/assert-throws";
 
 import { assertEquatable } from "../assert_equatable.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";

@@ -1,6 +1,6 @@
 import { Equatable } from "@esfx/equatable";
-import { assertStrictEquals } from "@std/assert/assert_strict_equals";
-import { assertThrows } from "@std/assert/assert_throws";
+import { assertStrictEquals } from "@std/assert/assert-strict-equals";
+import { assertThrows } from "@std/assert/assert-throws";
 import { unreachable } from "@std/assert/unreachable";
 
 import { integer } from "../arguments/IntegerArgumentType.ts";

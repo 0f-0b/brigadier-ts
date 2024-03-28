@@ -1,5 +1,5 @@
-import { joinToString } from "@std/collections/join_to_string";
-import { minWith } from "@std/collections/min_with";
+import { joinToString } from "@std/collections/join-to-string";
+import { minWith } from "@std/collections/min-with";
 
 import type { AmbiguityConsumer } from "./AmbiguityConsumer.ts";
 import {

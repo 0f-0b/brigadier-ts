@@ -1,6 +1,6 @@
 import { Equatable, tupleEqualer } from "@esfx/equatable";
 import { assert } from "@std/assert/assert";
-import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 
 import { StringRange } from "../context/StringRange.ts";
 import { Suggestion } from "./Suggestion.ts";

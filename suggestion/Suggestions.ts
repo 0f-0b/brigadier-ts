@@ -4,8 +4,8 @@ import {
   Equatable,
   tupleEqualer,
 } from "@esfx/equatable";
-import { maxOf } from "@std/collections/max_of";
-import { minOf } from "@std/collections/min_of";
+import { maxOf } from "@std/collections/max-of";
+import { minOf } from "@std/collections/min-of";
 
 import { StringRange } from "../context/StringRange.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";

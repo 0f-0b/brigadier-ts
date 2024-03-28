@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 import { assertSpyCall, assertSpyCalls, stub } from "@std/testing/mock";
 
 import { assertEquatable } from "../assert_equatable.ts";

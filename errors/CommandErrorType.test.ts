@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 
 import { LiteralMessage } from "../LiteralMessage.ts";
 import { StringReader } from "../StringReader.ts";

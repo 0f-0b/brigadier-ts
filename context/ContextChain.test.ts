@@ -1,5 +1,5 @@
 import { assert } from "@std/assert/assert";
-import { assertStrictEquals } from "@std/assert/assert_strict_equals";
+import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 
 import type { Command } from "../Command.ts";
