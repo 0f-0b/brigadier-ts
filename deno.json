@@ -59,7 +59,6 @@
   "publish": {
     "exclude": [
       ".github",
-      ".vscode",
       "deno.lock",
       "assert_equatable.ts",
       "assert_iterator.ts",
