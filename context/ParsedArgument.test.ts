@@ -1,7 +1,7 @@
 import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 
-import { assertEquatable } from "../assert_equatable.ts";
 import { StringReader } from "../StringReader.ts";
+import { assertEquatable } from "../testing/assert_equatable.ts";
 import { ParsedArgument } from "./ParsedArgument.ts";
 
 Deno.test("equals", () => {

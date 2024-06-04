@@ -1,8 +1,8 @@
 import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 import { assertSpyCall, assertSpyCalls, stub } from "@std/testing/mock";
 
-import { assertEquatable } from "../assert_equatable.ts";
 import { StringReader } from "../StringReader.ts";
+import { assertEquatable } from "../testing/assert_equatable.ts";
 import { bool } from "./BoolArgumentType.ts";
 
 Deno.test("parse", () => {

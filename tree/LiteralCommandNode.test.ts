@@ -3,13 +3,13 @@ import { assert } from "@std/assert/assert";
 import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 import { assertThrows } from "@std/assert/assert-throws";
 
-import { assertEquatable } from "../assert_equatable.ts";
+import { StringReader } from "../StringReader.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";
 import { StringRange } from "../context/StringRange.ts";
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
-import { StringReader } from "../StringReader.ts";
 import { Suggestion } from "../suggestion/Suggestion.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
+import { assertEquatable } from "../testing/assert_equatable.ts";
 import {
   command,
   newContextBuilder,

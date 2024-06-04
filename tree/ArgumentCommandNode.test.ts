@@ -1,10 +1,10 @@
 import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 
-import { integer } from "../arguments/IntegerArgumentType.ts";
-import { assertEquatable } from "../assert_equatable.ts";
-import { argument } from "../builder/RequiredArgumentBuilder.ts";
 import { StringReader } from "../StringReader.ts";
+import { integer } from "../arguments/IntegerArgumentType.ts";
+import { argument } from "../builder/RequiredArgumentBuilder.ts";
 import { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
+import { assertEquatable } from "../testing/assert_equatable.ts";
 import {
   command,
   newContextBuilder,

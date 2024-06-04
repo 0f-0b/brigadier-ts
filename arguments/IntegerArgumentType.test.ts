@@ -1,9 +1,9 @@
 import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 import { assertThrows } from "@std/assert/assert-throws";
 
-import { assertEquatable } from "../assert_equatable.ts";
-import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import { StringReader } from "../StringReader.ts";
+import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
+import { assertEquatable } from "../testing/assert_equatable.ts";
 import { integer } from "./IntegerArgumentType.ts";
 
 Deno.test("parse", () => {

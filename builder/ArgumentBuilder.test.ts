@@ -4,7 +4,7 @@ import { assertThrows } from "@std/assert/assert-throws";
 import { unreachable } from "@std/assert/unreachable";
 
 import { integer } from "../arguments/IntegerArgumentType.ts";
-import { assertIterator } from "../assert_iterator.ts";
+import { assertIterator } from "../testing/assert_iterator.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
 import { RootCommandNode } from "../tree/RootCommandNode.ts";
 import { ArgumentBuilder } from "./ArgumentBuilder.ts";

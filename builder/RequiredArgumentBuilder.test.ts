@@ -1,7 +1,7 @@
 import { assertStrictEquals } from "@std/assert/assert-strict-equals";
 
 import { integer } from "../arguments/IntegerArgumentType.ts";
-import { assertIterator } from "../assert_iterator.ts";
+import { assertIterator } from "../testing/assert_iterator.ts";
 import { argument } from "./RequiredArgumentBuilder.ts";
 
 const type = integer();
