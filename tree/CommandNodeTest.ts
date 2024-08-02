@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "@std/assert/assert-strict-equals";
+import { assertStrictEquals } from "@std/assert/strict-equals";
 
 import { CommandDispatcher } from "../CommandDispatcher.ts";
 import { literal } from "../builder/LiteralArgumentBuilder.ts";

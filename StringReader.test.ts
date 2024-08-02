@@ -1,5 +1,5 @@
-import { assertStrictEquals } from "@std/assert/assert-strict-equals";
-import { assertThrows } from "@std/assert/assert-throws";
+import { assertStrictEquals } from "@std/assert/strict-equals";
+import { assertThrows } from "@std/assert/throws";
 
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import { StringReader } from "./StringReader.ts";

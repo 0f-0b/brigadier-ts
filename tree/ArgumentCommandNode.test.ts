@@ -1,4 +1,4 @@
-import { assertStrictEquals } from "@std/assert/assert-strict-equals";
+import { assertStrictEquals } from "@std/assert/strict-equals";
 
 import { StringReader } from "../StringReader.ts";
 import { integer } from "../arguments/IntegerArgumentType.ts";

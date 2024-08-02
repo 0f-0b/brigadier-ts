@@ -1,10 +1,10 @@
 import { Equatable, tupleEqualer } from "@esfx/equatable";
 import { ref } from "@esfx/ref";
 import { assert } from "@std/assert/assert";
-import { assertEquals } from "@std/assert/assert-equals";
-import { assertExists } from "@std/assert/assert-exists";
-import { assertRejects } from "@std/assert/assert-rejects";
-import { assertStrictEquals } from "@std/assert/assert-strict-equals";
+import { assertEquals } from "@std/assert/equals";
+import { assertExists } from "@std/assert/exists";
+import { assertRejects } from "@std/assert/rejects";
+import { assertStrictEquals } from "@std/assert/strict-equals";
 import { assertSpyCalls, spy } from "@std/testing/mock";
 
 import type { Command } from "./Command.ts";
