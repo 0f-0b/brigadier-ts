@@ -8,6 +8,10 @@ import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
 export abstract class ArgumentType<T> implements Equatable {
   abstract parse(reader: StringReader): T;
 
+  parseFor<S>(reader: StringReader, _source: S): T {
+    return this.parse(reader);
+  }
+
   listSuggestions<S>(
     _context: CommandContext<S>,
     _builder: SuggestionsBuilder,

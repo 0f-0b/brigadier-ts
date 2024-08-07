@@ -82,7 +82,7 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     _argumentSeparator?: ArgumentSeparator,
   ): undefined {
     const start = reader.getCursor();
-    const result = this.#type.parse(reader);
+    const result = this.#type.parseFor(reader, contextBuilder.getSource());
     const parsed = new ParsedArgument<T>(start, reader.getCursor(), result);
     contextBuilder.withArgument(this.#name, parsed);
     contextBuilder.withNode(this, parsed.range);
