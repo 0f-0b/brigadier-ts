@@ -22,18 +22,8 @@ export class Suggestion implements Equatable, Comparable {
   }
 
   apply(input: string): string {
-    if (this.range.start === 0 && this.range.end === input.length) {
-      return this.text;
-    }
-    let result = "";
-    if (this.range.start > 0) {
-      result += input.substring(0, this.range.start);
-    }
-    result += this.text;
-    if (this.range.end < input.length) {
-      result += input.substring(this.range.end);
-    }
-    return result;
+    return input.substring(0, this.range.start) +
+      this.text + input.substring(this.range.end);
   }
 
   [Equatable.equals](other: unknown): boolean {
