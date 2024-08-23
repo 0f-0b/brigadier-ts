@@ -7,7 +7,7 @@ export type Stage = "modify" | "execute";
 export class ContextChain<S> {
   readonly #modifiers: readonly CommandContext<S>[];
   readonly #executable: CommandContext<S>;
-  #nextStageCache?: ContextChain<S>;
+  #nextStageCache: ContextChain<S> | undefined;
 
   constructor(
     modifiers: readonly CommandContext<S>[],

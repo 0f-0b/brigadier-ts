@@ -25,7 +25,7 @@ import { CommandNode } from "./CommandNode.ts";
 export class ArgumentCommandNode<S, T> extends CommandNode<S> {
   readonly #name: string;
   readonly #type: ArgumentType<T>;
-  readonly #customSuggestions?: SuggestionProvider<S>;
+  readonly #customSuggestions: SuggestionProvider<S> | undefined;
 
   constructor(
     name: string,

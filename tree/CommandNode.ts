@@ -30,10 +30,10 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
   readonly literals: Map<string, LiteralCommandNode<S>> = new Map();
   readonly arguments: Map<string, ArgumentCommandNode<S, unknown>> = new Map();
   readonly #requirement: Predicate<S>;
-  readonly #redirect?: CommandNode<S>;
-  readonly #modifier?: RedirectModifier<S>;
+  readonly #redirect: CommandNode<S> | undefined;
+  readonly #modifier: RedirectModifier<S> | undefined;
   readonly #forks: boolean;
-  command?: Command<S>;
+  command: Command<S> | undefined;
 
   constructor(
     command: Command<S> | undefined,

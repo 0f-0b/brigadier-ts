@@ -13,7 +13,7 @@ import type { Message } from "../Message.ts";
 export class Suggestion implements Equatable, Comparable {
   readonly range: StringRange;
   readonly text: string;
-  readonly tooltip?: Message;
+  readonly tooltip: Message | undefined;
 
   constructor(range: StringRange, text: string, tooltip?: Message) {
     this.range = range;

@@ -6,7 +6,7 @@ import { ArgumentBuilder } from "./ArgumentBuilder.ts";
 export class RequiredArgumentBuilder<S, T> extends ArgumentBuilder<S> {
   readonly #name: string;
   readonly #type: ArgumentType<T>;
-  #suggestionsProvider?: SuggestionProvider<S>;
+  #suggestionsProvider: SuggestionProvider<S> | undefined;
 
   constructor(name: string, type: ArgumentType<T>) {
     super();

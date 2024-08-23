@@ -92,8 +92,8 @@ export class CommandSyntaxError extends Error {
   // deno-lint-ignore no-explicit-any
   readonly type: CommandErrorType<any>;
   readonly rawMessage: Message;
-  readonly input?: string;
-  readonly cursor?: number;
+  readonly input: string | undefined;
+  readonly cursor: number | undefined;
 
   constructor(
     // deno-lint-ignore no-explicit-any
@@ -109,7 +109,7 @@ export class CommandSyntaxError extends Error {
     this.input = input;
     this.cursor = cursor;
     if (!CommandSyntaxError.enableCommandStackTraces) {
-      this.stack = undefined;
+      this.stack = undefined!;
     }
   }
 

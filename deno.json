@@ -54,7 +54,8 @@
     "@std/testing": "jsr:@std/testing@^1.0.0"
   },
   "compilerOptions": {
-    "noImplicitOverride": true
+    "noImplicitOverride": true,
+    "exactOptionalPropertyTypes": true
   },
   "publish": {
     "exclude": [

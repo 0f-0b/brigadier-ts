@@ -16,13 +16,13 @@ import type { StringRange } from "./StringRange.ts";
 export class CommandContext<S> implements Equatable {
   readonly #source: S;
   readonly #input: string;
-  readonly #command?: Command<S>;
+  readonly #command: Command<S> | undefined;
   readonly #arguments: Map<string, ParsedArgument<unknown>>;
   readonly #rootNode: CommandNode<S>;
   readonly #nodes: readonly ParsedCommandNode<S>[];
   readonly #range: StringRange;
-  readonly #child?: CommandContext<S>;
-  readonly #modifier?: RedirectModifier<S>;
+  readonly #child: CommandContext<S> | undefined;
+  readonly #modifier: RedirectModifier<S> | undefined;
   readonly #forks: boolean;
 
   constructor(

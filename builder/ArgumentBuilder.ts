@@ -9,10 +9,10 @@ import { RootCommandNode } from "../tree/RootCommandNode.ts";
 
 export abstract class ArgumentBuilder<S> {
   readonly #arguments = new RootCommandNode<S>();
-  #command?: Command<S>;
+  #command: Command<S> | undefined;
   #requirement: Predicate<S> = () => true;
-  #target?: CommandNode<S>;
-  #modifier?: RedirectModifier<S>;
+  #target: CommandNode<S> | undefined;
+  #modifier: RedirectModifier<S> | undefined;
   #forks = false;
 
   constructor() {

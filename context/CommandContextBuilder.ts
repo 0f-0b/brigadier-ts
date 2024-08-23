@@ -14,10 +14,10 @@ export class CommandContextBuilder<S> {
   readonly #nodes: ParsedCommandNode<S>[] = [];
   readonly #dispatcher: CommandDispatcher<S>;
   #source: S;
-  #command?: Command<S>;
-  #child?: CommandContextBuilder<S>;
+  #command: Command<S> | undefined;
+  #child: CommandContextBuilder<S> | undefined;
   #range: StringRange;
-  #modifier?: RedirectModifier<S>;
+  #modifier: RedirectModifier<S> | undefined;
   #forks = false;
 
   constructor(
