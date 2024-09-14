@@ -313,7 +313,7 @@ export class CommandDispatcher<S> {
           }
           if (childUsage.size !== 0) {
             if (childUsage.size === 1) {
-              const usage = childUsage.values().next().value;
+              const usage = childUsage.values().next().value!;
               return self + separator +
                 (childOptional ? formatter.optional(usage) : usage);
             }
