@@ -54,7 +54,6 @@
     "@std/testing": "jsr:@std/testing@^1.0.0"
   },
   "compilerOptions": {
-    "noImplicitOverride": true,
     "exactOptionalPropertyTypes": true
   },
   "publish": {
@@ -80,7 +79,7 @@
   },
   "tasks": {
     "lint": "deno fmt --check && deno lint",
-    "test": "deno test --check=all",
-    "bench": "deno bench --check=all"
+    "test": "deno test --check=all --allow-import=jsr.io:443",
+    "bench": "deno bench --check=all --allow-import=jsr.io:443"
   }
 }

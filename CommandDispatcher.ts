@@ -134,7 +134,7 @@ export class CommandDispatcher<S> {
     try {
       try {
         child.parse(reader, context, this.#argumentSeparator);
-      } catch (e: unknown) {
+      } catch (e) {
         if (e instanceof CommandSyntaxError) {
           throw e;
         }
@@ -148,7 +148,7 @@ export class CommandDispatcher<S> {
             .dispatcherExpectedArgumentSeparator.createWithContext(reader);
         }
       }
-    } catch (e: unknown) {
+    } catch (e) {
       if (!(e instanceof CommandSyntaxError)) {
         throw e;
       }
@@ -354,7 +354,7 @@ export class CommandDispatcher<S> {
             start,
           ),
         );
-      } catch (e: unknown) {
+      } catch (e) {
         if (!(e instanceof CommandSyntaxError)) {
           throw e;
         }

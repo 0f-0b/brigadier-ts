@@ -50,7 +50,7 @@ export class ContextChain<S> {
     const contextToUse = modifier.copyFor(source);
     try {
       return await sourceModifier(contextToUse);
-    } catch (e: unknown) {
+    } catch (e) {
       if (e instanceof CommandSyntaxError) {
         resultConsumer(contextToUse, false, 0);
         if (forkedMode) {
@@ -72,7 +72,7 @@ export class ContextChain<S> {
       const result = await executable.getCommand()!(contextToUse);
       resultConsumer(contextToUse, true, result);
       return forkedMode ? 1 : result;
-    } catch (e: unknown) {
+    } catch (e) {
       if (e instanceof CommandSyntaxError) {
         resultConsumer(contextToUse, false, 0);
         if (forkedMode) {
