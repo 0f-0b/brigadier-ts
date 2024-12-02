@@ -63,7 +63,7 @@ export declare class HashSet<T> implements Collection<T> {
     values(): Generator<T, void, unknown>;
     entries(): Generator<[T, T], void, unknown>;
     [Symbol.iterator](): Generator<T, void, unknown>;
-    forEach(callback: (value: T, key: T, map: this) => void, thisArg?: any): void;
+    forEach(callback: (value: T, key: T, set: this) => void, thisArg?: any): void;
     [Symbol.toStringTag]: string;
     get [Collection.size](): number;
     [Collection.has](value: T): boolean;
