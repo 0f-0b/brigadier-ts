@@ -1,12 +1,6 @@
 import { CommandSyntaxError } from "./errors/CommandSyntaxError.ts";
 import type { ImmutableStringReader } from "./ImmutableStringReader.ts";
 
-const allowedNumber = new Set("0123456789.-");
-const quotedStringStart = new Set("\"'");
-const allowedInUnquotedString = new Set(
-  "0123456789_-.+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-);
-
 export class StringReader implements ImmutableStringReader {
   readonly #string: string;
   #cursor: number;
@@ -66,11 +60,13 @@ export class StringReader implements ImmutableStringReader {
   }
 
   static isAllowedNumber(c: string): boolean {
-    return allowedNumber.has(c);
+    return c === "0" || c === "1" || c === "2" || c === "3" || c === "4" ||
+      c === "5" || c === "6" || c === "7" || c === "8" || c === "9" ||
+      c === "." || c === "-";
   }
 
   static isQuotedStringStart(c: string): boolean {
-    return quotedStringStart.has(c);
+    return c === '"' || c === "'";
   }
 
   skipWhitespace(): undefined {
@@ -117,7 +113,9 @@ export class StringReader implements ImmutableStringReader {
   }
 
   static isAllowedInUnquotedString(c: string): boolean {
-    return allowedInUnquotedString.has(c);
+    return c === "_" || c === "-" || c === "." || c === "+" ||
+      (c >= "0" && c <= "9") || (c >= "A" && c <= "Z") ||
+      (c >= "a" && c <= "z");
   }
 
   readUnquotedString(): string {
