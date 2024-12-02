@@ -52,7 +52,8 @@ export class CommandDispatcher<S> {
     }
     if (parse.reader.canRead()) {
       if (parse.errors.size === 1) {
-        throw parse.errors.values().next().value;
+        const [error] = parse.errors.values();
+        throw error;
       }
       throw (parse.context.getRange().isEmpty()
         ? CommandSyntaxError.builtInErrors.dispatcherUnknownCommand
@@ -313,7 +314,7 @@ export class CommandDispatcher<S> {
           }
           if (childUsage.size !== 0) {
             if (childUsage.size === 1) {
-              const usage = childUsage.values().next().value!;
+              const [usage] = childUsage;
               return self + separator +
                 (childOptional ? formatter.optional(usage) : usage);
             }
