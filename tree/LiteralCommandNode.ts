@@ -1,4 +1,4 @@
-import { combineHashes, Equatable, rawHash } from "@esfx/equatable";
+import { combineHashes, rawHash } from "@esfx/equatable";
 
 import { defaultArgumentSeparator } from "../ArgumentSeparator.ts";
 import {
@@ -112,13 +112,12 @@ export class LiteralCommandNode<S> extends CommandNode<S> {
       undefined;
   }
 
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof LiteralCommandNode &&
-      super[Equatable.equals](other) && this.#literal === other.#literal);
+  override _equals(other: this): boolean {
+    return super._equals(other) && this.#literal === other.#literal;
   }
 
-  override [Equatable.hash](): number {
-    return combineHashes(super[Equatable.hash](), rawHash(this.#literal));
+  override _hash(): number {
+    return combineHashes(super._hash(), rawHash(this.#literal));
   }
 
   override getUsageText(_formatter?: CommandUsageFormatter): string {

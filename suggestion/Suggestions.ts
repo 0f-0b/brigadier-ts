@@ -1,6 +1,8 @@
+import { ReadonlyCollection } from "@esfx/collection-core";
+import { HashSet } from "@esfx/collections-hashset";
 import {
   combineHashes,
-  defaultComparer,
+  Comparable,
   Equatable,
   tupleEqualer,
 } from "@esfx/equatable";
@@ -8,6 +10,7 @@ import { maxOf } from "@std/collections/max-of";
 import { minOf } from "@std/collections/min-of";
 
 import { StringRange } from "../context/StringRange.ts";
+import { mixinEquatable } from "../mixin_equatable.ts";
 import type { Suggestion } from "../suggestion/Suggestion.ts";
 
 export class Suggestions implements Equatable {
@@ -24,13 +27,12 @@ export class Suggestions implements Equatable {
     return this.list.length === 0;
   }
 
-  [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof Suggestions &&
-      this.range[Equatable.equals](other.range) &&
-      tupleEqualer.equals(this.list, other.list));
+  _equals(other: this): boolean {
+    return this.range[Equatable.equals](other.range) &&
+      tupleEqualer.equals(this.list, other.list);
   }
 
-  [Equatable.hash](): number {
+  _hash(): number {
     return combineHashes(
       this.range[Equatable.hash](),
       tupleEqualer.hash(this.list),
@@ -48,33 +50,42 @@ export class Suggestions implements Equatable {
       case 1:
         return input[0];
       default: {
-        const texts = new Set<Suggestion>();
+        const texts = new HashSet<Suggestion>();
         for (const suggestions of input) {
           for (const suggestion of suggestions.list) {
             texts.add(suggestion);
           }
         }
-        return this.create(command, Array.from(texts));
+        return this.create(command, texts);
       }
     }
   }
 
   static create(
     command: string,
-    suggestions: readonly Suggestion[],
+    suggestions: ReadonlyCollection<Suggestion>,
   ): Suggestions {
-    if (suggestions.length === 0) {
+    if (suggestions[ReadonlyCollection.size] === 0) {
       return this.EMPTY;
     }
     const start = minOf(suggestions, (suggestion) => suggestion.range.start)!;
     const end = maxOf(suggestions, (suggestion) => suggestion.range.end)!;
     const range = new StringRange(start, end);
-    const texts = new Set<Suggestion>();
+    const texts = new HashSet<Suggestion>();
     for (const suggestion of suggestions) {
       texts.add(suggestion.expand(command, range));
     }
     const sorted = Array.from(texts);
-    sorted.sort(defaultComparer.compare);
+    sorted.sort((a, b) =>
+      a.compareToIgnoreCase(b) || a[Comparable.compareTo](b)
+    );
     return new Suggestions(range, sorted);
+  }
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
   }
 }

@@ -1,4 +1,4 @@
-import { combineHashes, Comparable, Equatable, rawHash } from "@esfx/equatable";
+import { combineHashes, rawHash } from "@esfx/equatable";
 
 import type { StringRange } from "../context/StringRange.ts";
 import type { Message } from "../Message.ts";
@@ -12,19 +12,23 @@ export class NumberSuggestion extends Suggestion {
     this.value = value;
   }
 
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof NumberSuggestion &&
-      super[Equatable.equals](other) && this.value === other.value);
+  override _equals(other: this): boolean {
+    return super._equals(other) && this.value === other.value;
   }
 
-  override [Equatable.hash](): number {
-    return combineHashes(super[Equatable.hash](), rawHash(this.value));
+  override _hash(): number {
+    return combineHashes(super._hash(), rawHash(this.value));
   }
 
-  override [Comparable.compareTo](other: Suggestion): number {
-    if (other instanceof NumberSuggestion) {
-      return this.value - other.value;
-    }
-    return super[Comparable.compareTo](other);
+  override _sortOrder(): number {
+    return -1;
+  }
+
+  override _sortKey(): unknown {
+    return this.value;
+  }
+
+  override _sortKeyIC(): unknown {
+    return this.value;
   }
 }

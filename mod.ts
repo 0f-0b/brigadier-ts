@@ -1,3 +1,5 @@
+export * from "@esfx/collection-core";
+export * from "@esfx/collections-hashset";
 export * from "@esfx/equatable";
 export * from "@esfx/ref";
 export * from "./AmbiguityConsumer.ts";

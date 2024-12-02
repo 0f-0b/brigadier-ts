@@ -1,5 +1,3 @@
-import { Equatable } from "@esfx/equatable";
-
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { StringReader } from "../StringReader.ts";
 import type { Suggestions } from "../suggestion/Suggestions.ts";
@@ -24,11 +22,11 @@ export class BoolArgumentType extends ArgumentType<boolean> {
     return builder.buildPromise();
   }
 
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || other instanceof BoolArgumentType;
+  override _equals(_other: this): boolean {
+    return true;
   }
 
-  override [Equatable.hash](): number {
+  override _hash(): number {
     return 0;
   }
 

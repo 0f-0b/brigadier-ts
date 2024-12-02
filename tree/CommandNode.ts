@@ -17,6 +17,7 @@ import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
 import type { CommandContextBuilder } from "../context/CommandContextBuilder.ts";
 import { mapEqualer } from "../map_equaler.ts";
+import { mixinEquatable } from "../mixin_equatable.ts";
 import type { Predicate } from "../Predicate.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import type { StringReader } from "../StringReader.ts";
@@ -109,13 +110,12 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
     argumentSeparator?: ArgumentSeparator,
   ): boolean;
 
-  [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof CommandNode &&
-      defaultEqualer.equals(this.command, other.command) &&
-      mapEqualer.equals(this.children, other.children));
+  _equals(other: this): boolean {
+    return defaultEqualer.equals(this.command, other.command) &&
+      mapEqualer.equals(this.children, other.children);
   }
 
-  [Equatable.hash](): number {
+  _hash(): number {
     return combineHashes(
       defaultEqualer.hash(this.command),
       mapEqualer.hash(this.children),
@@ -181,4 +181,11 @@ export abstract class CommandNode<S> implements Equatable, Comparable {
   }
 
   abstract getExamples(): Iterable<string>;
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
+  }
 }

@@ -9,6 +9,7 @@ import {
 
 import type { StringRange } from "../context/StringRange.ts";
 import type { Message } from "../Message.ts";
+import { mixinEquatable } from "../mixin_equatable.ts";
 
 export class Suggestion implements Equatable, Comparable {
   readonly range: StringRange;
@@ -26,14 +27,13 @@ export class Suggestion implements Equatable, Comparable {
       this.text + input.substring(this.range.end);
   }
 
-  [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof Suggestion &&
-      this.range[Equatable.equals](other.range) &&
+  _equals(other: this): boolean {
+    return this.range[Equatable.equals](other.range) &&
       this.text === other.text &&
-      defaultEqualer.equals(this.tooltip, other.tooltip));
+      defaultEqualer.equals(this.tooltip, other.tooltip);
   }
 
-  [Equatable.hash](): number {
+  _hash(): number {
     return combineHashes(
       combineHashes(this.range[Equatable.hash](), rawHash(this.text)),
       defaultEqualer.hash(this.tooltip),
@@ -41,10 +41,25 @@ export class Suggestion implements Equatable, Comparable {
   }
 
   [Comparable.compareTo](other: Suggestion): number {
-    return defaultComparer.compare(
-      this.text.toLowerCase(),
-      other.text.toLowerCase(),
-    );
+    return this._sortOrder() - other._sortOrder() ||
+      defaultComparer.compare(this._sortKey(), other._sortKey());
+  }
+
+  compareToIgnoreCase(other: Suggestion): number {
+    return this._sortOrder() - other._sortOrder() ||
+      defaultComparer.compare(this._sortKeyIC(), other._sortKeyIC());
+  }
+
+  _sortOrder(): number {
+    return 0;
+  }
+
+  _sortKey(): unknown {
+    return this.text;
+  }
+
+  _sortKeyIC(): unknown {
+    return this.text.toUpperCase().toLowerCase();
   }
 
   expand(command: string, range: StringRange): Suggestion {
@@ -60,5 +75,12 @@ export class Suggestion implements Equatable, Comparable {
       result += command.substring(this.range.end, range.end);
     }
     return new Suggestion(range, result, this.tooltip);
+  }
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
   }
 }

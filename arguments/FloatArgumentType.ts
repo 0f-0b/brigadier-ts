@@ -1,4 +1,4 @@
-import { combineHashes, Equatable, rawHash } from "@esfx/equatable";
+import { combineHashes, rawHash } from "@esfx/equatable";
 
 import { CommandSyntaxError } from "../errors/CommandSyntaxError.ts";
 import type { StringReader } from "../StringReader.ts";
@@ -30,12 +30,11 @@ export class FloatArgumentType extends ArgumentType<number> {
     return result;
   }
 
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof FloatArgumentType &&
-      this.minimum === other.minimum && this.maximum === other.maximum);
+  override _equals(other: this): boolean {
+    return this.minimum === other.minimum && this.maximum === other.maximum;
   }
 
-  override [Equatable.hash](): number {
+  override _hash(): number {
     return combineHashes(rawHash(this.minimum), rawHash(this.maximum));
   }
 

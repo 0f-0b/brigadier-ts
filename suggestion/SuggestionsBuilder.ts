@@ -1,3 +1,5 @@
+import { HashSet } from "@esfx/collections-hashset";
+
 import { StringRange } from "../context/StringRange.ts";
 import type { Message } from "../Message.ts";
 import { NumberSuggestion } from "./NumberSuggestion.ts";
@@ -10,7 +12,7 @@ export class SuggestionsBuilder {
   readonly remaining: string;
   readonly remainingLowerCase: string;
   readonly #inputLowerCase: string;
-  readonly #result: Suggestion[] = [];
+  readonly #result = new HashSet<Suggestion>();
 
   constructor(input: string, start: number);
   constructor(input: string, inputLowerCase: string, start: number);
@@ -34,20 +36,20 @@ export class SuggestionsBuilder {
     return Promise.resolve(this.build());
   }
 
-  suggest(text: string | number, tooltip?: Message): this {
-    if (typeof text === "number") {
-      this.#result.push(
+  suggest(textOrValue: string | number, tooltip?: Message): this {
+    if (typeof textOrValue === "number") {
+      this.#result.add(
         new NumberSuggestion(
           StringRange.between(this.start, this.input.length),
-          text,
+          textOrValue,
           tooltip,
         ),
       );
-    } else if (text !== this.remaining) {
-      this.#result.push(
+    } else if (textOrValue !== this.remaining) {
+      this.#result.add(
         new Suggestion(
           StringRange.between(this.start, this.input.length),
-          text,
+          textOrValue,
           tooltip,
         ),
       );
@@ -56,7 +58,9 @@ export class SuggestionsBuilder {
   }
 
   add(other: SuggestionsBuilder): this {
-    this.#result.push(...other.#result);
+    for (const suggestion of other.#result) {
+      this.#result.add(suggestion);
+    }
     return this;
   }
 

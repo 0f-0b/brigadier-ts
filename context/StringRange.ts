@@ -1,6 +1,7 @@
 import { combineHashes, Equatable, rawHash } from "@esfx/equatable";
 
 import type { ImmutableStringReader } from "../ImmutableStringReader.ts";
+import { mixinEquatable } from "../mixin_equatable.ts";
 
 export class StringRange implements Equatable {
   readonly start: number;
@@ -38,12 +39,18 @@ export class StringRange implements Equatable {
     return this.end - this.start;
   }
 
-  [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof StringRange &&
-      this.start === other.start && this.end === other.end);
+  _equals(other: this): boolean {
+    return this.start === other.start && this.end === other.end;
   }
 
-  [Equatable.hash](): number {
+  _hash(): number {
     return combineHashes(rawHash(this.start), rawHash(this.end));
+  }
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
   }
 }

@@ -1,5 +1,3 @@
-import { Equatable } from "@esfx/equatable";
-
 import type { ArgumentSeparator } from "../ArgumentSeparator.ts";
 import type { CommandUsageFormatter } from "../CommandUsageFormatter.ts";
 import type { CommandContext } from "../context/CommandContext.ts";
@@ -46,11 +44,6 @@ export class RootCommandNode<S> extends CommandNode<S> {
     _argumentSeparator?: ArgumentSeparator,
   ): boolean {
     return false;
-  }
-
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof RootCommandNode &&
-      super[Equatable.equals](other));
   }
 
   override createBuilder(): never {

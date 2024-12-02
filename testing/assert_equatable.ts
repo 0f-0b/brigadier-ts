@@ -8,6 +8,7 @@ export function assertEquatable<T extends Equatable>(
 ): undefined {
   for (const as of groups) {
     for (const a of as) {
+      assert(Equatable.hasInstance(a), "Value does not implement Equatable");
       assert(!a[Equatable.equals](undefined), "Value equals undefined");
       assert(!a[Equatable.equals](null), "Value equals null");
       assert(

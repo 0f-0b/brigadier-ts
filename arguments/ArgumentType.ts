@@ -1,6 +1,7 @@
-import type { Equatable } from "@esfx/equatable";
+import { Equatable } from "@esfx/equatable";
 
 import type { CommandContext } from "../context/CommandContext.ts";
+import { mixinEquatable } from "../mixin_equatable.ts";
 import type { StringReader } from "../StringReader.ts";
 import { Suggestions } from "../suggestion/Suggestions.ts";
 import type { SuggestionsBuilder } from "../suggestion/SuggestionsBuilder.ts";
@@ -19,11 +20,18 @@ export abstract class ArgumentType<T> implements Equatable {
     return Suggestions.empty();
   }
 
-  abstract [Equatable.equals](other: unknown): boolean;
+  abstract _equals(other: this): boolean;
 
-  abstract [Equatable.hash](): number;
+  abstract _hash(): number;
 
   getExamples(): Iterable<string> {
     return [];
+  }
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
   }
 }

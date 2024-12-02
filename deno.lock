@@ -6,6 +6,7 @@
     "jsr:@std/collections@1": "1.0.9",
     "jsr:@std/internal@^1.0.5": "1.0.5",
     "jsr:@std/testing@1": "1.0.5",
+    "npm:@esfx/collection-core@1.0.0": "1.0.0",
     "npm:@esfx/ref@1.0.0": "1.0.0"
   },
   "jsr": {
@@ -29,6 +30,9 @@
     }
   },
   "npm": {
+    "@esfx/collection-core@1.0.0": {
+      "integrity": "sha512-IoOxDAKyywc2+VWOnBCYZKtu40he19/GM40+02SkABhoPBejJmw8s8+0QiCVv3iFJjdQWH8BUl6h4CL1DeGFyA=="
+    },
     "@esfx/ref@1.0.0": {
       "integrity": "sha512-JW6E03t8K3AA0E9fmydNWJT+7QA5psTHW9RC0Fp+9R2SqnwVUusjhBIRGycU4v88qaLhSFqekYhecSvdFQyymQ=="
     }

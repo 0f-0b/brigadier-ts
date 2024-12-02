@@ -1,4 +1,3 @@
-import { Equatable } from "@esfx/equatable";
 import { assertStrictEquals } from "@std/assert/strict-equals";
 import { assertThrows } from "@std/assert/throws";
 
@@ -10,7 +9,7 @@ import { ParsedArgument } from "./ParsedArgument.ts";
 import { StringRange } from "./StringRange.ts";
 
 export class TestableCommandNode<S> extends RootCommandNode<S> {
-  override [Equatable.equals](other: unknown): boolean {
+  override _equals(other: unknown): boolean {
     return this === other;
   }
 }

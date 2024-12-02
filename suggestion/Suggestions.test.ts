@@ -34,10 +34,10 @@ Deno.test("merge multiple", () => {
   const merged = Suggestions.merge("foo b", [a, b]);
   assert(tupleEqualer.equals([
     new Suggestion(StringRange.between(4, 5), "apple"),
-    new Suggestion(StringRange.between(4, 5), "bar"),
     new Suggestion(StringRange.between(4, 5), "Bar"),
-    new Suggestion(StringRange.between(4, 5), "baz"),
+    new Suggestion(StringRange.between(4, 5), "bar"),
     new Suggestion(StringRange.between(4, 5), "bAz"),
+    new Suggestion(StringRange.between(4, 5), "baz"),
     new Suggestion(StringRange.between(4, 5), "foo"),
     new Suggestion(StringRange.between(4, 5), "qux"),
   ], merged.list));

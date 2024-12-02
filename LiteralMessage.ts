@@ -1,6 +1,7 @@
 import { Equatable, rawHash } from "@esfx/equatable";
 
 import type { Message } from "./Message.ts";
+import { mixinEquatable } from "./mixin_equatable.ts";
 
 export class LiteralMessage implements Message, Equatable {
   readonly #str: string;
@@ -13,16 +14,22 @@ export class LiteralMessage implements Message, Equatable {
     return this.#str;
   }
 
-  [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof LiteralMessage &&
-      this.#str === other.#str);
+  _equals(other: this): boolean {
+    return this.#str === other.#str;
   }
 
-  [Equatable.hash](): number {
+  _hash(): number {
     return rawHash(this.#str);
   }
 
   toString(): string {
     return this.#str;
+  }
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
   }
 }

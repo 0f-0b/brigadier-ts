@@ -3,8 +3,10 @@
   "version": "0.0.0",
   "exports": {
     ".": "./mod.ts",
-    "./equatable": "./vendor/@esfx/equatable.ts",
-    "./ref": "./vendor/@esfx/ref.ts",
+    "./vendor/esfx/collection-core": "./vendor/@esfx/collection_core.ts",
+    "./vendor/esfx/collections-hashset": "./vendor/@esfx/collections_hashset.ts",
+    "./vendor/esfx/equatable": "./vendor/@esfx/equatable.ts",
+    "./vendor/esfx/ref": "./vendor/@esfx/ref.ts",
     "./AmbiguityConsumer": "./AmbiguityConsumer.ts",
     "./ArgumentSeparator": "./ArgumentSeparator.ts",
     "./Command": "./Command.ts",
@@ -47,6 +49,8 @@
     "./tree/RootCommandNode": "./tree/RootCommandNode.ts"
   },
   "imports": {
+    "@esfx/collection-core": "./vendor/@esfx/collection_core.ts",
+    "@esfx/collections-hashset": "./vendor/@esfx/collections_hashset.ts",
     "@esfx/equatable": "./vendor/@esfx/equatable.ts",
     "@esfx/ref": "./vendor/@esfx/ref.ts",
     "@std/assert": "jsr:@std/assert@^1.0.0",

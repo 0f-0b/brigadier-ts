@@ -1,4 +1,4 @@
-import { Equatable, rawHash } from "@esfx/equatable";
+import { rawHash } from "@esfx/equatable";
 
 import { StringReader } from "../StringReader.ts";
 import { ArgumentType } from "./ArgumentType.ts";
@@ -39,12 +39,11 @@ export class StringArgumentType extends ArgumentType<string> {
     }
   }
 
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof StringArgumentType &&
-      this.type === other.type);
+  override _equals(other: this): boolean {
+    return this.type === other.type;
   }
 
-  override [Equatable.hash](): number {
+  override _hash(): number {
     return rawHash(this.type);
   }
 

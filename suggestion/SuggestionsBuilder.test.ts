@@ -115,16 +115,16 @@ Deno.test("sort mixed", () => {
     .suggest("a3")
     .build();
   assertEquals(result.list.map((s) => s.text), [
-    "11",
     "2",
-    "22",
-    "33",
-    "3a",
     "4",
     "6",
     "8",
     "30",
     "32",
+    "11",
+    "22",
+    "33",
+    "3a",
     "a",
     "a3",
     "b",

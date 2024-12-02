@@ -7,6 +7,7 @@ import {
 
 import type { Command } from "../Command.ts";
 import { mapEqualer } from "../map_equaler.ts";
+import { mixinEquatable } from "../mixin_equatable.ts";
 import type { RedirectModifier } from "../RedirectModifier.ts";
 import type { CommandNode } from "../tree/CommandNode.ts";
 import type { ParsedArgument } from "./ParsedArgument.ts";
@@ -97,17 +98,16 @@ export class CommandContext<S> implements Equatable {
     return argument.result as T;
   }
 
-  [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof CommandContext &&
-      mapEqualer.equals(this.#arguments, other.#arguments) &&
+  _equals(other: this): boolean {
+    return mapEqualer.equals(this.#arguments, other.#arguments) &&
       this.#rootNode[Equatable.equals](other.#rootNode) &&
       tupleEqualer.equals(this.#nodes, other.#nodes) &&
       defaultEqualer.equals(this.#command, other.#command) &&
       defaultEqualer.equals(this.#source, other.#source) &&
-      defaultEqualer.equals(this.#child, other.#child));
+      defaultEqualer.equals(this.#child, other.#child);
   }
 
-  [Equatable.hash](): number {
+  _hash(): number {
     let hash = mapEqualer.hash(this.#arguments);
     hash = combineHashes(hash, this.#rootNode[Equatable.hash]());
     hash = combineHashes(hash, tupleEqualer.hash(this.#nodes));
@@ -143,5 +143,12 @@ export class CommandContext<S> implements Equatable {
 
   isForked(): boolean {
     return this.#forks;
+  }
+
+  declare [Equatable.equals]: (other: unknown) => boolean;
+  declare [Equatable.hash]: () => number;
+
+  static {
+    mixinEquatable(this.prototype);
   }
 }

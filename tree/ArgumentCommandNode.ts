@@ -126,16 +126,14 @@ export class ArgumentCommandNode<S, T> extends CommandNode<S> {
     }
   }
 
-  override [Equatable.equals](other: unknown): boolean {
-    return this === other || (other instanceof ArgumentCommandNode &&
-      super[Equatable.equals](other) &&
-      this.#name === other.#name &&
-      this.#type[Equatable.equals](other.#type));
+  override _equals(other: this): boolean {
+    return super._equals(other) && this.#name === other.#name &&
+      this.#type[Equatable.equals](other.#type);
   }
 
-  override [Equatable.hash](): number {
+  override _hash(): number {
     return combineHashes(
-      combineHashes(super[Equatable.hash](), rawHash(this.#name)),
+      combineHashes(super._hash(), rawHash(this.#name)),
       this.#type[Equatable.hash](),
     );
   }
