@@ -15,6 +15,7 @@ export class CommandContextBuilder<S> {
   readonly #dispatcher: CommandDispatcher<S>;
   #source: S;
   #command: Command<S> | undefined;
+  #childPos: number | undefined;
   #child: CommandContextBuilder<S> | undefined;
   #range: StringRange;
   #modifier: RedirectModifier<S> | undefined;
@@ -85,6 +86,11 @@ export class CommandContextBuilder<S> {
     return copy;
   }
 
+  withChildPos(childPos: number): this {
+    this.#childPos = childPos;
+    return this;
+  }
+
   withChild(child: CommandContextBuilder<S>): this {
     this.#child = child;
     return this;
@@ -136,29 +142,24 @@ export class CommandContextBuilder<S> {
   }
 
   findSuggestionContext(cursor: number): SuggestionContext<S> {
-    if (this.#range.start <= cursor) {
-      if (this.#range.end < cursor) {
-        if (this.#child) {
-          return this.#child.findSuggestionContext(cursor);
-        }
-        const leaf = this.#nodes.at(-1);
-        return leaf
-          ? new SuggestionContext(leaf.node, leaf.range.end + 1)
-          : new SuggestionContext(this.#rootNode, this.#range.start);
-      } else {
-        let prev = this.#rootNode;
-        for (const node of this.#nodes) {
-          const nodeRange = node.range;
-          if (nodeRange.start <= cursor && cursor <= nodeRange.end) {
-            return new SuggestionContext(prev, nodeRange.start);
-          }
-          prev = node.node;
-        }
-        if (prev) {
-          return new SuggestionContext(prev, this.#range.start);
-        }
+    if (this.#range.end < cursor) {
+      if (this.#child) {
+        return this.#child.findSuggestionContext(cursor);
       }
+      const leaf = this.#nodes.at(-1);
+      return leaf
+        ? new SuggestionContext(leaf.node, this.#childPos ?? leaf.range.end + 1)
+        : new SuggestionContext(this.#rootNode, this.#range.start);
+    } else {
+      let prev = this.#rootNode;
+      for (const node of this.#nodes) {
+        const nodeRange = node.range;
+        if (cursor <= nodeRange.end) {
+          return new SuggestionContext(prev, nodeRange.start);
+        }
+        prev = node.node;
+      }
+      return new SuggestionContext(prev, this.#range.start);
     }
-    throw new TypeError("Can't find node before cursor");
   }
 }

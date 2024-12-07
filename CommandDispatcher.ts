@@ -158,6 +158,7 @@ export class CommandDispatcher<S> {
     }
     context.withCommand(child.getCommand());
     if (skippedSeparator !== -1) {
+      context.withChildPos(reader.getCursor());
       const redirect = child.getRedirect();
       if (redirect) {
         const childContext = new CommandContextBuilder(
